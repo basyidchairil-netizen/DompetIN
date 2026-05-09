@@ -1,0 +1,19 @@
+# Database
+dompetin.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+venv/
+.venv/
+env/
+
+# IDEs
+.vscode/
+.idea/
+
+# Check schema scripts
+check_schema.py
+check_indices.py

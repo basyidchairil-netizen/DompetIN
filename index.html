@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dompetin - Budget Tracker for Students</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+<nav>
+            <div class="nav-container">
+                <div class="logo">Dompetin</div>
+                <ul class="nav-links">
+                    <li><a href="#home" data-i18n="nav_home">Home</a></li>
+                    <li><a href="#features" data-i18n="nav_features">Features</a></li>
+                    <li><a href="#pricing" data-i18n="nav_pricing">Pricing</a></li>
+                    <li><a href="#how-it-works" data-i18n="nav_how_it_works">How It Works</a></li>
+                    <li><a href="#about" data-i18n="nav_about">About</a></li>
+                    <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+                </ul>
+                <div class="nav-right">
+                    <!-- Theme Toggle Button -->
+                    <button class="theme-toggle" onclick="window.themeManager.cycleTheme()" aria-label="Toggle theme">
+                        <span class="theme-icon theme-icon-light"><i class="fas fa-sun"></i></span>
+                        <span class="theme-icon theme-icon-dark"><i class="fas fa-moon"></i></span>
+                        <span class="theme-icon theme-icon-auto"><i class="fas fa-circle-half-stroke"></i></span>
+                    </button>
+                    <!-- Language Toggle Button -->
+                    <button class="language-toggle ml-2 px-2 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition" onclick="window.i18nManager.toggleLanguage()" title="Toggle Language">
+                        <span class="lang-text font-medium text-sm" data-i18n="language">EN</span>
+                    </button>
+                    <a href="login.html" class="btn-login" data-i18n="nav_login">Login</a>
+                </div>
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Manage Your Money, One Step at a Time</h1>
+                <p>Dompetin is your friendly budget tracker designed for students and young adults. Take control of your finances with ease and build a brighter financial future.</p>
+                <div class="cta-buttons">
+                    <a href="dashboard.html" class="btn-primary">Get Started</a>
+                    <button class="btn-secondary">Download App</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="LogoDompetin.png" alt="Dompetin App Screenshot">
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features">
+            <div class="container">
+                <h2>Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Income & Expense Tracking</h3>
+                        <p>Easily record and categorize your income and expenses to stay on top of your finances.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h3>Budget Planning per Category</h3>
+                        <p>Set monthly budgets for different categories and track your spending against them.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-lightbulb"></i>
+                        <h3>Smart Spending Insights</h3>
+                        <p>Get personalized insights and recommendations to optimize your spending habits.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-bullseye"></i>
+                        <h3>Financial Goals Tracking</h3>
+                        <p>Set and track progress towards your savings goals and financial milestones.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="pricing">
+            <div class="container">
+                <h2>Pricing</h2>
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h3>Free</h3>
+                        <div class="price">Rp0<span>/month</span></div>
+                        <ul>
+                            <li>Basic income/expense tracking</li>
+                            <li>Up to 3 categories</li>
+                            <li>Monthly reports</li>
+                            <li>Email support</li>
+                        </ul>
+                        <button class="btn-primary">Get Started</button>
+                    </div>
+                    <div class="pricing-card featured">
+                        <h3>Standard</h3>
+                        <div class="price">Rp30.000<span>/month</span></div>
+                        <ul>
+                            <li>All Free features</li>
+                            <li>Unlimited categories</li>
+                            <li>Budget planning</li>
+                            <li>Smart insights</li>
+                            <li>Priority support</li>
+                        </ul>
+                        <button class="btn-primary">Choose Standard</button>
+                    </div>
+                    <div class="pricing-card">
+                        <h3>Premium</h3>
+                        <div class="price">Rp50.000<span>/month</span></div>
+                        <ul>
+                            <li>All Standard features</li>
+                            <li>Financial goals tracking</li>
+                            <li>Advanced analytics</li>
+                            <li>Export data</li>
+                            <li>24/7 phone support</li>
+                        </ul>
+                        <button class="btn-primary">Choose Premium</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="how-it-works">
+            <div class="container">
+                <h2>How It Works</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Record Income and Expenses</h3>
+                        <p>Log your daily transactions quickly and categorize them for better organization.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Set Monthly Budgets</h3>
+                        <p>Create budgets for different spending categories to stay within your limits.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Get Insights and Recommendations</h3>
+                        <p>Receive personalized tips and insights to improve your financial habits.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about">
+            <div class="container">
+                <h2>About Dompetin</h2>
+                <p>Our mission is to help students become more financially aware and disciplined. We believe that everyone deserves a chance to build a secure financial future, starting with simple tools that make money management easy and fun.</p>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-number">10,000+</div>
+                        <div class="stat-label">Students Helped</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">$5M+</div>
+                        <div class="stat-label">Money Saved</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4.8/5</div>
+                        <div class="stat-label">User Rating</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2>Contact Us</h2>
+                <div class="contact-content">
+                    <div class="contact-form">
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" required></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary">Send Message</button>
+                        </form>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Get in Touch</h3>
+                        <p><i class="fas fa-envelope"></i> support@dompetin.com</p>
+                        <p><i class="fas fa-phone"></i> 1-800-DOMPETIN</p>
+                        <p><i class="fas fa-clock"></i> Mon-Fri 9AM-6PM EST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Dompetin. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+<script src="static/script.js"></script>
+    <script src="static/theme.js"></script>
+    <script src="static/i18n.js"></script>
+</body>
+</html>

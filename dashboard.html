@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dompetin - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            300: '#6ee7b7',
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-emerald-50 text-gray-800 dark:bg-slate-900 dark:text-gray-100 transition-colors duration-300">
+    <!-- Sidebar -->
+    <div class="flex flex-col md:flex-row">
+        <!-- Hamburger Menu for Mobile -->
+        <div class="md:hidden bg-emerald-700 text-white p-4 flex justify-between items-center sticky top-0 z-[60]">
+            <h1 class="text-xl font-bold">Dompetin</h1>
+            <button onclick="toggleSidebar()" class="p-2 text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <div id="sidebar" class="w-64 bg-emerald-700 text-white h-screen fixed dark:bg-emerald-800 transition-transform duration-300 transform -translate-x-full md:translate-x-0 z-[50]">
+            <div class="p-4 flex justify-between items-center">
+                <h1 class="text-2xl font-bold">Dompetin</h1>
+                <!-- Language and Theme Toggle -->
+                <div class="flex items-center gap-2">
+                    <button onclick="window.i18nManager.toggleLanguage()" class="p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Language">
+                        <span class="text-sm font-medium">ID</span>
+                    </button>
+                    <button onclick="window.themeManager.cycleTheme()" class="p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Theme">
+                        <span class="theme-icon-light"><i class="fas fa-sun text-yellow-300"></i></span>
+                        <span class="theme-icon-dark hidden"><i class="fas fa-moon text-gray-300"></i></span>
+                        <span class="theme-icon-auto hidden"><i class="fas fa-circle-half-stroke text-gray-300"></i></span>
+                    </button>
+                </div>
+            </div>
+            <nav class="mt-4">
+                <a href="dashboard.html" class="block py-3 px-6 hover:bg-emerald-600 border-l-4 border-transparent hover:border-white">Home</a>
+                <a href="incomeTracking.html" class="block py-3 px-6 hover:bg-emerald-600 border-l-4 border-transparent hover:border-white">Income Tracking</a>
+                <a href="budgetplaning.html" class="block py-3 px-6 hover:bg-emerald-600 border-l-4 border-transparent hover:border-white">Budget Planning</a>
+                <a href="analysis.html" class="block py-3 px-6 hover:bg-emerald-600 border-l-4 border-transparent hover:border-white">Analysis</a>
+                <a href="profile.html" class="block py-3 px-6 hover:bg-emerald-600 border-l-4 border-transparent hover:border-white">Profile</a>
+                <a href="index.html" class="block py-3 px-6 hover:bg-emerald-600 mt-8 border-l-4 border-transparent">Logout</a>
+            </nav>
+        </div>
+
+        <!-- Overlay for Mobile -->
+        <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-[40]"></div>
+
+        <div class="flex-1 md:ml-64 p-4 md:p-8">
+            <!-- Dashboard -->
+            <div id="dashboard" class="section">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Your Financial Dashboard</h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-400">Monitor your income, expenses, and savings at a glance.</p>
+                </div>
+                <!-- Balance Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                    <div class="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-wallet text-3xl text-emerald-600 mr-4"></i>
+                            <h3 class="text-xl font-semibold dark:text-white">Total Balance</h3>
+                        </div>
+                        <p class="text-3xl font-bold text-emerald-600" id="total-balance">${{ balance|round(2) }}</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-arrow-up text-3xl text-green-600 mr-4"></i>
+                            <h3 class="text-xl font-semibold dark:text-white">Monthly Income</h3>
+                        </div>
+                        <p class="text-3xl font-bold text-green-600">$0.00</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-arrow-down text-3xl text-red-600 mr-4"></i>
+                            <h3 class="text-xl font-semibold dark:text-white">Monthly Expenses</h3>
+                        </div>
+                        <p class="text-3xl font-bold text-red-600">$0.00</p>
+                    </div>
+                </div>
+                <!-- Bar Chart Placeholder -->
+                <div class="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg mb-12">
+                    <h3 class="text-2xl font-semibold mb-6 dark:text-white">Monthly Spending Overview</h3>
+                    <img src="https://via.placeholder.com/800x400/10b981/ffffff?text=Spending+Chart" alt="Monthly Spending Chart" class="w-full rounded-lg">
+                </div>
+                <!-- Quick Add Transaction -->
+                <div class="text-center">
+                    <button class="bg-emerald-600 text-white px-8 py-4 rounded-full font-semibold hover:bg-emerald-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1" onclick="openModal()">
+                        <i class="fas fa-plus mr-2"></i>Add Transaction
+                    </button>
+                </div>
+            </div>
+
+            <!-- Analysis -->
+            <div id="analysis" class="section hidden">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Financial Analysis</h2>
+                    <p class="text-lg text-gray-600">Dive deep into your spending patterns and financial trends.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-semibold mb-6">Spending Breakdown</h3>
+                        <img src="https://via.placeholder.com/500x300/10b981/ffffff?text=Spending+Breakdown" alt="Spending Breakdown" class="w-full rounded-lg mb-6">
+                        <p class="text-gray-600">Visualize where your money goes with detailed category breakdowns.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-semibold mb-6">Income vs Expenses</h3>
+                        <img src="https://via.placeholder.com/500x300/10b981/ffffff?text=Income+vs+Expenses" alt="Income vs Expenses" class="w-full rounded-lg mb-6">
+                        <p class="text-gray-600">Track your financial balance over time with interactive charts.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-semibold mb-6">Savings Goals</h3>
+                        <img src="https://via.placeholder.com/500x300/10b981/ffffff?text=Savings+Goals" alt="Savings Goals" class="w-full rounded-lg mb-6">
+                        <p class="text-gray-600">Monitor progress towards your savings objectives.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-semibold mb-6">Financial Insights</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center p-4 bg-emerald-50 rounded-lg">
+                                <i class="fas fa-lightbulb text-2xl text-emerald-600 mr-4"></i>
+                                <p class="text-gray-700">You're spending 15% more on dining out this month.</p>
+                            </div>
+                            <div class="flex items-center p-4 bg-blue-50 rounded-lg">
+                                <i class="fas fa-chart-line text-2xl text-blue-600 mr-4"></i>
+                                <p class="text-gray-700">Your savings rate has increased by 5% this quarter.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile -->
+            <div id="profile" class="section hidden">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Your Profile</h2>
+                    <p class="text-lg text-gray-600">Manage your account settings and preferences.</p>
+                </div>
+                <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg">
+                    <div class="text-center mb-8">
+                        <img src="https://via.placeholder.com/150x150/10b981/ffffff?text=Profile+Photo" alt="Profile Photo" class="w-32 h-32 rounded-full mx-auto mb-4">
+                        <h3 class="text-2xl font-semibold">John Doe</h3>
+                        <p class="text-gray-600">johndoe@example.com</p>
+                    </div>
+                    <div class="space-y-4">
+                        <button class="w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700 transition duration-300">Edit Profile</button>
+                        <button class="w-full bg-gray-200 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-300 transition duration-300">Settings</button>
+                        <button class="w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 transition duration-300">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Add Transaction Modal -->
+    <div id="transaction-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+            <h3 class="text-xl font-semibold mb-4">Add Transaction</h3>
+            <form id="transaction-form">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Type</label>
+                    <select name="type" class="w-full p-2 border rounded" required>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Amount</label>
+                    <input type="number" name="amount" step="0.01" class="w-full p-2 border rounded" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Category</label>
+                    <select name="category" class="w-full p-2 border rounded" required>
+                        <option value="Food">Food</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Date</label>
+                    <input type="date" name="date" class="w-full p-2 border rounded" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Description</label>
+                    <input type="text" name="description" class="w-full p-2 border rounded">
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Smart Nudge Alert -->
+    <div id="nudge-alert" class="fixed bottom-4 right-4 bg-yellow-500 text-white p-4 rounded-lg shadow-lg hidden">
+        <p id="nudge-message"></p>
+        <button class="mt-2 underline" onclick="closeNudge()">Dismiss</button>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+    </script>
+    <script src="static/notifications.js"></script>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+    <script src="static/i18n.js"></script>
+</body>
+</html>

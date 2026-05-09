@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis - Dompetin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            300: '#6ee7b7',
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .sidebar-link {
+            transition: all 0.3s ease;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .stat-card {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-emerald-50 text-gray-800">
+    <!-- Sidebar -->
+    <div class="flex flex-col md:flex-row">
+        <!-- Hamburger Menu for Mobile -->
+        <div class="md:hidden bg-emerald-700 text-white p-4 flex justify-between items-center sticky top-0 z-[60]">
+            <h1 class="text-xl font-bold">Dompetin</h1>
+            <button onclick="toggleSidebar()" class="p-2 text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <div id="sidebar" class="w-64 bg-emerald-700 text-white h-screen fixed dark:bg-emerald-800 transition-transform duration-300 transform -translate-x-full md:translate-x-0 z-[50]">
+            <div class="p-4">
+                <h1 class="text-2xl font-bold">Dompetin</h1>
+            </div>
+            <nav class="mt-8">
+                <a href="dashboard.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-home mr-3"></i>Home
+                </a>
+                <a href="incomeTracking.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-money-bill-wave mr-3"></i>Income Tracking
+                </a>
+                <a href="budgetplaning.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-chart-pie mr-3"></i>Budget Planning
+                </a>
+                <a href="analysis.html" class="sidebar-link block py-2 px-4 bg-emerald-600">
+                    <i class="fas fa-chart-line mr-3"></i>Analysis
+                </a>
+                <a href="profile.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-user mr-3"></i>Profile
+                <a href="index.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600 mt-8">
+                    <i class="fas fa-sign-out-alt mr-3"></i>Logout
+                </a>
+            </nav>
+        </div>
+        <!-- Overlay for Mobile -->
+        <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-[40]"></div>
+
+        <!-- Main Content -->
+        <div class="flex-1 md:ml-64 p-4 md:p-8">
+            <!-- Header -->
+            <div class="mb-8">
+                <h2 class="text-4xl font-bold text-gray-900 mb-2">Financial Analysis</h2>
+                <p class="text-lg text-gray-600">Analisis mendalam kondisi keuangan Anda</p>
+            </div>
+
+            <!-- Time Period Selector -->
+            <div class="flex items-center justify-between mb-6 bg-white p-4 rounded-xl shadow-lg">
+                <button onclick="changePeriod(-1)" class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
+                    <i class="fas fa-chevron-left text-emerald-600"></i>
+                </button>
+                <div class="flex gap-2">
+                    <button onclick="setPeriod('week')" class="period-btn px-4 py-2 rounded-lg font-medium transition" data-period="week">Minggu Ini</button>
+                    <button onclick="setPeriod('month')" class="period-btn px-4 py-2 rounded-lg font-medium transition bg-emerald-100 text-emerald-700" data-period="month">Bulan Ini</button>
+                    <button onclick="setPeriod('year')" class="period-btn px-4 py-2 rounded-lg font-medium transition" data-period="year">Tahun Ini</button>
+                </div>
+                <button onclick="changePeriod(1)" class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
+                    <i class="fas fa-chevron-right text-emerald-600"></i>
+                </button>
+            </div>
+
+            <!-- Overview Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="stat-card bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-arrow-up text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Total Pemasukan</p>
+                            <p class="text-2xl font-bold text-green-600" id="total-income">Rp 3.000.000</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500">Periode yang dipilih</p>
+                </div>
+                
+                <div class="stat-card bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-arrow-down text-red-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Total Pengeluaran</p>
+                            <p class="text-2xl font-bold text-red-600" id="total-expense">Rp 1.850.000</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500">Periode yang dipilih</p>
+                </div>
+                
+                <div class="stat-card bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-wallet text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Total Saving</p>
+                            <p class="text-2xl font-bold text-blue-600" id="total-saving">Rp 1.150.000</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500">Sisa setelah pengeluaran</p>
+                </div>
+                
+                <div class="stat-card bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-percentage text-purple-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Saving Rate</p>
+                            <p class="text-2xl font-bold text-purple-600" id="saving-rate">38%</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500">Target: 20%+</p>
+                </div>
+            </div>
+
+            <!-- Charts Row 1 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Spending by Category (Pie Chart) -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">Pengeluaran per Kategori</h3>
+                    <div class="relative h-64">
+                        <canvas id="categoryPieChart"></canvas>
+                    </div>
+                    <div class="mt-4 grid grid-cols-2 gap-2" id="category-legend">
+                        <!-- Legend items will be populated by JS -->
+                    </div>
+                </div>
+                
+                <!-- Monthly Trend (Bar Chart) -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">Tren Pemasukan vs Pengeluaran</h3>
+                    <div class="relative h-64">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row 2 -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <!-- Budget vs Actual -->
+                <div class="bg-white rounded-xl shadow-lg p-6 lg:col-span-2">
+                    <h3 class="text-xl font-semibold mb-4">Budget vs Pengeluaran Aktual</h3>
+                    <div class="relative h-64">
+                        <canvas id="budgetVsActualChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Daily Spending Heatmap -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">Pola Pengeluaran Mingguan</h3>
+                    <div class="space-y-2" id="weekly-pattern">
+                        <!-- Will be populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Financial Insights -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>Financial Insights
+                    </h3>
+                    <div class="space-y-4" id="insights-list">
+                        <div class="flex items-start p-3 bg-emerald-50 rounded-lg">
+                            <i class="fas fa-check-circle text-emerald-600 mr-3 mt-1"></i>
+                            <div>
+                                <p class="font-medium text-emerald-800">Saving Rate Baik</p>
+                                <p class="text-sm text-gray-600">Tingkattabungan Anda 38% sudah di atas target 20%</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start p-3 bg-orange-50 rounded-lg">
+                            <i class="fas fa-exclamation-circle text-orange-500 mr-3 mt-1"></i>
+                            <div>
+                                <p class="font-medium text-orange-800">Peningkatan Pengeluaran Makanan</p>
+                                <p class="text-sm text-gray-600">Pengeluaran makanan naik 15% dari bulan lalu</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start p-3 bg-blue-50 rounded-lg">
+                            <i class="fas fa-chart-line text-blue-600 mr-3 mt-1"></i>
+                            <div>
+                                <p class="font-medium text-blue-800">Tren Positif</p>
+                                <p class="text-sm text-gray-600">Pengeluaran bulan ini menurun 10% dari bulan lalu</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Budget Recommendations -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-robot text-emerald-600 mr-2"></i>Rekomendasi Budget
+                    </h3>
+                    <div class="space-y-3" id="recommendations">
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <p class="font-medium text-gray-800">Kurangi pengeluaran hiburan</p>
+                            <p class="text-sm text-gray-600">Hiburan menghabiskan 18% dari budget, pertimbangkan untuk mengurangi 5%</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <p class="font-medium text-gray-800">Tingkatkan tabungan darurat</p>
+                            <p class="text-sm text-gray-600">Tabungan saat ini Rp 600.000/bln, target minimal Rp 1.000.000/bln</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <p class="font-medium text-gray-800">Budget makanan sudah optimal</p>
+                            <p class="text-sm text-gray-600">Alokasi makanan 45% sudah sesuai kebutuhan mahasiswa</p>
+                        </div>
+                    </div>
+                    <button onclick="openAIRecommendation()" class="w-full mt-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-3 px-4 rounded-lg hover:from-emerald-600 hover:to-teal-600 transition shadow-md font-medium">
+                        <i class="fas fa-robot mr-2"></i>Minta Saran AI
+                    </button>
+                </div>
+            </div>
+
+            <!-- Transaction History Table -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-semibold">Riwayat Transaksi Terakhir</h3>
+                    <div class="flex gap-2">
+                        <select id="filter-category" class="px-3 py-2 border rounded-lg text-sm" onchange="filterTransactions()">
+                            <option value="all">Semua Kategori</option>
+                            <option value="food">Makanan</option>
+                            <option value="transport">Transportasi</option>
+                            <option value="shopping">Belanja</option>
+                            <option value="entertainment">Hiburan</option>
+                            <option value="bills">Tagihan</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="pb-3 text-sm font-semibold text-gray-600">Tanggal</th>
+                                <th class="pb-3 text-sm font-semibold text-gray-600">Deskripsi</th>
+                                <th class="pb-3 text-sm font-semibold text-gray-600">Kategori</th>
+                                <th class="pb-3 text-sm font-semibold text-gray-600">Tipe</th>
+                                <th class="pb-3 text-sm font-semibold text-gray-600 text-right">Jumlah</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transaction-table">
+                            <!-- Will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Export Section -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-semibold mb-4">Export Laporan</h3>
+                <div class="flex gap-4">
+                    <button onclick="exportReport('csv')" class="flex items-center bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg hover:bg-emerald-200 transition">
+                        <i class="fas fa-file-csv mr-2"></i>Export CSV
+                    </button>
+                    <button onclick="exportReport('pdf')" class="flex items-center bg-red-100 text-red-700 px-4 py-2 rounded-lg hover:bg-red-200 transition">
+                        <i class="fas fa-file-pdf mr-2"></i>Export PDF
+                    </button>
+                    <button onclick="printReport()" class="flex items-center bg-blue-100 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-200 transition">
+                        <i class="fas fa-print mr-2"></i>Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Recommendation Modal -->
+    <div id="ai-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
+            <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-4 flex justify-between items-center">
+                <h3 class="text-lg font-semibold"><i class="fas fa-robot mr-2"></i>AI Financial Analysis</h3>
+                <button onclick="closeAIRecommendation()" class="text-white hover:text-emerald-200">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-4 max-h-96 overflow-y-auto" id="ai-response">
+                <div class="flex items-start mb-4">
+                    <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2 mt-1">
+                        <i class="fas fa-robot text-emerald-600 text-sm"></i>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-lg rounded-tl-none">
+                        <p class="text-sm">Halo! Saya akan menganalisis keuangan Anda berdasarkan data yang ada. Silakan tunggu sebentar...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t">
+                <form id="ai-form" class="flex gap-2">
+                    <input type="text" id="ai-input" class="flex-1 px-4 py-2 border rounded-lg" placeholder="Tanyakan tentang finances Anda...">
+                    <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample Data
+        let transactions = [
+            { id: 1, type: 'income', desc: 'Uang Saku', amount: 3000000, category: 'allowance', date: '2025-01-01', notes: 'Bulanan' },
+            { id: 2, type: 'expense', desc: 'Makan Siang', amount: 25000, category: 'food', date: '2025-01-02', notes: '' },
+            { id: 3, type: 'expense', desc: 'Ojol', amount: 15000, category: 'transport', date: '2025-01-02', notes: '' },
+            { id: 4, type: 'expense', desc: 'Makan Malam', amount: 35000, category: 'food', date: '2025-01-02', notes: '' },
+            { id: 5, type: 'expense', desc: 'Kuota Internet', amount: 150000, category: 'bills', date: '2025-01-03', notes: '' },
+            { id: 6, type: 'expense', desc: 'Nonton Film', amount: 50000, category: 'entertainment', date: '2025-01-04', notes: '' },
+            { id: 7, type: 'expense', desc: 'Belanja Buku', amount: 200000, category: 'shopping', date: '2025-01-05', notes: '' },
+            { id: 8, type: 'expense', desc: 'Uang Makan', amount: 500000, category: 'food', date: '2025-01-10', notes: '' },
+        ];
+
+        let budgetData = {
+            totalBudget: 3000000,
+            categories: [
+                { name: 'Food', budget: 1350000, spent: 850000, color: '#f97316' },
+                { name: 'Transport', budget: 450000, spent: 250000, color: '#3b82f6' },
+                { name: 'Entertainment', budget: 450000, spent: 350000, color: '#ec4899' },
+                { name: 'Bills', budget: 300000, spent: 200000, color: '#8b5cf6' },
+                { name: 'Shopping', budget: 450000, spent: 200000, color: '#14b8a6' }
+            ]
+        };
+
+        // Charts
+        let categoryPieChart, trendChart, budgetVsActualChart;
+
+        // Initialize charts
+        function initCharts() {
+            // Category Pie Chart
+            const categoryCtx = document.getElementById('categoryPieChart').getContext('2d');
+            categoryPieChart = new Chart(categoryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: budgetData.categories.map(c => c.name),
+                    datasets: [{
+                        data: budgetData.categories.map(c => c.spent),
+                        backgroundColor: budgetData.categories.map(c => c.color),
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // Update legend
+            updateCategoryLegend();
+
+            // Trend Chart
+            const trendCtx = document.getElementById('trendChart').getContext('2d');
+            trendChart = new Chart(trendCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [
+                        {
+                            label: 'Pemasukan',
+                            data: [3000000, 3000000, 3200000, 3000000, 3000000, 3500000],
+                            backgroundColor: '#10b981'
+                        },
+                        {
+                            label: 'Pengeluaran',
+                            data: [1850000, 2100000, 1950000, 1800000, 1700000, 1650000],
+                            backgroundColor: '#ef4444'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Budget vs Actual Chart
+            const budgetCtx = document.getElementById('budgetVsActualChart').getContext('2d');
+            budgetVsActualChart = new Chart(budgetCtx, {
+                type: 'bar',
+                data: {
+                    labels: budgetData.categories.map(c => c.name),
+                    datasets: [
+                        {
+                            label: 'Budget',
+                            data: budgetData.categories.map(c => c.budget),
+                            backgroundColor: '#d1d5db'
+                        },
+                        {
+                            label: 'Actual',
+                            data: budgetData.categories.map(c => c.spent),
+                            backgroundColor: budgetData.categories.map(c => c.color)
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateCategoryLegend() {
+            const legendContainer = document.getElementById('category-legend');
+            legendContainer.innerHTML = budgetData.categories.map(c => `
+                <div class="flex items-center">
+                    <div class="w-3 h-3 rounded-full mr-2" style="background-color: ${c.color}"></div>
+                    <span class="text-sm text-gray-600">${c.name}</span>
+                    <span class="text-sm font-medium ml-auto">Rp ${c.spent.toLocaleString('id-ID')}</span>
+                </div>
+            `).join('');
+        }
+
+        // Update overview stats
+        function updateStats() {
+            const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+            const totalExpense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+            const totalSaving = totalIncome - totalExpense;
+            const savingRate = totalIncome > 0 ? Math.round((totalSaving / totalIncome) * 100) : 0;
+
+            document.getElementById('total-income').textContent = 'Rp ' + totalIncome.toLocaleString('id-ID');
+            document.getElementById('total-expense').textContent = 'Rp ' + totalExpense.toLocaleString('id-ID');
+            document.getElementById('total-saving').textContent = 'Rp ' + totalSaving.toLocaleString('id-ID');
+            document.getElementById('saving-rate').textContent = savingRate + '%';
+
+            // Update saving rate color
+            const savingRateEl = document.getElementById('saving-rate');
+            if (savingRate >= 20) {
+                savingRateEl.className = 'text-2xl font-bold text-purple-600';
+            } else if (savingRate >= 10) {
+                savingRateEl.className = 'text-2xl font-bold text-yellow-600';
+            } else {
+                savingRateEl.className = 'text-2xl font-bold text-red-600';
+            }
+        }
+
+        // Update transaction table
+        function updateTransactionTable(filter = 'all') {
+            const tbody = document.getElementById('transaction-table');
+            let filtered = transactions;
+
+            if (filter !== 'all') {
+                filtered = transactions.filter(t => t.category === filter);
+            }
+
+            // Sort by date descending
+            filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            tbody.innerHTML = filtered.slice(0, 10).map(t => {
+                const isIncome = t.type === 'income';
+                const categoryNames = {
+                    'food': 'Makanan', 'transport': 'Transportasi', 'shopping': 'Belanja',
+                    'entertainment': 'Hiburan', 'bills': 'Tagihan', 'allowance': 'Uang Saku'
+                };
+                
+                return `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="py-3 text-sm">${formatDate(t.date)}</td>
+                        <td class="py-3 text-sm font-medium">${t.desc}</td>
+                        <td class="py-3 text-sm"><span class="px-2 py-1 bg-gray-100 rounded text-xs">${categoryNames[t.category] || t.category}</span></td>
+                        <td class="py-3 text-sm"><span class="px-2 py-1 rounded text-xs ${isIncome ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">${isIncome ? 'Pemasukan' : 'Pengeluaran'}</span></td>
+                        <td class="py-3 text-sm text-right font-medium ${isIncome ? 'text-green-600' : 'text-red-600'}">${isIncome ? '+' : '-'}Rp ${t.amount.toLocaleString('id-ID')}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        // Update weekly pattern
+        function updateWeeklyPattern() {
+            const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+            const expenses = [150000, 85000, 120000, 95000, 200000, 350000, 180000];
+            const maxExpense = Math.max(...expenses);
+
+            const container = document.getElementById('weekly-pattern');
+            container.innerHTML = days.map((day, i) => {
+                const percent = (expenses[i] / maxExpense) * 100;
+                const color = percent > 70 ? 'bg-red-500' : percent > 40 ? 'bg-yellow-500' : 'bg-emerald-500';
+                
+                return `
+                    <div class="flex items-center">
+                        <span class="w-12 text-sm text-gray-600">${day}</span>
+                        <div class="flex-1 mx-2 h-4 bg-gray-100 rounded overflow-hidden">
+                            <div class="${color} h-full transition-all duration-500" style="width: ${percent}%"></div>
+                        </div>
+                        <span class="text-xs text-gray-500 w-16 text-right">Rp ${expenses[i].toLocaleString('id-ID')}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Filter transactions
+        function filterTransactions() {
+            const filter = document.getElementById('filter-category').value;
+            updateTransactionTable(filter);
+        }
+
+        // Period selector
+        let currentPeriod = 'month';
+
+        function setPeriod(period) {
+            currentPeriod = period;
+            
+            // Update button styles
+            document.querySelectorAll('.period-btn').forEach(btn => {
+                if (btn.dataset.period === period) {
+                    btn.className = 'period-btn px-4 py-2 rounded-lg font-medium transition bg-emerald-100 text-emerald-700';
+                } else {
+                    btn.className = 'period-btn px-4 py-2 rounded-lg font-medium transition bg-gray-100 text-gray-700 hover:bg-gray-200';
+                }
+            });
+
+            // Update data based on period (in real app, this would fetch from API)
+            updateStats();
+            updateTransactionTable();
+        }
+
+        function changePeriod(direction) {
+            // In real app, this would change the date range
+            console.log('Change period:', direction);
+        }
+
+        // AI Recommendation Modal
+        function openAIRecommendation() {
+            document.getElementById('ai-modal').classList.remove('hidden');
+            generateAIResponse();
+        }
+
+        function closeAIRecommendation() {
+            document.getElementById('ai-modal').classList.add('hidden');
+        }
+
+        async function generateAIResponse() {
+            const aiResponse = document.getElementById('ai-response');
+            
+            // Show loading
+            aiResponse.innerHTML = `
+                <div class="flex items-start mb-4">
+                    <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2 mt-1">
+                        <i class="fas fa-robot text-emerald-600 text-sm"></i>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-lg rounded-tl-none">
+                        <p class="text-sm"><i class="fas fa-spinner fa-spin mr-2"></i>Menganalisis data keuangan Anda...</p>
+                    </div>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: [
+                            {
+                                role: "user",
+                                content: `Anda adalah asisten AI Dompetin yang menganalisis keuangan. 
+                                Berikut data keuangan user:
+                                - Total Pemasukan: Rp 3.000.000/bulan
+                                - Total Pengeluaran: Rp 1.850.000/bulan
+                                - Tabungan: Rp 1.150.000/bulan (38%)
+                                - Budget per kategori:
+                                  * Food: Rp 850.000 terpakai dari Rp 1.350.000
+                                  * Transport: Rp 250.000 terpakai dari Rp 450.000
+                                  * Entertainment: Rp 350.000 terpakai dari Rp 450.000
+                                  * Bills: Rp 200.000 terpakai dari Rp 300.000
+                                  * Shopping: Rp 200.000 terpakai dari Rp 450.000
+                                
+                                Berikan analisis keuangan singkat (3-4 poin) dalam Bahasa Indonesia dengan emoji yang sesuai.`
+                            }
+                        ]
+                    })
+                });
+
+                const data = await response.json();
+                
+                aiResponse.innerHTML = `
+                    <div class="flex items-start mb-4">
+                        <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2 mt-1">
+                            <i class="fas fa-robot text-emerald-600 text-sm"></i>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg rounded-tl-none max-w-[85%]">
+                            <p class="text-sm text-gray-800 whitespace-pre-line">${data.response}</p>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                // Fallback response
+                aiResponse.innerHTML = `
+                    <div class="flex items-start mb-4">
+                        <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2 mt-1">
+                            <i class="fas fa-robot text-emerald-600 text-sm"></i>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg rounded-tl-none max-w-[85%]">
+                            <p class="text-sm text-gray-800">📊 <strong>Analisis Keuangan Anda:</strong></p>
+                            <p class="text-sm text-gray-800 mt-2">
+✅ <strong>Saving Rate Excellent!</strong><br>
+Tabungan 38% jauh di atas target 20%. Pertahankan!</p>
+                            <p class="text-sm text-gray-800 mt-2">
+⚠️ <strong>Hati-hati dengan Hiburan</strong><br>
+Pengeluaran hiburan 78% dari budget. Kurangi spending untuk entertainment.</p>
+                            <p class="text-sm text-gray-800 mt-2">
+💡 <strong>Rekomendasi:</strong><br>
+Alihkan 5% dari budget entertainment ke tabungan darurat.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // AI form submission
+        document.getElementById('ai-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const input = document.getElementById('ai-input').value;
+            if (!input) return;
+
+            const aiResponse = document.getElementById('ai-response');
+            
+            // Add user message
+            aiResponse.innerHTML += `
+                <div class="flex justify-end mb-4">
+                    <div class="bg-emerald-500 text-white p-3 rounded-lg rounded-tr-none max-w-[80%]">
+                        <p class="text-sm">${input}</p>
+                    </div>
+                </div>
+                <div class="flex items-start mb-4">
+                    <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2 mt-1">
+                        <i class="fas fa-robot text-emerald-600 text-sm"></i>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-lg rounded-tl-none">
+                        <p class="text-sm"><i class="fas fa-spinner fa-spin mr-2"></i>Memproses...</p>
+                    </div>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: [
+                            {
+                                role: "user",
+                                content: `Anda adalah asisten AI Dompetin. User bertanya: "${input}". 
+                                Jawab dalam Bahasa Indonesia yang helpful dan friendly.`
+                            }
+                        ]
+                    })
+                });
+
+                const data = await response.json();
+                
+                // Update with response
+                const messages = aiResponse.querySelectorAll('.fa-spinner');
+                messages.forEach(s => s.parentElement.parentElement.remove());
+                
+                aiResponse.innerHTML += `
+                    <div class="flex items-start mb-4">
+                        <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2 mt-1">
+                            <i class="fas fa-robot text-emerald-600 text-sm"></i>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg rounded-tl-none max-w-[85%]">
+                            <p class="text-sm text-gray-800">${data.response}</p>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                const messages = aiResponse.querySelectorAll('.fa-spinner');
+                messages.forEach(s => s.parentElement.parentElement.remove());
+                
+                aiResponse.innerHTML += `
+                    <div class="flex items-start mb-4">
+                        <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2 mt-1">
+                            <i class="fas fa-robot text-emerald-600 text-sm"></i>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg rounded-tl-none">
+                            <p class="text-sm text-gray-800">Maaf, terjadi kesalahan. Pastikan API key OpenAI sudah dikonfigurasi dengan benar.</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('ai-input').value = '';
+            aiResponse.parentElement.scrollTop = aiResponse.parentElement.scrollHeight;
+        });
+
+        // Export functions
+        function exportReport(format) {
+            if (format === 'csv') {
+                let csv = 'Tanggal,Deskripsi,Kategori,Tipe,Jumlah\n';
+                transactions.forEach(t => {
+                    csv += `${t.date},${t.desc},${t.category},${t.type},${t.amount}\n`;
+                });
+                
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'dompetin-report.csv';
+                a.click();
+            } else if (format === 'pdf') {
+                alert('Fitur export PDF akan segera tersedia!');
+            }
+        }
+
+        function printReport() {
+            window.print();
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('ai-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAIRecommendation();
+            }
+        });
+
+// Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            updateStats();
+            updateTransactionTable();
+            updateWeeklyPattern();
+        });
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+    </script>
+
+    <script src="static/notifications.js"></script>
+    <script src="static/i18n.js"></script>
+</body>
+</html>
+

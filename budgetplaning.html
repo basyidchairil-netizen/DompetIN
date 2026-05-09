@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Planning - Dompetin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            300: '#6ee7b7',
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .sidebar-link {
+            transition: all 0.3s ease;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+    </style>
+</head>
+<body class="bg-emerald-50 text-gray-800">
+    <!-- Sidebar -->
+    <div class="flex flex-col md:flex-row">
+        <!-- Hamburger Menu for Mobile -->
+        <div class="md:hidden bg-emerald-700 text-white p-4 flex justify-between items-center sticky top-0 z-[60]">
+            <h1 class="text-xl font-bold">Dompetin</h1>
+            <button onclick="toggleSidebar()" class="p-2 text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <div id="sidebar" class="w-64 bg-emerald-700 text-white h-screen fixed dark:bg-emerald-800 transition-transform duration-300 transform -translate-x-full md:translate-x-0 z-[50]">
+            <div class="p-4">
+                <h1 class="text-2xl font-bold">Dompetin</h1>
+            </div>
+            <nav class="mt-8">
+                <a href="dashboard.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-home mr-3"></i>Home
+                </a>
+                <a href="incomeTracking.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-money-bill-wave mr-3"></i>Income Tracking
+                </a>
+                <a href="budgetplaning.html" class="sidebar-link block py-2 px-4 bg-emerald-600">
+                    <i class="fas fa-chart-pie mr-3"></i>Budget Planning
+                </a>
+<a href="analysis.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-chart-line mr-3"></i>Analysis
+                </a>
+                <a href="profile.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-user mr-3"></i>Profile
+                </a>
+                <a href="index.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600 mt-8">
+                    <i class="fas fa-sign-out-alt mr-3"></i>Logout
+                </a>
+            </nav>
+        </div>
+        <!-- Overlay for Mobile -->
+        <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-[40]"></div>
+
+        <!-- Main Content -->
+        <div class="flex-1 md:ml-64 p-4 md:p-8">
+            <!-- Header -->
+            <div class="mb-8">
+                <h2 class="text-4xl font-bold text-gray-900 mb-2">Budget Planning</h2>
+                <p class="text-lg text-gray-600">Plan and manage your monthly budgets by category</p>
+            </div>
+
+            <!-- Month Selector -->
+            <div class="flex items-center justify-between mb-8">
+                <button class="bg-white px-4 py-2 rounded-lg shadow hover:shadow-md transition" onclick="changeMonth(-1)">
+                    <i class="fas fa-chevron-left text-emerald-600"></i>
+                </button>
+                <h3 class="text-2xl font-semibold" id="current-month">January 2024</h3>
+                <button class="bg-white px-4 py-2 rounded-lg shadow hover:shadow-md transition" onclick="changeMonth(1)">
+                    <i class="fas fa-chevron-right text-emerald-600"></i>
+                </button>
+            </div>
+
+            <!-- Budget Overview Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-wallet text-emerald-600 text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-500">Total Budget</p>
+                            <div class="flex items-center">
+                                <p class="text-2xl font-bold text-gray-900" id="total-budget">Rp 3.000.000</p>
+                                <button onclick="openEditBudgetModal()" class="ml-2 text-emerald-600 hover:text-emerald-800">
+                                    <i class="fas fa-edit text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-arrow-up text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Total Spent</p>
+                            <p class="text-2xl font-bold text-green-600" id="total-spent">Rp 1.850.000</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-piggy-bank text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Remaining</p>
+                            <p class="text-2xl font-bold text-blue-600" id="total-remaining">Rp 1.150.000</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-percentage text-purple-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Budget Used</p>
+                            <p class="text-2xl font-bold text-purple-600" id="budget-used">62%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Budget Categories List -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-2xl font-semibold">Budget Categories</h3>
+                            <button onclick="openBudgetModal()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition">
+                                <i class="fas fa-plus mr-2"></i>Add Category
+                            </button>
+                        </div>
+                        
+                        <!-- Category Items -->
+                        <div class="space-y-4" id="budget-categories">
+                            <!-- Uang Makan -->
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center mr-3">
+                                            <i class="fas fa-utensils text-orange-600"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold">Food/Dining</h4>
+                                            <p class="text-sm text-gray-500">Rp 0 / Rp 1.500.000</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-sm font-medium text-green-600">0%</span>
+                                    </div>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-orange-500 h-2 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Transportasi -->
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                            <i class="fas fa-car text-blue-600"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold">Transportasi</h4>
+                                            <p class="text-sm text-gray-500">Rp 0 / Rp 450.000</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-sm font-medium text-green-600">0%</span>
+                                    </div>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-blue-500 h-2 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Paket Kuota -->
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 bg-cyan-100 rounded-full flex items-center justify-center mr-3">
+                                            <i class="fas fa-wifi text-cyan-600"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold">Paket Kuota</h4>
+                                            <p class="text-sm text-gray-500">Rp 0 / Rp 100.000</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-sm font-medium text-green-600">0%</span>
+                                    </div>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-cyan-500 h-2 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Shopping & Hiburan -->
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center mr-3">
+                                            <i class="fas fa-shopping-bag text-pink-600"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold">Shopping & Hiburan</h4>
+                                            <p class="text-sm text-gray-500">Rp 0 / Rp 650.000</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-sm font-medium text-green-600">0%</span>
+                                    </div>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-pink-500 h-2 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Tabungan -->
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                            <i class="fas fa-piggy-bank text-green-600"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold">Tabungan</h4>
+                                            <p class="text-sm text-gray-500">Rp 0 / Rp 300.000</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-sm font-medium text-green-600">0%</span>
+                                    </div>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Smart Saving Section (New Feature) -->
+                    <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-2xl font-semibold">Smart Saving Goals 🎯</h3>
+                            <button onclick="openSavingModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                                <i class="fas fa-plus mr-2"></i>Add Goal
+                            </button>
+                        </div>
+                        <div id="saving-goals-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Saving goals will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Side - Budget Tips & Summary -->
+                <div class="space-y-6">
+                    <!-- Budget Status -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">Budget Status</h3>
+                        <div class="flex justify-center mb-4">
+                            <div class="relative w-40 h-40">
+                                <svg class="w-full h-full progress-ring" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb" stroke-width="10"/>
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#10b981" stroke-width="10" 
+                                        stroke-dasharray="283" stroke-dashoffset="107" stroke-linecap="round"/>
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center flex-col">
+                                    <span class="text-3xl font-bold text-emerald-600">62%</span>
+                                    <span class="text-sm text-gray-500">Used</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-gray-600">You have <span class="font-bold text-emerald-600">Rp 1.150.000</span> remaining this month</p>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Budget Assistant - Professional Design -->
+                    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-5">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full flex items-center justify-center mr-3 shadow-md">
+                                <i class="fas fa-robot text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-emerald-800">AI Budget Assistant</h3>
+                                <p class="text-xs text-emerald-600">Asisten keuangan pintar</p>
+                            </div>
+                        </div>
+                        <p class="text-emerald-700 text-sm mb-4">Tanyakan langsung kepada AI tentang tips budget yang sesuai dengan kondisi keuangan Anda!</p>
+                        <div class="space-y-2">
+                            <button onclick="askAI('tips hemat')" class="w-full text-left bg-white p-3 rounded-lg text-sm hover:bg-emerald-100 transition border border-emerald-200 flex items-center">
+                                <span class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                    <i class="fas fa-lightbulb text-yellow-600 text-xs"></i>
+                                </span>
+                                <span class="text-gray-700">Tips hemat keuangan</span>
+                            </button>
+                            <button onclick="askAI('analisis budget')" class="w-full text-left bg-white p-3 rounded-lg text-sm hover:bg-emerald-100 transition border border-emerald-200 flex items-center">
+                                <span class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                    <i class="fas fa-chart-pie text-blue-600 text-xs"></i>
+                                </span>
+                                <span class="text-gray-700">Analisis budget saya</span>
+                            </button>
+                            <button onclick="askAI('tips menabung')" class="w-full text-left bg-white p-3 rounded-lg text-sm hover:bg-emerald-100 transition border border-emerald-200 flex items-center">
+                                <span class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                    <i class="fas fa-piggy-bank text-purple-600 text-xs"></i>
+                                </span>
+                                <span class="text-gray-700">Tips menabung</span>
+                            </button>
+                        </div>
+                        <button onclick="toggleChat()" class="w-full mt-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-3 px-4 rounded-lg hover:from-emerald-600 hover:to-teal-600 transition shadow-md font-medium">
+                            <i class="fas fa-comments mr-2"></i>Buka Chat
+                        </button>
+                    </div>
+                    
+                    <!-- Tips -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">Budget Tips</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-start">
+                                <i class="fas fa-lightbulb text-yellow-500 mr-3 mt-1"></i>
+                                <p class="text-sm text-gray-600">Try the 50/30/20 rule: 50% needs, 30% wants, 20% savings</p>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-lightbulb text-yellow-500 mr-3 mt-1"></i>
+                                <p class="text-sm text-gray-600">Review your spending weekly to stay on track</p>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-lightbulb text-yellow-500 mr-3 mt-1"></i>
+                                <p class="text-sm text-gray-600">Set aside unspent budget for emergency funds</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+<!-- Quick Actions -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">Quick Actions</h3>
+                        <div class="space-y-2">
+                            <button onclick="openBudgetModal()" class="w-full bg-emerald-100 text-emerald-700 py-2 px-4 rounded-lg hover:bg-emerald-200 transition text-left">
+                                <i class="fas fa-plus-circle mr-2"></i>Add Budget Category
+                            </button>
+                            <button class="w-full bg-blue-100 text-blue-700 py-2 px-4 rounded-lg hover:bg-blue-200 transition text-left">
+                                <i class="fas fa-download mr-2"></i>Export Budget Report
+                            </button>
+                            <button class="w-full bg-purple-100 text-purple-700 py-2 px-4 rounded-lg hover:bg-purple-200 transition text-left">
+                                <i class="fas fa-copy mr-2"></i>Copy from Last Month
+                            </button>
+                            <button onclick="toggleChat()" class="w-full bg-amber-100 text-amber-700 py-2 px-4 rounded-lg hover:bg-amber-200 transition text-left">
+                                <i class="fas fa-robot mr-2"></i>AI Assistant (Ollama)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Add Budget Category Modal -->
+    <div id="budget-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-4">Add Budget Category</h3>
+            <form id="budget-form">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Category Name</label>
+                    <select id="category-select" class="w-full p-2 border rounded-lg" required onchange="handleCategoryChange()">
+                        <option value="">Select Category</option>
+                        <option value="uangmakan">Uang Makan</option>
+                        <option value="transportasi">Transportasi</option>
+                        <option value="paketkuota">Paket Kuota</option>
+                        <option value="shoppinghiburan">Shopping & Hiburan</option>
+                        <option value="tabungan">Tabungan</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="mb-4 hidden" id="other-name-container">
+                    <label class="block text-sm font-medium mb-2">Custom Category Name</label>
+                    <input type="text" id="other-name" class="w-full p-2 border rounded-lg" placeholder="Enter category name">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Monthly Budget Amount (Rp)</label>
+                    <input type="number" id="budget-amount" class="w-full p-2 border rounded-lg" placeholder="e.g. 500000" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Notes (Optional)</label>
+                    <textarea id="budget-notes" class="w-full p-2 border rounded-lg" rows="2" placeholder="Add any notes..."></textarea>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeBudgetModal()">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Save Budget</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Ollama Chat Modal - Professional & Responsive -->
+    <div id="chat-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl h-[80vh] max-h-[700px] flex flex-col overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-4 flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-robot text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold">AI Budget Assistant</h3>
+                        <p class="text-xs text-emerald-100"><span class="w-2 h-2 bg-green-400 rounded-full inline-block mr-1"></span>Online • Siap membantu</p>
+                    </div>
+                </div>
+                <button onclick="toggleChat()" class="text-white hover:text-emerald-200 transition p-2">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Chat Messages -->
+            <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-gray-50">
+                <!-- Welcome Message -->
+                <div class="mb-4">
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2 mt-1 flex-shrink-0">
+                            <i class="fas fa-robot text-emerald-600 text-sm"></i>
+                        </div>
+                        <div class="bg-white p-3 rounded-lg rounded-tl-none shadow-sm max-w-[85%]">
+                            <p class="text-sm text-gray-800">Halo! 👋 Saya asisten AI Dompetin. Ada yang bisa saya bantu tentang perencanaan budget keuangan Anda?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Reply Buttons -->
+            <div class="px-4 pb-2 flex gap-2 flex-wrap">
+                <button onclick="askAI('tips hemat')" class="text-xs bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full hover:bg-emerald-100 transition border border-emerald-200">
+                    💡 Tips hemat
+                </button>
+                <button onclick="askAI('analisis budget')" class="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full hover:bg-blue-100 transition border border-blue-200">
+                    📊 Analisis budget
+                </button>
+                <button onclick="askAI('tips menabung')" class="text-xs bg-purple-50 text-purple-700 px-3 py-1.5 rounded-full hover:bg-purple-100 transition border border-purple-200">
+                    💰 Tips menabung
+                </button>
+            </div>
+            
+            <!-- Input Form -->
+            <div class="p-4 border-t bg-white">
+                <form id="chat-form" class="flex gap-2">
+                    <input type="text" id="chat-input" class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent" placeholder="Tulis pertanyaan Anda..." required>
+                    <button type="submit" class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-6 py-3 rounded-xl hover:from-emerald-600 hover:to-emerald-700 transition shadow-lg">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @media (max-width: 640px) {
+            #chat-modal .max-w-2xl {
+                max-width: 100% !important;
+                h-height: 90vh !important;
+            }
+            #chat-messages {
+                padding: 12px !important;
+            }
+            #chat-form {
+                padding: 12px !important;
+            }
+            #chat-form input {
+                padding: 10px 14px !important;
+            }
+            #chat-form button {
+                padding: 10px 16px !important;
+            }
+        }
+    </style>
+
+    <!-- Smart Saving Modal -->
+    <div id="saving-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-4">Add Saving Goal 🚀</h3>
+            <form id="saving-form">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Apa yang ingin kamu beli?</label>
+                    <input type="text" id="saving-item" class="w-full p-2 border rounded-lg" placeholder="e.g. iPhone 16" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Harga Target (Rp)</label>
+                    <input type="number" id="saving-target" class="w-full p-2 border rounded-lg" placeholder="e.g. 15000000" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Tabungan Saat Ini (Rp)</label>
+                    <input type="number" id="saving-current" class="w-full p-2 border rounded-lg" value="0">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Target Tanggal Tercapai</label>
+                    <input type="date" id="saving-date" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div id="smart-saving-result" class="mb-4 p-3 bg-blue-50 rounded-lg hidden">
+                    <p class="text-sm text-blue-800" id="saving-calc-text"></p>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeSavingModal()">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Save Goal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Smart Saving Modal -->
+    <div id="saving-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-4">Add Saving Goal 🚀</h3>
+            <form id="saving-form">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Apa yang ingin kamu beli?</label>
+                    <input type="text" id="saving-item" class="w-full p-2 border rounded-lg" placeholder="e.g. iPhone 16" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Harga Target (Rp)</label>
+                    <input type="number" id="saving-target" class="w-full p-2 border rounded-lg" placeholder="e.g. 15000000" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Tabungan Saat Ini (Rp)</label>
+                    <input type="number" id="saving-current" class="w-full p-2 border rounded-lg" value="0">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Target Tanggal Tercapai</label>
+                    <input type="date" id="saving-date" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div id="smart-saving-result" class="mb-4 p-3 bg-blue-50 rounded-lg hidden">
+                    <p class="text-sm text-blue-800" id="saving-calc-text"></p>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeSavingModal()">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Save Goal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Savings Modal -->
+    <div id="add-savings-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-2">Tambah Tabungan 💰</h3>
+            <p id="add-savings-item-name" class="text-sm text-gray-600 mb-4"></p>
+            <form id="add-savings-form">
+                <input type="hidden" id="add-savings-goal-id">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Jumlah yang ditabung (Rp)</label>
+                    <input type="number" id="add-savings-amount" class="w-full p-2 border rounded-lg" placeholder="e.g. 50000" required>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeAddSavingsModal()">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Simpan Tabungan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+
+
+    <!-- Edit Total Budget Modal -->
+    <div id="edit-budget-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-4">Edit Total Budget</h3>
+            <form id="edit-budget-form">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Total Monthly Budget (Rp)</label>
+                    <input type="number" id="edit-total-budget" class="w-full p-2 border rounded-lg" placeholder="e.g. 3000000" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">
+                        <input type="checkbox" id="auto-allocate" class="mr-2" checked>
+                        Auto-alocate categories (50/30/20 rule)
+                    </label>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeEditBudgetModal()">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Update Budget</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Month navigation
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                        'July', 'August', 'September', 'October', 'November', 'December'];
+        let currentMonthIndex = 0;
+        let currentYear = 2024;
+
+        function changeMonth(direction) {
+            currentMonthIndex += direction;
+            if (currentMonthIndex > 11) {
+                currentMonthIndex = 0;
+                currentYear++;
+            } else if (currentMonthIndex < 0) {
+                currentMonthIndex = 11;
+                currentYear--;
+            }
+            document.getElementById('current-month').textContent = months[currentMonthIndex] + ' ' + currentYear;
+        }
+
+        // Modal functions
+        function openBudgetModal() {
+            document.getElementById('budget-modal').classList.remove('hidden');
+        }
+
+        function closeBudgetModal() {
+            document.getElementById('budget-modal').classList.add('hidden');
+        }
+
+        // Form submission
+        document.getElementById('budget-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const category = document.getElementById('category-select').value;
+            const amount = document.getElementById('budget-amount').value;
+            const notes = document.getElementById('budget-notes').value;
+            
+            if (category && amount) {
+                alert('Budget added successfully!\nCategory: ' + category + '\nAmount: Rp ' + parseInt(amount).toLocaleString('id-ID'));
+                closeBudgetModal();
+                // Reset form
+                this.reset();
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('budget-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBudgetModal();
+            }
+        });
+
+// Initialize
+        document.getElementById('current-month').textContent = months[currentMonthIndex] + ' ' + currentYear;
+
+        // Chat functions
+        function toggleChat() {
+            const chatModal = document.getElementById('chat-modal');
+            chatModal.classList.toggle('hidden');
+        }
+
+        // Ask AI function for quick questions
+        async function askAI(question) {
+            const chatMessages = document.getElementById('chat-messages');
+            
+            // Open chat if hidden
+            const chatModal = document.getElementById('chat-modal');
+            if (chatModal.classList.contains('hidden')) {
+                chatModal.classList.remove('hidden');
+            }
+            
+            // Map questions to prompts
+            const questionPrompts = {
+                'tips hemat': 'Berikan tips hemat keuangan untuk mahasiswa dengan budget Rp 3.000.000 per bulan',
+                'analisis budget': 'Analisis budget Rp 3.000.000 per bulan dengan alokasi: Food/Dining Rp 1.350.000, Transportasi Rp 450.000, Paket Kuota Rp 150.000, Shopping & Hiburan Rp 450.000, Tabungan Rp 600.000. Apakah sudah optimal?',
+                'tips menabung': 'Berikan tips menabung yang efektif untuk mahasiswa dengan income Rp 3.000.000 per bulan'
+            };
+            
+            const message = questionPrompts[question] || question;
+            
+                // Add user message
+            chatMessages.innerHTML += `
+                <div class="mb-4 flex justify-end">
+                    <div class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-3 rounded-lg rounded-tr-none shadow-md max-w-[80%]">
+                        <p class="text-sm">${message}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Show loading
+            chatMessages.innerHTML += `
+                <div class="mb-4">
+                    <div class="bg-amber-100 p-3 rounded-lg inline-block">
+                        <p class="text-sm text-gray-800"><i class="fas fa-spinner fa-spin mr-2"></i>AI sedang mengetik...</p>
+                    </div>
+                </div>
+            `;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            try {
+                // Call Ollama API
+                const response = await fetch('http://localhost:11434/api/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        model: 'llama3',
+                        prompt: `Anda adalah asisten AI Dompetin yang membantu perencanaan budget. 
+                        Berikan jawaban yang helpful, friendly, dan dalam Bahasa Indonesia. 
+                        Konteks: user memiliki budget Rp 3.000.000/bulan dengan kategori: 
+                        - Food/Dining: Rp 1.350.000
+                        - Transportasi: Rp 450.000
+                        - Paket Kuota: Rp 150.000
+                        - Shopping & Hiburan: Rp 450.000
+                        - Tabungan: Rp 600.000
+                        
+                        Pertanyaan user: ${message}`,
+                        stream: false
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Remove loading message
+                const loadingMsg = chatMessages.querySelector('.fa-spinner');
+                if (loadingMsg) loadingMsg.parentElement.parentElement.remove();
+                
+                // Add AI response
+                chatMessages.innerHTML += `
+                    <div class="mb-4">
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full flex items-center justify-center mr-2 mt-1 flex-shrink-0">
+                                <i class="fas fa-robot text-white text-sm"></i>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg rounded-tl-none shadow-md border border-gray-100 max-w-[85%]">
+                                <p class="text-sm text-gray-800">${data.response}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } catch (error) {
+                // Remove loading message
+                const loadingMsg = chatMessages.querySelector('.fa-spinner');
+                if (loadingMsg) loadingMsg.parentElement.parentElement.remove();
+                
+                // Fallback responses
+                const fallbackResponses = {
+                    'tips hemat': "Berikut tips hemat keuangan untuk Anda:\n\n1. Masak sendiri di kos - bisa hemat hingga Rp 500.000/bulan\n2. Gunakan transportasi publik atau berbagi rides\n3. Beli paket data yang sesuai kebutuhan\n4. Batasi jajan di luar maksimal 2x/minggu\n5. Catat setiap pengeluaran dengan Dompetin",
+                    'analisis budget': "Analisis budget Anda:\n\n✅ Alokasi sudah cukup baik\n• Food 45% = Rp 1.350.000 (cukup untuk makan 3x sehari)\n• Transport 15% = Rp 450.000 (cukup untuk commuting)\n• Tabungan 20% = Rp 600.000 (sesuai standar)\n\n💡 Saran: Pertahankan pola ini dan evaluasi setiap bulan!",
+                    'tips menabung': "Tips menabung efektif:\n\n1. Sisihkan 20% langsung saat terima uang\n2. Simpan di rekening terpisah\n3. Gunakan metode uang封 (envelope)\n4. Tetapkan target tabungan bulanan\n5. Jangan pernah蹭 tabungan untuk hal non-darurat!"
+                };
+                
+                const response = fallbackResponses[question] || "Maaf, terjadi kesalahan. Pastikan Ollama server sedang berjalan.";
+                
+                chatMessages.innerHTML += `
+                    <div class="mb-4">
+                        <div class="bg-amber-100 p-3 rounded-lg inline-block max-w-[80%]">
+                            <p class="text-sm text-gray-800">${response}</p>
+                        </div>
+                    </div>
+                `;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
+// Chat form submission
+        document.getElementById('chat-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            // Add user message
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.innerHTML += `
+                <div class="mb-4 flex justify-end">
+                    <div class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-3 rounded-lg rounded-tr-none shadow-md max-w-[80%]">
+                        <p class="text-sm">${message}</p>
+                    </div>
+                </div>
+            `;
+
+            // Clear input
+            input.value = '';
+
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Show loading
+            chatMessages.innerHTML += `
+                <div class="mb-4">
+                    <div class="bg-amber-100 p-3 rounded-lg inline-block">
+                        <p class="text-sm text-gray-800"><i class="fas fa-spinner fa-spin mr-2"></i>AI sedang mengetik...</p>
+                    </div>
+                </div>
+            `;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                // Call Ollama API
+                const response = await fetch('http://localhost:11434/api/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        model: 'llama3',
+                        prompt: `Anda adalah asisten AI Dompetin yang membantu perencanaan budget. 
+                        Berikan jawaban yang helpful, friendly, dan dalam Bahasa Indonesia. 
+                        Konteks: user memiliki budget Rp 3.000.000/bulan dengan kategori: 
+                        - Food/Dining: Rp 1.350.000
+                        - Transportasi: Rp 450.000
+                        - Paket Kuota: Rp 150.000
+                        - Shopping & Hiburan: Rp 450.000
+                        - Tabungan: Rp 600.000
+                        
+                        Pertanyaan user: ${message}`,
+                        stream: false
+                    })
+                });
+
+                const data = await response.json();
+                
+                // Remove loading message
+                const loadingMsg = chatMessages.querySelector('.fa-spinner');
+                if (loadingMsg) loadingMsg.parentElement.parentElement.remove();
+
+                // Add AI response
+                chatMessages.innerHTML += `
+                    <div class="mb-4">
+                        <div class="bg-amber-100 p-3 rounded-lg inline-block max-w-[80%]">
+                            <p class="text-sm text-gray-800">${data.response}</p>
+                        </div>
+                    </div>
+                `;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } catch (error) {
+                // Remove loading message
+                const loadingMsg = chatMessages.querySelector('.fa-spinner');
+                if (loadingMsg) loadingMsg.parentElement.parentElement.remove();
+
+                // Fallback response
+                const fallbackResponses = [
+                    "Maaf, terjadi kesalahan saat menghubungkan ke Ollama. Pastikan server Ollama sedang berjalan.",
+                    "Berdasarkan budget Anda Rp 3.000.000, saya sarankan mengalokasikan: 45% untuk Uang Makan (Rp 1.350.000), 15% untuk Transportasi (Rp 450.000), 5% untuk Paket Kuota (Rp 150.000), 15% untuk Shopping & Hiburan (Rp 450.000), dan 20% untuk Tabungan (Rp 600.000).",
+                    "Tips menabung: Sisihkan 20% dari income Rp 3.000.000 yaitu Rp 600.000 setiap bulan.",
+                    "Anda masih memiliki sisa budget Rp 1.150.000 bulan ini. Pastikan tidak melebihi limit!"
+                ];
+                const randomResponse = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+                
+                chatMessages.innerHTML += `
+                    <div class="mb-4">
+                        <div class="bg-amber-100 p-3 rounded-lg inline-block max-w-[80%]">
+                            <p class="text-sm text-gray-800">${randomResponse}</p>
+                        </div>
+                    </div>
+                `;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        });
+
+        // Close chat modal when clicking outside
+        document.getElementById('chat-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                toggleChat();
+            }
+        });
+
+        // Budget data - can be updated
+        let budgetData = {
+            totalBudget: 3000000,
+            totalSpent: 1850000,
+            categories: [
+                { name: 'Food/Dining', spent: 0, budget: 1500000, icon: 'utensils', color: 'orange' },
+                { name: 'Transportasi', spent: 0, budget: 450000, icon: 'car', color: 'blue' },
+                { name: 'Paket Kuota', spent: 0, budget: 100000, icon: 'wifi', color: 'cyan' },
+                { name: 'Shopping & Hiburan', spent: 0, budget: 650000, icon: 'shopping-bag', color: 'pink' },
+                { name: 'Tabungan', spent: 0, budget: 300000, icon: 'piggy-bank', color: 'green' }
+            ]
+        };
+
+        // Edit Budget Modal functions
+        function openEditBudgetModal() {
+            document.getElementById('edit-total-budget').value = budgetData.totalBudget;
+            document.getElementById('edit-budget-modal').classList.remove('hidden');
+        }
+
+        function closeEditBudgetModal() {
+            document.getElementById('edit-budget-modal').classList.add('hidden');
+        }
+
+        // Update budget calculations
+        function updateBudgetCalculations() {
+            // Calculate totalSpent from all category spent amounts
+            budgetData.totalSpent = budgetData.categories.reduce((sum, cat) => sum + cat.spent, 0);
+            
+            const remaining = budgetData.totalBudget - budgetData.totalSpent;
+            const usedPercent = budgetData.totalBudget > 0 ? Math.round((budgetData.totalSpent / budgetData.totalBudget) * 100) : 0;
+
+            // Update overview cards
+            document.getElementById('total-budget').textContent = 'Rp ' + budgetData.totalBudget.toLocaleString('id-ID');
+            document.getElementById('total-spent').textContent = 'Rp ' + budgetData.totalSpent.toLocaleString('id-ID');
+            document.getElementById('total-remaining').textContent = 'Rp ' + remaining.toLocaleString('id-ID');
+            document.getElementById('budget-used').textContent = usedPercent + '%';
+
+            // Update Budget Status section
+            const statusCircle = document.querySelector('.progress-ring circle:last-child');
+            if (statusCircle) {
+                const circumference = 283;
+                const offset = circumference - (circumference * usedPercent / 100);
+                statusCircle.setAttribute('stroke-dashoffset', offset);
+            }
+
+            // Update remaining text in status
+            const remainingText = document.querySelector('.text-center .text-emerald-600');
+            if (remainingText) {
+                remainingText.textContent = 'Rp ' + remaining.toLocaleString('id-ID');
+            }
+
+            // Update Budget Status percentage display
+            const statusPercent = document.querySelector('.progress-ring + div span:first-child');
+            if (statusPercent) {
+                statusPercent.textContent = usedPercent + '%';
+            }
+
+            // Update categories display
+            updateCategoriesDisplay();
+        }
+
+        // Auto-allocate categories using 50/30/20 rule
+        function autoAllocateBudget(totalBudget) {
+            const needs = totalBudget * 0.50; // 50% needs (food, transport, quota)
+            const wants = totalBudget * 0.30; // 30% wants (shopping, entertainment)
+            const savings = totalBudget * 0.20; // 20% savings
+
+            budgetData.categories = [
+                { name: 'Food/Dining', spent: 0, budget: Math.round(needs * 0.60), icon: 'utensils', color: 'orange' },
+                { name: 'Transportasi', spent: 0, budget: Math.round(needs * 0.25), icon: 'car', color: 'blue' },
+                { name: 'Paket Kuota', spent: 0, budget: Math.round(needs * 0.15), icon: 'wifi', color: 'cyan' },
+                { name: 'Shopping & Hiburan', spent: 0, budget: wants, icon: 'shopping-bag', color: 'pink' },
+                { name: 'Tabungan', spent: 0, budget: savings, icon: 'piggy-bank', color: 'green' }
+            ];
+        }
+
+        // Update categories display
+        function updateCategoriesDisplay() {
+            const categoriesContainer = document.getElementById('budget-categories');
+            categoriesContainer.innerHTML = '';
+
+            budgetData.categories.forEach(cat => {
+                const percent = cat.spent > 0 ? Math.round((cat.spent / cat.budget) * 100) : 0;
+                const html = `
+                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-${cat.color}-100 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-${cat.icon} text-${cat.color}-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold">${cat.name}</h4>
+                                    <p class="text-sm text-gray-500">Rp ${cat.spent.toLocaleString('id-ID')} / Rp ${cat.budget.toLocaleString('id-ID')}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-sm font-medium ${percent > 100 ? 'text-red-600' : 'text-green-600'}">${percent}%</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-${cat.color}-500 h-2 rounded-full" style="width: ${Math.min(percent, 100)}%"></div>
+                        </div>
+                    </div>
+                `;
+                categoriesContainer.innerHTML += html;
+            });
+        }
+
+        // Handle edit budget form submission
+        document.getElementById('edit-budget-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const newTotalBudget = parseInt(document.getElementById('edit-total-budget').value);
+            const autoAllocate = document.getElementById('auto-allocate').checked;
+
+            if (newTotalBudget && newTotalBudget > 0) {
+                try {
+                    // Save to server
+                    await fetch('/api/total_budget', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ amount: newTotalBudget })
+                    });
+
+                    budgetData.totalBudget = newTotalBudget;
+
+                    if (autoAllocate) {
+                        autoAllocateBudget(newTotalBudget);
+                        // Save category budgets to server too
+                        for (const cat of budgetData.categories) {
+                            await fetch('/api/budgets', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ category: cat.name, amount: cat.budget })
+                            });
+                        }
+                    }
+
+                    updateBudgetCalculations();
+                    closeEditBudgetModal();
+
+                    showAlert('Total budget berhasil diupdate menjadi Rp ' + newTotalBudget.toLocaleString('id-ID'));
+                } catch (error) {
+                    console.error('Error saving budget:', error);
+                    showAlert('Gagal menyimpan budget ke server.');
+                }
+            }
+        });
+
+        // Close edit modal when clicking outside
+        document.getElementById('edit-budget-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditBudgetModal();
+            }
+        });
+
+// Initialize
+
+        // Smart Saving Functions
+        function openSavingModal() {
+            document.getElementById('saving-modal').classList.remove('hidden');
+        }
+
+        function closeSavingModal() {
+            document.getElementById('saving-modal').classList.add('hidden');
+            document.getElementById('saving-form').reset();
+            document.getElementById('smart-saving-result').classList.add('hidden');
+        }
+
+        // Live calculation as user types
+        const savingInputs = ['saving-target', 'saving-current', 'saving-date'];
+        savingInputs.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', calculateDailySaving);
+        });
+
+        function calculateDailySaving() {
+            const target = parseFloat(document.getElementById('saving-target').value) || 0;
+            const current = parseFloat(document.getElementById('saving-current').value) || 0;
+            const dateVal = document.getElementById('saving-date').value;
+            const resultDiv = document.getElementById('smart-saving-result');
+            const resultText = document.getElementById('saving-calc-text');
+
+            if (target > 0 && dateVal) {
+                const targetDate = new Date(dateVal);
+                const today = new Date();
+                const diffTime = targetDate - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                if (diffDays > 0) {
+                    const remaining = target - current;
+                    const daily = remaining / diffDays;
+                    resultDiv.classList.remove('hidden');
+                    resultText.innerHTML = `Kamu harus menabung <strong>Rp ${Math.ceil(daily).toLocaleString('id-ID')}</strong> per hari selama ${diffDays} hari agar targetmu tercapai! 🚀`;
+                } else {
+                    resultDiv.classList.add('hidden');
+                }
+            } else {
+                resultDiv.classList.add('hidden');
+            }
+        }
+
+        // Save Goal
+        document.getElementById('saving-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const data = {
+                item_name: document.getElementById('saving-item').value,
+                target_amount: parseFloat(document.getElementById('saving-target').value),
+                current_amount: parseFloat(document.getElementById('saving-current').value) || 0,
+                target_date: document.getElementById('saving-date').value
+            };
+
+            try {
+                const response = await fetch('/api/saving_goals', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (response.ok) {
+                    closeSavingModal();
+                    loadSavingGoals();
+                }
+            } catch (error) {
+                console.error('Error saving goal:', error);
+            }
+        });
+
+        async function loadSavingGoals() {
+            const container = document.getElementById('saving-goals-list');
+            if (!container) return;
+
+            try {
+                const response = await fetch('/api/saving_goals');
+                if (!response.ok) throw new Error('Server response not ok');
+                
+                const goals = await response.json();
+                
+                if (goals.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-10 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 col-span-full">
+                            <i class="fas fa-piggy-bank text-4xl text-gray-300 mb-3"></i>
+                            <p class="text-gray-500">Belum ada target tabungan. Yuk, mulai buat goal pertamamu!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = goals.map(goal => {
+                    const targetDate = new Date(goal.target_date);
+                    const today = new Date();
+                    const diffTime = targetDate - today;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    const remainingAmount = goal.target_amount - goal.current_amount;
+                    const dailySaving = diffDays > 0 ? Math.ceil(remainingAmount / diffDays) : 0;
+                    const progress = Math.min(100, Math.round((goal.current_amount / goal.target_amount) * 100));
+
+                    return `
+                        <div class="bg-white border border-blue-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
+                                    <i class="fas fa-gift text-blue-600 text-xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-gray-800 text-lg">${goal.item_name}</h4>
+                                    <p class="text-xs text-gray-500">Target: Rp ${goal.target_amount.toLocaleString('id-ID')}</p>
+                                </div>
+                                <button onclick="confirmDeleteGoal(${goal.id})" class="text-gray-300 hover:text-red-500 transition p-1">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-xs font-semibold text-blue-600">${progress}% Tercapai</span>
+                                    <span class="text-xs text-gray-400">Rp ${goal.current_amount.toLocaleString('id-ID')} terkumpul</span>
+                                </div>
+                                <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                                    <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-full rounded-full transition-all duration-1000" style="width: ${progress}%"></div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3 mb-4">
+                                <div class="bg-blue-50 p-2 rounded-lg">
+                                    <p class="text-[10px] text-blue-600 uppercase font-bold">Tabungan / Hari</p>
+                                    <p class="text-sm font-bold text-blue-800">Rp ${dailySaving > 0 ? dailySaving.toLocaleString('id-ID') : '0'}</p>
+                                </div>
+                                <div class="bg-indigo-50 p-2 rounded-lg">
+                                    <p class="text-[10px] text-indigo-600 uppercase font-bold">Sisa Waktu</p>
+                                    <p class="text-sm font-bold text-indigo-800">${diffDays > 0 ? diffDays + ' Hari' : 'Selesai'}</p>
+                                </div>
+                            </div>
+
+                            <button onclick="openAddSavingsModal(${goal.id}, '${goal.item_name}')" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2.5 rounded-xl text-sm font-bold hover:shadow-lg transition-all duration-300 flex items-center justify-center">
+                                <i class="fas fa-plus-circle mr-2"></i>Tambah Tabungan
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading goals:', error);
+                container.innerHTML = `
+                    <div class="col-span-full p-4 bg-red-50 text-red-700 rounded-xl border border-red-100 flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-3"></i>
+                        <p class="text-sm">Gagal memuat data. Pastikan server Flask sudah dijalankan (python app.py).</p>
+                    </div>
+                `;
+            }
+        }
+
+        function openAddSavingsModal(id, name) {
+            document.getElementById('add-savings-goal-id').value = id;
+            document.getElementById('add-savings-item-name').textContent = `Target: ${name}`;
+            document.getElementById('add-savings-modal').classList.remove('hidden');
+        }
+
+        function closeAddSavingsModal() {
+            document.getElementById('add-savings-modal').classList.add('hidden');
+            document.getElementById('add-savings-form').reset();
+        }
+
+        document.getElementById('add-savings-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('add-savings-goal-id').value;
+            const amount = parseFloat(document.getElementById('add-savings-amount').value);
+
+            try {
+                const response = await fetch(`/api/saving_goals/${id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ add_amount: amount })
+                });
+                if (response.ok) {
+                    closeAddSavingsModal();
+                    loadSavingGoals();
+                    showAlert('Tabungan berhasil ditambahkan! Terus semangat menabung ya! 💪');
+                }
+            } catch (error) {
+                console.error('Error updating goal:', error);
+            }
+        });
+
+        function confirmDeleteGoal(id) {
+            showConfirm('Hapus target tabungan ini? Tindakan ini tidak dapat dibatalkan.', () => {
+                deleteGoal(id);
+            });
+        }
+
+        async function deleteGoal(id) {
+            try {
+                await fetch(`/api/saving_goals/${id}`, { method: 'DELETE' });
+                loadSavingGoals();
+            } catch (error) {
+                console.error('Error deleting goal:', error);
+            }
+        }
+
+        // Initialize from server
+        async function init() {
+            try {
+                // Get Total Budget
+                const budgetRes = await fetch('/api/total_budget');
+                const budgetDataServer = await budgetRes.json();
+                budgetData.totalBudget = budgetDataServer.total_budget;
+
+                // Get Category Budgets
+                const catRes = await fetch('/api/budgets');
+                const catBudgets = await catRes.json();
+                
+                // Get Current Spending
+                const spendRes = await fetch('/get_spending');
+                const spending = await spendRes.json();
+
+                budgetData.categories.forEach(cat => {
+                    if (catBudgets[cat.name]) cat.budget = catBudgets[cat.name];
+                    if (spending[cat.name]) cat.spent = spending[cat.name];
+                });
+
+                loadSavingGoals();
+                updateBudgetCalculations();
+            } catch (error) {
+                console.error('Initialization error:', error);
+                loadSavingGoals();
+                updateBudgetCalculations();
+            }
+        }
+
+        init();
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+    </script>
+    <script src="static/notifications.js"></script>
+    <script src="static/i18n.js"></script>
+</body>
+</html>

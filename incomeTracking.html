@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Tracking - Dompetin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            300: '#6ee7b7',
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        },
+                        red: {
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            200: '#fecaca',
+                            300: '#fca5a5',
+                            400: '#f87171',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            800: '#991b1b',
+                            900: '#7f1d1d',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .sidebar-link {
+            transition: all 0.3s ease;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .transaction-item {
+            animation: slideUp 0.3s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-emerald-50 text-gray-800 dark:bg-slate-900 dark:text-gray-100 transition-colors duration-300">
+    <!-- Sidebar -->
+    <div class="flex flex-col md:flex-row">
+        <!-- Hamburger Menu for Mobile -->
+        <div class="md:hidden bg-emerald-700 text-white p-4 flex justify-between items-center sticky top-0 z-[60]">
+            <h1 class="text-xl font-bold">Dompetin</h1>
+            <button onclick="toggleSidebar()" class="p-2 text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <div id="sidebar" class="w-64 bg-emerald-700 text-white h-screen fixed dark:bg-emerald-800 transition-transform duration-300 transform -translate-x-full md:translate-x-0 z-[50]">
+            <div class="p-4 flex justify-between items-center">
+                <h1 class="text-2xl font-bold">Dompetin</h1>
+                <!-- Language and Theme Toggle -->
+                <div class="flex items-center gap-2">
+                    <button onclick="window.i18nManager.toggleLanguage()" class="p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Language">
+                        <span class="text-sm font-medium">ID</span>
+                    </button>
+                    <button onclick="window.themeManager.cycleTheme()" class="p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Theme">
+                        <span class="theme-icon-light"><i class="fas fa-sun text-yellow-300"></i></span>
+                        <span class="theme-icon-dark hidden"><i class="fas fa-moon text-gray-300"></i></span>
+                        <span class="theme-icon-auto hidden"><i class="fas fa-circle-half-stroke text-gray-300"></i></span>
+                    </button>
+                </div>
+            </div>
+            <nav class="mt-8">
+<a href="dashboard.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-home mr-3"></i>Home
+                </a>
+                <a href="incomeTracking.html" class="sidebar-link block py-2 px-4 bg-emerald-600">
+                    <i class="fas fa-money-bill-wave mr-3"></i>Income Tracking
+                </a>
+                <a href="budgetplaning.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-chart-pie mr-3"></i>Budget Planning
+                </a>
+<a href="analysis.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-chart-line mr-3"></i>Analysis
+                </a>
+                <a href="profile.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-user mr-3"></i>Profile
+                </a>
+                <a href="index.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600 mt-8">
+                    <i class="fas fa-sign-out-alt mr-3"></i>Logout
+                </a>
+            </nav>
+        </div>
+        <!-- Overlay for Mobile -->
+        <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-[40]"></div>
+
+        <!-- Main Content -->
+        <div class="flex-1 md:ml-64 p-4 md:p-8">
+            <!-- Header -->
+            <div class="mb-8">
+                <h2 class="text-4xl font-bold text-gray-900 mb-2">Budget Tracking</h2>
+                <p class="text-lg text-gray-600">Catat pemasukan dan pengeluaran harian Anda</p>
+            </div>
+
+            <!-- Day Selector -->
+            <div class="flex items-center justify-between mb-6">
+                <button class="bg-white px-4 py-2 rounded-lg shadow hover:shadow-md transition" onclick="changeDay(-1)">
+                    <i class="fas fa-chevron-left text-emerald-600"></i>
+                </button>
+                <div class="text-center">
+                    <h3 class="text-2xl font-semibold" id="current-day">Hari Ini</h3>
+                    <p class="text-sm text-gray-500" id="current-date">Selasa, 14 Januari 2025</p>
+                </div>
+                <button class="bg-white px-4 py-2 rounded-lg shadow hover:shadow-md transition" onclick="changeDay(1)">
+                    <i class="fas fa-chevron-right text-emerald-600"></i>
+                </button>
+            </div>
+
+            <!-- Today's Overview Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-arrow-up text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Pemasukan</p>
+                            <p class="text-2xl font-bold text-green-600" id="today-income">Rp 0</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-arrow-down text-red-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Pengeluaran</p>
+                            <p class="text-2xl font-bold text-red-600" id="today-expense">Rp 0</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-wallet text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Sisa Hari Ini</p>
+                            <p class="text-2xl font-bold text-blue-600" id="today-remaining">Rp 0</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-chart-line text-purple-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Status Hari Ini</p>
+                            <p class="text-2xl font-bold" id="today-status">Normal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Transaction List -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-2xl font-semibold">Riwayat Transaksi</h3>
+                            <div class="flex gap-2">
+                                <button onclick="openTransactionModal('income')" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+                                    <i class="fas fa-plus mr-2"></i>Pemasukan
+                                </button>
+                                <button onclick="openTransactionModal('expense')" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
+                                    <i class="fas fa-minus mr-2"></i>Pengeluaran
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Filter Tabs -->
+                        <div class="flex gap-2 mb-4">
+                            <button onclick="filterTransactions('all')" class="filter-btn active px-4 py-2 rounded-lg bg-emerald-100 text-emerald-700 font-medium" data-filter="all">
+                                Semua
+                            </button>
+                            <button onclick="filterTransactions('income')" class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-medium hover:bg-gray-200" data-filter="income">
+                                Pemasukan
+                            </button>
+                            <button onclick="filterTransactions('expense')" class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-medium hover:bg-gray-200" data-filter="expense">
+                                Pengeluaran
+                            </button>
+                        </div>
+                        
+                        <!-- Transaction Items -->
+                        <div class="space-y-3" id="transaction-list">
+                            <!-- Transactions will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Side - Summary & Tips -->
+                <div class="space-y-6">
+                    <!-- Daily Budget Status -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">Status Harian</h3>
+                        <div class="text-center mb-4">
+                            <div class="relative w-32 h-32 mx-auto">
+                                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                                    <!-- Background circle -->
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb" stroke-width="10"/>
+                                    <!-- Progress circle with dynamic color -->
+                                    <circle id="daily-progress" cx="50" cy="50" r="45" fill="none" stroke="#10b981" stroke-width="10" 
+                                        stroke-dasharray="283" stroke-dashoffset="0" stroke-linecap="round"
+                                        style="transition: stroke-dashoffset 0.5s ease, stroke 0.5s ease;"/>
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center flex-col">
+                                    <span class="text-2xl font-bold" id="daily-percent">0%</span>
+                                    <span class="text-xs text-gray-500">terpakai</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600">Total Pemasukan: <span class="font-bold" id="daily-budget">Rp 100.000</span></p>
+                            <p class="text-sm text-gray-500 mt-1" id="daily-message">Hari yang baik!</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Kategori Pengeluaran Hari Ini -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">Kategori Pengeluaran</h3>
+                        <div class="space-y-3" id="category-summary">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Tips -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">Tips Harian</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-start">
+                                <i class="fas fa-lightbulb text-yellow-500 mr-3 mt-1"></i>
+                                <p class="text-sm text-gray-600">Catat setiap transaksi agar keuangan Anda terkontrol</p>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-lightbulb text-yellow-500 mr-3 mt-1"></i>
+                                <p class="text-sm text-gray-600">Jangan lupa sisihkan 20% untuk tabungan</p>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-lightbulb text-yellow-500 mr-3 mt-1"></i>
+                                <p class="text-sm text-gray-600">Review pengeluaran setiap malam</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Transaction Modal -->
+    <div id="transaction-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-4" id="modal-title">Tambah Transaksi</h3>
+            <form id="transaction-form">
+                <input type="hidden" id="transaction-type" value="expense">
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Deskripsi</label>
+                    <input type="text" id="transaction-desc" class="w-full p-2 border rounded-lg" placeholder="e.g. Makan siang" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Jumlah (Rp)</label>
+                    <input type="number" id="transaction-amount" class="w-full p-2 border rounded-lg" placeholder="e.g. 25000" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Kategori</label>
+                    <select id="transaction-category" class="w-full p-2 border rounded-lg" required>
+                        <option value="">Pilih Kategori</option>
+                        <!-- Income categories -->
+                        <optgroup label="Pemasukan" id="income-categories">
+                            <option value="salary">Gaji</option>
+                            <option value="allowance">Uang Saku</option>
+                            <option value="freelance">Freelance</option>
+                            <option value="bonus">Bonus</option>
+                            <option value="other-income">Lainnya</option>
+                        </optgroup>
+                        <!-- Expense categories -->
+                        <optgroup label="Pengeluaran" id="expense-categories">
+                            <option value="food">Makanan</option>
+                            <option value="transport">Transportasi</option>
+                            <option value="shopping">Belanja</option>
+                            <option value="entertainment">Hiburan</option>
+                            <option value="bills">Tagihan</option>
+                            <option value="education">Pendidikan</option>
+                            <option value="health">Kesehatan</option>
+                            <option value="other-expense">Lainnya</option>
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Catatan (Opsional)</label>
+                    <textarea id="transaction-notes" class="w-full p-2 border rounded-lg" rows="2" placeholder="Tambahkan catatan..."></textarea>
+                </div>
+                
+                <div class="flex justify-end">
+                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeTransactionModal()">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Data - will be loaded from server
+        let transactions = [];
+        
+        let currentDate = new Date();
+        let dailyBudget = 100000; // Default daily budget
+        
+        // Load transactions from server
+        async function loadTransactions() {
+            const dateStr = currentDate.toISOString().split('T')[0];
+            try {
+                const response = await fetch(`/get_transactions?date=${dateStr}`);
+                const data = await response.json();
+                transactions = data;
+            } catch (error) {
+                console.error('Error loading transactions:', error);
+                transactions = [];
+            }
+            renderTransactions();
+            updateSummary();
+        }
+
+        // Save transaction to server
+        async function saveTransaction(transaction) {
+            try {
+                const response = await fetch('/add_transaction', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: transaction.type,
+                        amount: transaction.amount,
+                        category: transaction.category,
+                        date: transaction.date,
+                        description: transaction.desc
+                    })
+                });
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                console.error('Error saving transaction:', error);
+                return { success: false };
+            }
+        }
+
+        // Day navigation
+        const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+        function changeDay(direction) {
+            currentDate.setDate(currentDate.getDate() + direction);
+            updateDateDisplay();
+            loadTransactions();
+        }
+
+        function updateDateDisplay() {
+            const today = new Date();
+            const isToday = currentDate.toDateString() === today.toDateString();
+            
+            document.getElementById('current-day').textContent = isToday ? 'Hari Ini' : dayNames[currentDate.getDay()];
+            document.getElementById('current-date').textContent = `${currentDate.getDate()} ${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+        }
+
+        // Modal functions
+        function openTransactionModal(type) {
+            document.getElementById('transaction-type').value = type;
+            document.getElementById('modal-title').textContent = type === 'income' ? 'Tambah Pemasukan' : 'Tambah Pengeluaran';
+            document.getElementById('transaction-category').value = '';
+            
+            // Update button color
+            const submitBtn = document.querySelector('#transaction-form button[type="submit"]');
+            if (type === 'income') {
+                submitBtn.className = 'px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition';
+            } else {
+                submitBtn.className = 'px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition';
+            }
+            
+            document.getElementById('transaction-modal').classList.remove('hidden');
+        }
+
+        function closeTransactionModal() {
+            document.getElementById('transaction-modal').classList.add('hidden');
+            document.getElementById('transaction-form').reset();
+        }
+
+        // Filter transactions
+        let currentFilter = 'all';
+        
+        function filterTransactions(filter) {
+            currentFilter = filter;
+            
+            // Update button styles
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.dataset.filter === filter) {
+                    btn.className = 'filter-btn active px-4 py-2 rounded-lg bg-emerald-100 text-emerald-700 font-medium';
+                } else {
+                    btn.className = 'filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-medium hover:bg-gray-200';
+                }
+            });
+            
+            renderTransactions();
+        }
+
+        // Render transactions
+        function renderTransactions() {
+            const dateStr = currentDate.toISOString().split('T')[0];
+            const filtered = transactions.filter(t => {
+                const matchDate = t.date === dateStr;
+                const matchFilter = currentFilter === 'all' || t.type === currentFilter;
+                return matchDate && matchFilter;
+            });
+            
+            const container = document.getElementById('transaction-list');
+            
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-receipt text-4xl mb-3"></i>
+                        <p>Belum ada transaksi hari ini</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = filtered.map(t => {
+                const isIncome = t.type === 'income';
+                const iconClass = isIncome ? 'fa-arrow-up bg-green-100 text-green-600' : 'fa-arrow-down bg-red-100 text-red-600';
+                const amountClass = isIncome ? 'text-green-600' : 'text-red-600';
+                const categoryNames = {
+                    'salary': 'Gaji', 'allowance': 'Uang Saku', 'freelance': 'Freelance', 'bonus': 'Bonus', 'other-income': 'Lainnya',
+                    'food': 'Makanan', 'transport': 'Transportasi', 'shopping': 'Belanja', 'entertainment': 'Hiburan', 'bills': 'Tagihan', 'education': 'Pendidikan', 'health': 'Kesehatan', 'other-expense': 'Lainnya'
+                };
+                
+                return `
+                    <div class="transaction-item border border-gray-200 rounded-lg p-4 hover:shadow-md transition flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3 ${iconClass}">
+                                <i class="fas ${isIncome ? 'fa-plus' : 'fa-minus'}"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">${t.desc}</h4>
+                                <p class="text-xs text-gray-500">${categoryNames[t.category] || 'Lainnya'}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-lg font-bold ${amountClass}">${isIncome ? '+' : '-'}Rp ${parseInt(t.amount).toLocaleString('id-ID')}</p>
+                            <button onclick="deleteTransaction(${t.id})" class="text-xs text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash"></i> Hapus
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Delete transaction
+        function deleteTransaction(id) {
+            showConfirm('Yakin ingin menghapus transaksi ini?', () => {
+                transactions = transactions.filter(t => t.id !== id);
+                renderTransactions();
+                updateSummary();
+            });
+        }
+
+        // Fungsi untuk mendapatkan warna gradient dari hijau ke merah berdasarkan persentase
+        function getColorForPercentage(percent) {
+            // Jika tidak ada pengeluaran atau persentase 0, gunakan warna default
+            if (percent <= 0) return '#10b981'; // hijau
+            
+            // Menghitung warna berdasarkan persentase (hijau -> kuning -> oranye -> merah)
+            if (percent <= 25) {
+                // Hijau ke kuning muda
+                return '#10b981'; // emerald-500
+            } else if (percent <= 50) {
+                // Kuning muda ke kuning
+                return '#84cc16'; // lime-500
+            } else if (percent <= 75) {
+                // Kuning ke oranye
+                return '#f59e0b'; // amber-500
+            } else if (percent <= 90) {
+                // Oranye ke oranye merah
+                return '#f97316'; // orange-500
+            } else if (percent <= 100) {
+                // Oranye merah ke merah
+                return '#ef4444'; // red-500
+            } else {
+                // Lebih dari 100% - merah gelap
+                return '#dc2626'; // red-600
+            }
+        }
+
+        // Fungsi untuk mendapatkan status text berdasarkan persentase
+        function getStatusForPercentage(percent, expense, income) {
+            if (income === 0) return { text: 'Tidak Ada Pemasukan', color: 'text-gray-500' };
+            if (expense === 0) return { text: 'Belum Terpakai', color: 'text-emerald-600' };
+            if (percent <= 25) return { text: 'Sangat Hemat', color: 'text-emerald-600' };
+            if (percent <= 50) return { text: 'Hemat', color: 'text-lime-600' };
+            if (percent <= 75) return { text: 'Normal', color: 'text-amber-600' };
+            if (percent <= 90) return { text: 'Boross', color: 'text-orange-500' };
+            if (percent <= 100) return { text: 'Sangat Boros!', color: 'text-red-500' };
+            return { text: 'KELEBIHAN!', color: 'text-red-600' };
+        }
+
+        // Update summary
+        function updateSummary() {
+            const dateStr = currentDate.toISOString().split('T')[0];
+            const todayTransactions = transactions.filter(t => t.date === dateStr);
+            
+            const income = todayTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + parseInt(t.amount), 0);
+            const expense = todayTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + parseInt(t.amount), 0);
+            const remaining = income - expense;
+            
+            // Update today's overview
+            document.getElementById('today-income').textContent = 'Rp ' + income.toLocaleString('id-ID');
+            document.getElementById('today-expense').textContent = 'Rp ' + expense.toLocaleString('id-ID');
+            document.getElementById('today-remaining').textContent = 'Rp ' + remaining.toLocaleString('id-ID');
+            
+            // Hitung persentase berdasarkan income (bukan daily budget)
+            // Jika income 0, maka gunakan dailyBudget sebagai denominator
+            const denominator = income > 0 ? income : dailyBudget;
+            const dailyPercent = denominator > 0 ? Math.round((expense / denominator) * 100) : 0;
+            
+            // Dapatkan warna dan status berdasarkan persentase
+            const progressColor = getColorForPercentage(dailyPercent);
+            const statusInfo = getStatusForPercentage(dailyPercent, expense, income);
+            
+            // Update status
+            const statusEl = document.getElementById('today-status');
+            statusEl.textContent = statusInfo.text;
+            statusEl.className = 'text-2xl font-bold ' + statusInfo.color;
+            
+            // Update warna remaining berdasarkan status
+            const remainingEl = document.getElementById('today-remaining');
+            if (remaining < 0) {
+                remainingEl.className = 'text-2xl font-bold text-red-600';
+            } else if (dailyPercent > 75) {
+                remainingEl.className = 'text-2xl font-bold text-orange-500';
+            } else if (dailyPercent > 50) {
+                remainingEl.className = 'text-2xl font-bold text-amber-500';
+            } else {
+                remainingEl.className = 'text-2xl font-bold text-blue-600';
+            }
+            
+            // Update daily progress dengan warna gradient
+            const progressEl = document.getElementById('daily-progress');
+            const offset = 283 - (283 * Math.min(dailyPercent, 100) / 100);
+            progressEl.setAttribute('stroke-dashoffset', offset);
+            progressEl.setAttribute('stroke', progressColor);
+            
+            // Update persentase
+            document.getElementById('daily-percent').textContent = dailyPercent + '%';
+            document.getElementById('daily-percent').style.color = progressColor;
+            document.getElementById('daily-budget').textContent = 'Rp ' + income.toLocaleString('id-ID');
+            
+            // Update pesan berdasarkan persentase
+            const messageEl = document.getElementById('daily-message');
+            if (income === 0) {
+                messageEl.innerHTML = '<span class="text-gray-500">Tambahkan pemasukan terlebih dahulu</span>';
+            } else if (expense === 0) {
+                messageEl.innerHTML = '<span class="text-emerald-600">✅ belum ada pengeluaran hari ini</span>';
+            } else if (dailyPercent > 100) {
+                messageEl.innerHTML = '<span class="text-red-600 font-bold">⚠️ Anda melebihi pemasukan!</span>';
+            } else if (dailyPercent > 90) {
+                messageEl.innerHTML = '<span class="text-red-500 font-bold">⚠️ Hampir menghabiskan semua pemasukan</span>';
+            } else if (dailyPercent > 75) {
+                messageEl.innerHTML = '<span class="text-orange-500">⚠️ Pengeluaran sudah banyak</span>';
+            } else if (dailyPercent > 50) {
+                messageEl.innerHTML = '<span class="text-amber-500">⚡ Pengeluaran sedang berlangsung</span>';
+            } else if (dailyPercent > 25) {
+                messageEl.innerHTML = '<span class="text-lime-600">✅ Pengeluaran terkontrol</span>';
+            } else {
+                messageEl.innerHTML = '<span class="text-emerald-600">✅ Sangat hemat!</span>';
+            }
+            
+            // Update category summary
+            const expenseByCategory = {};
+            todayTransactions.filter(t => t.type === 'expense').forEach(t => {
+                expenseByCategory[t.category] = (expenseByCategory[t.category] || 0) + parseInt(t.amount);
+            });
+            
+            const categoryNames = {
+                'food': 'Makanan', 'transport': 'Transportasi', 'shopping': 'Belanja', 
+                'entertainment': 'Hiburan', 'bills': 'Tagihan', 'education': 'Pendidikan', 
+                'health': 'Kesehatan', 'other-expense': 'Lainnya'
+            };
+            const categoryIcons = {
+                'food': 'fa-utensils', 'transport': 'fa-car', 'shopping': 'fa-shopping-bag',
+                'entertainment': 'fa-gamepad', 'bills': 'fa-file-invoice', 'education': 'fa-graduation-cap',
+                'health': 'fa-heartbeat', 'other-expense': 'fa-ellipsis-h'
+            };
+            
+            const categoryContainer = document.getElementById('category-summary');
+            if (Object.keys(expenseByCategory).length === 0) {
+                categoryContainer.innerHTML = '<p class="text-sm text-gray-500 text-center">Belum ada pengeluaran</p>';
+            } else {
+                categoryContainer.innerHTML = Object.entries(expenseByCategory).map(([cat, amt]) => `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fas ${categoryIcons[cat] || 'fa-ellipsis-h'} text-gray-500 mr-3"></i>
+                            <span class="text-sm text-gray-600">${categoryNames[cat] || 'Lainnya'}</span>
+                        </div>
+                        <span class="font-semibold text-red-600">Rp ${amt.toLocaleString('id-ID')}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Form submission
+        document.getElementById('transaction-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const type = document.getElementById('transaction-type').value;
+            const desc = document.getElementById('transaction-desc').value;
+            const amount = parseInt(document.getElementById('transaction-amount').value);
+            const category = document.getElementById('transaction-category').value;
+            const notes = document.getElementById('transaction-notes').value;
+            
+            if (desc && amount && category) {
+                const newTransaction = {
+                    id: Date.now(),
+                    type: type,
+                    desc: desc,
+                    amount: amount,
+                    category: category,
+                    date: currentDate.toISOString().split('T')[0],
+                    notes: notes
+                };
+                
+                // Save to server first
+                await saveTransaction(newTransaction);
+                
+                // Then add to local array and update UI
+                transactions.push(newTransaction);
+                closeTransactionModal();
+                renderTransactions();
+                updateSummary();
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('transaction-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTransactionModal();
+            }
+        });
+
+        // Initialize - load transactions from server
+        updateDateDisplay();
+        loadTransactions();
+    </script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+    </script>
+    <script src="static/notifications.js"></script>
+
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+    <script src="static/i18n.js"></script>
+</body>
+</html>

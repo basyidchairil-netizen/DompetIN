@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Dompetin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            300: '#6ee7b7',
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .sidebar-link {
+            transition: all 0.3s ease;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-emerald-50 text-gray-800 dark:bg-slate-900 dark:text-gray-100 transition-colors duration-300">
+    <!-- Sidebar -->
+    <div class="flex flex-col md:flex-row">
+        <!-- Hamburger Menu for Mobile -->
+        <div class="md:hidden bg-emerald-700 text-white p-4 flex justify-between items-center sticky top-0 z-[60]">
+            <h1 class="text-xl font-bold">Dompetin</h1>
+            <button onclick="toggleSidebar()" class="p-2 text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <div id="sidebar" class="w-64 bg-emerald-700 text-white h-screen fixed dark:bg-emerald-800 transition-transform duration-300 transform -translate-x-full md:translate-x-0 z-[50]">
+            <div class="p-4">
+                <h1 class="text-2xl font-bold">Dompetin</h1>
+            </div>
+            <nav class="mt-8">
+                <a href="dashboard.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-home mr-3"></i>Home
+                </a>
+                <a href="incomeTracking.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-money-bill-wave mr-3"></i>Income Tracking
+                </a>
+                <a href="budgetplaning.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-chart-pie mr-3"></i>Budget Planning
+                </a>
+                <a href="analysis.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-chart-line mr-3"></i>Analysis
+                </a>
+                <a href="profile.html" class="sidebar-link block py-2 px-4 bg-emerald-600">
+                    <i class="fas fa-user mr-3"></i>Profile
+                </a>
+                <a href="index.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600 mt-8">
+                    <i class="fas fa-sign-out-alt mr-3"></i>Logout
+                </a>
+            </nav>
+        </div>
+        <!-- Overlay for Mobile -->
+        <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-[40]"></div>
+
+        <!-- Main Content -->
+        <div class="flex-1 md:ml-64 p-4 md:p-8">
+            <!-- Header -->
+            <div class="mb-8">
+                <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">Profile</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400">Kelola pengaturan akun dan preferensi Anda</p>
+            </div>
+
+            <!-- Profile Header Card -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 mb-8">
+                <div class="flex flex-col md:flex-row items-center">
+                    <!-- Avatar -->
+                    <div class="relative mb-4 md:mb-0 md:mr-8">
+                        <div class="w-32 h-32 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-5xl font-bold" id="profile-avatar">
+                            JD
+                        </div>
+                        <button onclick="openEditPhotoModal()" class="absolute bottom-0 right-0 w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-emerald-700 transition">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Info -->
+                    <div class="text-center md:text-left flex-1">
+                        <h3 class="text-3xl font-bold text-gray-900" id="profile-name">John Doe</h3>
+                        <p class="text-gray-600" id="profile-email">johndoe@example.com</p>
+                        <div class="flex items-center justify-center md:justify-start gap-4 mt-4">
+                            <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm">
+                                <i class="fas fa-id-card mr-1"></i> Student
+                            </span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                                <i class="fas fa-calendar-alt mr-1"></i> Bergabung Jan 2025
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Edit Button -->
+                    <button onclick="openEditProfileModal()" class="mt-4 md:mt-0 bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition">
+                        <i class="fas fa-edit mr-2"></i>Edit Profile
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center mb-2">
+                        <div class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-wallet text-green-600 dark:text-green-400"></i>
+                        </div>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">Total Transaksi</span>
+                    </div>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white" id="total-transactions">0</p>
+                </div>
+                
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center mb-2">
+                        <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-piggy-bank text-purple-600 dark:text-purple-400"></i>
+                        </div>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">Total Tabungan</span>
+                    </div>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white" id="total-savings">Rp 0</p>
+                </div>
+                
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center mb-2">
+                        <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-percentage text-blue-600 dark:text-blue-400"></i>
+                        </div>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">Rata-rata Saving</span>
+                    </div>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white" id="avg-saving-rate">0%</p>
+                </div>
+                
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center mb-2">
+                        <div class="w-10 h-10 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-calendar-check text-orange-600 dark:text-orange-400"></i>
+                        </div>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">Bulan Aktif</span>
+                    </div>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white" id="active-months">0</p>
+                </div>
+            </div>
+
+            <!-- Settings Sections -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Personal Information -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-user-circle text-emerald-600 mr-2"></i>Informasi Personal
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center py-2 border-b">
+                            <span class="text-gray-600">Nama Lengkap</span>
+                            <span class="font-medium" id="display-name">John Doe</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b">
+                            <span class="text-gray-600">Email</span>
+                            <span class="font-medium" id="display-email">johndoe@example.com</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b">
+                            <span class="text-gray-600">Nomor Telepon</span>
+                            <span class="font-medium" id="display-phone">+62 812 3456 7890</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b">
+                            <span class="text-gray-600">Tanggal Lahir</span>
+                            <span class="font-medium" id="display-birthday">15 Januari 2003</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2">
+                            <span class="text-gray-600">Alamat</span>
+                            <span class="font-medium" id="display-address">Jakarta, Indonesia</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Financial Settings -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-semibold">
+                            <i class="fas fa-cog text-emerald-600 mr-2"></i>Pengaturan Keuangan
+                        </h3>
+                        <button onclick="openEditFinancialModal()" class="text-emerald-600 hover:text-emerald-800 text-sm">
+                            <i class="fas fa-edit mr-1"></i>Edit
+                        </button>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center py-2 border-b">
+                            <span class="text-gray-600">Mata Uang</span>
+                            <span class="font-medium" id="display-currency">IDR (Rupiah)</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b">
+                            <span class="text-gray-600">Format Angka</span>
+                            <span class="font-medium" id="display-number-format">1.000.000</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b">
+                            <span class="text-gray-600">Tanggal Gajian</span>
+                            <span class="font-medium" id="display-payday">Setiap Tanggal 1</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b">
+                            <span class="text-gray-600">Target Tabungan</span>
+                            <span class="font-medium" id="display-savings-target">Rp 600.000/bulan</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2">
+                            <span class="text-gray-600">Notifikasi Budget</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App Settings -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- App Preferences -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-sliders-h text-emerald-600 mr-2"></i>Preferensi Aplikasi
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center py-2 border-b">
+                            <span class="text-gray-600 dark:text-gray-300">Tema</span>
+                            <select id="theme-dropdown" class="border rounded-lg px-3 py-1 text-sm bg-white dark:bg-slate-700 dark:border-gray-600 dark:text-gray-200" onchange="window.themeManager.setTheme(this.value)">
+                                <option value="light">Light</option>
+                                <option value="dark">Dark</option>
+                                <option value="auto" selected>Auto</option>
+                            </select>
+                        </div>
+<div class="flex justify-between items-center py-2 border-b">
+                            <span class="text-gray-600" data-i18n="profile_language">Bahasa</span>
+                            <select id="language-dropdown" class="border rounded-lg px-3 py-1 text-sm bg-white dark:bg-slate-700 dark:border-gray-600 dark:text-gray-200" onchange="window.i18nManager.setLanguage(this.value)">
+                                <option value="id" selected>Indonesia</option>
+                                <option value="en">English</option>
+                            </select>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b">
+                            <span class="text-gray-600">Notifikasi</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                            </label>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b">
+                            <span class="text-gray-600">Reminder Harian</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                            </label>
+                        </div>
+                        <div class="flex justify-between items-center py-2">
+                            <span class="text-gray-600">Auto Backup</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Security -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-shield-alt text-emerald-600 mr-2"></i>Keamanan
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center py-2 border-b">
+                            <div>
+                                <span class="text-gray-600 block">Kata Sandi</span>
+                                <span class="text-sm text-gray-400">Terakhir diubah 30 hari lalu</span>
+                            </div>
+                            <button class="text-emerald-600 hover:text-emerald-800 font-medium text-sm">Ubah</button>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b">
+                            <div>
+                                <span class="text-gray-600 block">Verifikasi Dua Faktor</span>
+                                <span class="text-sm text-gray-400">Tambahkan keamanan ekstra</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                            </label>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b">
+                            <div>
+                                <span class="text-gray-600 block">Biometrik</span>
+                                <span class="text-sm text-gray-400">Face ID / Fingerprint</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                            </label>
+                        </div>
+                        <div class="flex justify-between items-center py-2">
+                            <div>
+                                <span class="text-gray-600 block">Sesi Aktif</span>
+                                <span class="text-sm text-gray-400">1 perangkat</span>
+                            </div>
+                            <button class="text-red-500 hover:text-red-700 font-medium text-sm">Keluar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Actions -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <h3 class="text-xl font-semibold mb-4">
+                    <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>Akun
+                </h3>
+                <div class="flex flex-wrap gap-4">
+                    <button class="flex items-center bg-blue-100 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-200 transition">
+                        <i class="fas fa-download mr-2"></i>Export Data
+                    </button>
+                    <button class="flex items-center bg-purple-100 text-purple-700 px-4 py-2 rounded-lg hover:bg-purple-200 transition">
+                        <i class="fas fa-history mr-2"></i>Riwayat Aktivitas
+                    </button>
+                    <button onclick="openDeleteModal()" class="flex items-center bg-red-100 text-red-700 px-4 py-2 rounded-lg hover:bg-red-200 transition">
+                        <i class="fas fa-trash mr-2"></i>Hapus Akun
+                    </button>
+                </div>
+            </div>
+
+            <!-- App Info -->
+            <div class="text-center text-gray-500 text-sm">
+                <p>Dompetin v1.0.0</p>
+                <p class="mt-1">© 2025 Dompetin. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
+            <form id="edit-profile-form">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Nama Lengkap</label>
+                    <input type="text" id="edit-name" class="w-full p-2 border rounded-lg" value="John Doe">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Email</label>
+                    <input type="email" id="edit-email" class="w-full p-2 border rounded-lg" value="johndoe@example.com">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Nomor Telepon</label>
+                    <input type="tel" id="edit-phone" class="w-full p-2 border rounded-lg" value="+62 812 3456 7890">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Alamat</label>
+                    <input type="text" id="edit-address" class="w-full p-2 border rounded-lg" value="Jakarta, Indonesia">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Tanggal Lahir</label>
+                    <input type="date" id="edit-birthday" class="w-full p-2 border rounded-lg" value="2003-01-15">
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeEditProfileModal()">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Photo Modal -->
+    <div id="edit-photo-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-4">Ganti Foto Profil</h3>
+            <div class="text-center mb-4">
+                <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-4xl font-bold mb-4" id="preview-avatar">
+                    JD
+                </div>
+                <input type="file" id="photo-input" class="hidden" accept="image/*" onchange="previewPhoto(event)">
+                <label for="photo-input" class="cursor-pointer text-emerald-600 hover:text-emerald-800">
+                    <i class="fas fa-upload mr-2"></i>Pilih Foto
+                </label>
+            </div>
+            <div class="flex justify-end">
+                <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeEditPhotoModal()">Batal</button>
+                <button type="button" onclick="savePhoto()" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div id="delete-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Hapus Akun?</h3>
+                <p class="text-gray-600 mb-4">Tindakan ini tidak dapat dibatalkan. Semua data Anda akan dihapus secara permanen.</p>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2">Ketik "HAPUS" untuk konfirmasi</label>
+                <input type="text" id="delete-confirm" class="w-full p-2 border rounded-lg" placeholder="HAPUS">
+            </div>
+            <div class="flex justify-end gap-2">
+                <button type="button" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeDeleteModal()">Batal</button>
+                <button type="button" onclick="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">Hapus Akun</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Financial Settings Modal -->
+    <div id="edit-financial-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-4">Edit Pengaturan Keuangan</h3>
+            <form id="edit-financial-form">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Mata Uang</label>
+                    <select id="edit-currency" class="w-full p-2 border rounded-lg">
+                        <option value="IDR (Rupiah)" selected>IDR (Rupiah)</option>
+                        <option value="USD (Dollar)">USD (Dollar)</option>
+                        <option value="EUR (Euro)">EUR (Euro)</option>
+                        <option value="GBP (Pound)">GBP (Pound)</option>
+                        <option value="JPY (Yen)">JPY (Yen)</option>
+                        <option value="SGD (Dollar Singapore)">SGD (Dollar Singapore)</option>
+                        <option value="MYR (Ringgit)">MYR (Ringgit)</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Format Angka</label>
+                    <select id="edit-number-format" class="w-full p-2 border rounded-lg">
+                        <option value="1.000.000" selected>1.000.000 (Indonesia)</option>
+                        <option value="1,000,000">1,000,000 (US/UK)</option>
+                        <option value="1 000 000">1 000 000 (France)</option>
+                        <option value="1,000,000.00">1,000,000.00 (US Decimal)</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Tanggal Gajian</label>
+                    <select id="edit-payday" class="w-full p-2 border rounded-lg">
+                        <option value="1" selected>1</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="25">25</option>
+                        <option value="30">30</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Target Tabungan (per bulan)</label>
+                    <input type="number" id="edit-savings-target" class="w-full p-2 border rounded-lg" value="600000" min="0" step="10000">
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeEditFinancialModal()">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Fetch profile stats from API
+        function loadProfileStats() {
+            fetch('/get_profile_stats')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('total-transactions').textContent = data.total_transactions;
+                    document.getElementById('total-savings').textContent = 'Rp ' + parseInt(data.total_savings).toLocaleString('id-ID');
+                    document.getElementById('avg-saving-rate').textContent = data.avg_saving_rate + '%';
+                    document.getElementById('active-months').textContent = data.active_months;
+                })
+                .catch(error => {
+                    console.error('Error loading profile stats:', error);
+                });
+        }
+
+        // Profile data
+        let profileData = {
+            name: 'John Doe',
+            email: 'johndoe@example.com',
+            phone: '+62 812 3456 7890',
+            address: 'Jakarta, Indonesia',
+            birthday: '15 Januari 2003'
+        };
+
+        // Financial settings data
+        let financialData = {
+            currency: 'IDR (Rupiah)',
+            numberFormat: '1.000.000',
+            payday: '1',
+            savingsTarget: '600000'
+        };
+
+        // Currency symbols
+        const currencySymbols = {
+            'IDR (Rupiah)': 'Rp',
+            'USD (Dollar)': '$',
+            'EUR (Euro)': '€',
+            'GBP (Pound)': '£',
+            'JPY (Yen)': '¥',
+            'SGD (Dollar Singapore)': 'S$',
+            'MYR (Ringgit)': 'RM'
+        };
+
+        // Modal functions
+        function openEditProfileModal() {
+            document.getElementById('edit-name').value = profileData.name;
+            document.getElementById('edit-email').value = profileData.email;
+            document.getElementById('edit-phone').value = profileData.phone;
+            document.getElementById('edit-address').value = profileData.address;
+            
+            const birthdayParts = profileData.birthday.split(' ');
+            if (birthdayParts.length === 3) {
+                const day = birthdayParts[0].padStart(2, '0');
+                const months = { 'Januari': '01', 'Februari': '02', 'Maret': '03', 'April': '04', 'Mei': '05', 'Juni': '06', 'Juli': '07', 'Agustus': '08', 'September': '09', 'Oktober': '10', 'November': '11', 'Desember': '12' };
+                const month = months[birthdayParts[1]] || '01';
+                const year = birthdayParts[2];
+                document.getElementById('edit-birthday').value = `${year}-${month}-${day}`;
+            }
+            
+            document.getElementById('edit-profile-modal').classList.remove('hidden');
+        }
+
+        function closeEditProfileModal() {
+            document.getElementById('edit-profile-modal').classList.add('hidden');
+        }
+
+        function openEditPhotoModal() {
+            document.getElementById('edit-photo-modal').classList.remove('hidden');
+        }
+
+        function closeEditPhotoModal() {
+            document.getElementById('edit-photo-modal').classList.add('hidden');
+        }
+
+        function openDeleteModal() {
+            document.getElementById('delete-modal').classList.remove('hidden');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('delete-modal').classList.add('hidden');
+        }
+
+        function openEditFinancialModal() {
+            document.getElementById('edit-currency').value = financialData.currency;
+            document.getElementById('edit-number-format').value = financialData.numberFormat;
+            document.getElementById('edit-payday').value = financialData.payday;
+            document.getElementById('edit-savings-target').value = financialData.savingsTarget;
+            document.getElementById('edit-financial-modal').classList.remove('hidden');
+        }
+
+        function closeEditFinancialModal() {
+            document.getElementById('edit-financial-modal').classList.add('hidden');
+        }
+
+        function formatNumber(num, format) {
+            const numberStr = num.toString();
+            switch(format) {
+                case '1.000.000':
+                    return parseInt(numberStr).toLocaleString('id-ID');
+                case '1,000,000':
+                    return parseInt(numberStr).toLocaleString('en-US');
+                case '1 000 000':
+                    return parseInt(numberStr).toLocaleString('fr-FR');
+                case '1,000,000.00':
+                    return parseFloat(numberStr).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                default:
+                    return parseInt(numberStr).toLocaleString('id-ID');
+            }
+        }
+
+        function formatBirthday(dateStr) {
+            const date = new Date(dateStr);
+            const day = date.getDate();
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+            return `${day} ${month} ${year}`;
+        }
+
+        document.getElementById('edit-profile-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            profileData.name = document.getElementById('edit-name').value;
+            profileData.email = document.getElementById('edit-email').value;
+            profileData.phone = document.getElementById('edit-phone').value;
+            profileData.address = document.getElementById('edit-address').value;
+            
+            const birthdayInput = document.getElementById('edit-birthday').value;
+            if (birthdayInput) {
+                profileData.birthday = formatBirthday(birthdayInput);
+            }
+
+            document.getElementById('profile-name').textContent = profileData.name;
+            document.getElementById('profile-email').textContent = profileData.email;
+            document.getElementById('profile-avatar').textContent = getInitials(profileData.name);
+            
+            document.getElementById('display-name').textContent = profileData.name;
+            document.getElementById('display-email').textContent = profileData.email;
+            document.getElementById('display-phone').textContent = profileData.phone;
+            document.getElementById('display-address').textContent = profileData.address;
+            document.getElementById('display-birthday').textContent = profileData.birthday;
+
+            closeEditProfileModal();
+            alert('Profile berhasil diperbarui!');
+        });
+
+        document.getElementById('edit-financial-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            financialData.currency = document.getElementById('edit-currency').value;
+            financialData.numberFormat = document.getElementById('edit-number-format').value;
+            financialData.payday = document.getElementById('edit-payday').value;
+            financialData.savingsTarget = document.getElementById('edit-savings-target').value;
+
+            const currencySymbol = currencySymbols[financialData.currency] || 'Rp';
+            const formattedSavings = formatNumber(financialData.savingsTarget, financialData.numberFormat);
+
+            document.getElementById('display-currency').textContent = financialData.currency;
+            document.getElementById('display-number-format').textContent = financialData.numberFormat;
+            document.getElementById('display-payday').textContent = 'Setiap Tanggal ' + financialData.payday;
+            document.getElementById('display-savings-target').textContent = currencySymbol + ' ' + formattedSavings + '/bulan';
+
+            closeEditFinancialModal();
+            alert('Pengaturan keuangan berhasil diperbarui!');
+        });
+
+        function getInitials(name) {
+            return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        }
+
+        function previewPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview-avatar').style.backgroundImage = `url(${e.target.result})`;
+                    document.getElementById('preview-avatar').style.backgroundSize = 'cover';
+                    document.getElementById('preview-avatar').textContent = '';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function savePhoto() {
+            const preview = document.getElementById('preview-avatar');
+            const avatar = document.getElementById('profile-avatar');
+            
+            if (preview.style.backgroundImage) {
+                avatar.style.backgroundImage = preview.style.backgroundImage;
+                avatar.style.backgroundSize = 'cover';
+                avatar.textContent = '';
+            }
+            
+            closeEditPhotoModal();
+            alert('Foto profil berhasil diperbarui!');
+        }
+
+        function confirmDelete() {
+            const confirmText = document.getElementById('delete-confirm').value;
+            if (confirmText === 'HAPUS') {
+                alert('Akun akan dihapus. Fitur ini memerlukan konfirmasi tambahan.');
+                closeDeleteModal();
+            } else {
+                alert('Ketik "HAPUS" untuk melanjutkan');
+            }
+        }
+
+        document.getElementById('edit-profile-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeEditProfileModal();
+        });
+
+        document.getElementById('edit-photo-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeEditPhotoModal();
+        });
+
+        document.getElementById('delete-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeDeleteModal();
+        });
+
+        document.getElementById('edit-financial-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeEditFinancialModal();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProfileStats();
+        });
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+    </script>
+
+    <script src="static/notifications.js"></script>
+    <script src="static/theme.js"></script>
+    <script src="static/i18n.js"></script>
+</body>
+</html>
+
