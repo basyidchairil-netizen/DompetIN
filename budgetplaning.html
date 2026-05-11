@@ -968,7 +968,7 @@
         // Budget data - can be updated
         let budgetData = {
             totalBudget: {{ global_data.total_budget }},
-        totalSpent: { { global_data.monthly_expense } },
+        totalSpent: {{ global_data.monthly_expense }},
         categories: [
             { name: 'Food/Dining', key: 'category_food', spent: {{ global_data.category_spent.get('food', 0) }}, budget: {{ global_data.category_budgets.get('food', 0) }}, icon: 'utensils', color: 'orange' },
             { name: 'Transportasi', key: 'category_transport', spent: {{ global_data.category_spent.get('transport', 0) }}, budget: {{ global_data.category_budgets.get('transport', 0) }}, icon: 'car', color: 'blue' },
@@ -999,8 +999,8 @@
         }
 
         async function triggerTotalBudgetEdit() {
-            const currentBudget = {{ global_data.total_budget }
-        };
+            const currentBudget = {{ global_data.total_budget }};
+        
         const newAmount = prompt("Masukkan total budget bulanan baru (Rp):", currentBudget);
         if (newAmount !== null) {
             const amount = parseFloat(newAmount);
