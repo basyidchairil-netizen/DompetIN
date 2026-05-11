@@ -50,27 +50,40 @@
         </div>
 
         <div id="sidebar" class="w-64 bg-emerald-700 text-white h-screen fixed dark:bg-emerald-800 transition-transform duration-300 transform -translate-x-full md:translate-x-0 z-[50]">
-            <div class="p-4">
+            <div class="p-4 flex justify-between items-center">
                 <h1 class="text-2xl font-bold">Dompetin</h1>
+                <div class="flex items-center gap-1">
+                    <button onclick="window.i18nManager.toggleLanguage()" class="language-toggle p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Language">
+                        <span class="lang-text text-sm font-medium">ID</span>
+                    </button>
+                    <button onclick="window.themeManager.cycleTheme()" class="p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Theme">
+                        <span class="theme-icon-light"><i class="fas fa-sun text-yellow-300 text-sm"></i></span>
+                        <span class="theme-icon-dark hidden"><i class="fas fa-moon text-blue-300 text-sm"></i></span>
+                        <span class="theme-icon-auto hidden"><i class="fas fa-circle-half-stroke text-gray-300 text-sm"></i></span>
+                    </button>
+                </div>
             </div>
             <nav class="mt-8">
                 <a href="dashboard.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
-                    <i class="fas fa-home mr-3"></i>Home
+                    <i class="fas fa-home mr-3"></i><span data-i18n="sidebar_home">Home</span>
                 </a>
                 <a href="incomeTracking.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
-                    <i class="fas fa-money-bill-wave mr-3"></i>Income Tracking
+                    <i class="fas fa-money-bill-wave mr-3"></i><span data-i18n="sidebar_income_tracking">Income Tracking</span>
                 </a>
                 <a href="budgetplaning.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
-                    <i class="fas fa-chart-pie mr-3"></i>Budget Planning
+                    <i class="fas fa-chart-pie mr-3"></i><span data-i18n="sidebar_budget_planning">Budget Planning</span>
+                </a>
+                <a href="smart_saving.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-piggy-bank mr-3"></i><span data-i18n="sidebar_smart_saving">Smart Saving</span>
                 </a>
                 <a href="analysis.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
-                    <i class="fas fa-chart-line mr-3"></i>Analysis
+                    <i class="fas fa-chart-line mr-3"></i><span data-i18n="sidebar_analysis">Analysis</span>
                 </a>
                 <a href="profile.html" class="sidebar-link block py-2 px-4 bg-emerald-600">
-                    <i class="fas fa-user mr-3"></i>Profile
+                    <i class="fas fa-user mr-3"></i><span data-i18n="sidebar_profile">Profile</span>
                 </a>
-                <a href="index.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600 mt-8">
-                    <i class="fas fa-sign-out-alt mr-3"></i>Logout
+                <a href="javascript:void(0)" onclick="handleLogout()" class="sidebar-link block py-2 px-4 hover:bg-emerald-600 mt-8">
+                    <i class="fas fa-sign-out-alt mr-3"></i><span data-i18n="sidebar_logout">Logout</span>
                 </a>
             </nav>
         </div>
@@ -81,8 +94,8 @@
         <div class="flex-1 md:ml-64 p-4 md:p-8">
             <!-- Header -->
             <div class="mb-8">
-                <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">Profile</h2>
-                <p class="text-lg text-gray-600 dark:text-gray-400">Kelola pengaturan akun dan preferensi Anda</p>
+                <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-2" data-i18n="profile_title">Profile</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400" data-i18n="profile_subtitle">Kelola pengaturan akun dan preferensi Anda</p>
             </div>
 
             <!-- Profile Header Card -->
@@ -104,17 +117,17 @@
                         <p class="text-gray-600" id="profile-email">johndoe@example.com</p>
                         <div class="flex items-center justify-center md:justify-start gap-4 mt-4">
                             <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm">
-                                <i class="fas fa-id-card mr-1"></i> Student
+                                <i class="fas fa-id-card mr-1"></i> <span data-i18n="role_student">Student</span>
                             </span>
                             <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
-                                <i class="fas fa-calendar-alt mr-1"></i> Bergabung Jan 2025
+                                <i class="fas fa-calendar-alt mr-1"></i> <span data-i18n="joined_desc">Bergabung Jan 2025</span>
                             </span>
                         </div>
                     </div>
                     
                     <!-- Edit Button -->
                     <button onclick="openEditProfileModal()" class="mt-4 md:mt-0 bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition">
-                        <i class="fas fa-edit mr-2"></i>Edit Profile
+                        <i class="fas fa-edit mr-2"></i><span data-i18n="edit_profile">Edit Profile</span>
                     </button>
                 </div>
             </div>
@@ -126,7 +139,7 @@
                         <div class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mr-3">
                             <i class="fas fa-wallet text-green-600 dark:text-green-400"></i>
                         </div>
-                        <span class="text-sm text-gray-500 dark:text-gray-400">Total Transaksi</span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400" data-i18n="stat_total_transactions">Total Transaksi</span>
                     </div>
                     <p class="text-2xl font-bold text-gray-900 dark:text-white" id="total-transactions">0</p>
                 </div>
@@ -136,7 +149,7 @@
                         <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mr-3">
                             <i class="fas fa-piggy-bank text-purple-600 dark:text-purple-400"></i>
                         </div>
-                        <span class="text-sm text-gray-500 dark:text-gray-400">Total Tabungan</span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400" data-i18n="stat_total_savings">Total Tabungan</span>
                     </div>
                     <p class="text-2xl font-bold text-gray-900 dark:text-white" id="total-savings">Rp 0</p>
                 </div>
@@ -146,7 +159,7 @@
                         <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mr-3">
                             <i class="fas fa-percentage text-blue-600 dark:text-blue-400"></i>
                         </div>
-                        <span class="text-sm text-gray-500 dark:text-gray-400">Rata-rata Saving</span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400" data-i18n="stat_avg_saving">Rata-rata Saving</span>
                     </div>
                     <p class="text-2xl font-bold text-gray-900 dark:text-white" id="avg-saving-rate">0%</p>
                 </div>
@@ -156,7 +169,7 @@
                         <div class="w-10 h-10 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center mr-3">
                             <i class="fas fa-calendar-check text-orange-600 dark:text-orange-400"></i>
                         </div>
-                        <span class="text-sm text-gray-500 dark:text-gray-400">Bulan Aktif</span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400" data-i18n="stat_active_months">Bulan Aktif</span>
                     </div>
                     <p class="text-2xl font-bold text-gray-900 dark:text-white" id="active-months">0</p>
                 </div>
@@ -165,63 +178,63 @@
             <!-- Settings Sections -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 <!-- Personal Information -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-semibold mb-4">
-                        <i class="fas fa-user-circle text-emerald-600 mr-2"></i>Informasi Personal
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4 dark:text-white">
+                        <i class="fas fa-user-circle text-emerald-600 mr-2"></i><span data-i18n="profile_personal_info">Informasi Personal</span>
                     </h3>
                     <div class="space-y-4">
-                        <div class="flex justify-between items-center py-2 border-b">
-                            <span class="text-gray-600">Nama Lengkap</span>
-                            <span class="font-medium" id="display-name">John Doe</span>
+                        <div class="flex justify-between items-center py-2 border-b dark:border-slate-700">
+                            <span class="text-gray-600 dark:text-gray-400" data-i18n="profile_full_name">Nama Lengkap</span>
+                            <span class="font-medium dark:text-white" id="display-name">John Doe</span>
                         </div>
-                        <div class="flex justify-between items-center py-2 border-b">
-                            <span class="text-gray-600">Email</span>
-                            <span class="font-medium" id="display-email">johndoe@example.com</span>
+                        <div class="flex justify-between items-center py-2 border-b dark:border-slate-700">
+                            <span class="text-gray-600 dark:text-gray-400" data-i18n="profile_email">Email</span>
+                            <span class="font-medium dark:text-white" id="display-email">johndoe@example.com</span>
                         </div>
-                        <div class="flex justify-between items-center py-2 border-b">
-                            <span class="text-gray-600">Nomor Telepon</span>
-                            <span class="font-medium" id="display-phone">+62 812 3456 7890</span>
+                        <div class="flex justify-between items-center py-2 border-b dark:border-slate-700">
+                            <span class="text-gray-600 dark:text-gray-400" data-i18n="profile_phone">Nomor Telepon</span>
+                            <span class="font-medium dark:text-white" id="display-phone">+62 812 3456 7890</span>
                         </div>
-                        <div class="flex justify-between items-center py-2 border-b">
-                            <span class="text-gray-600">Tanggal Lahir</span>
-                            <span class="font-medium" id="display-birthday">15 Januari 2003</span>
+                        <div class="flex justify-between items-center py-2 border-b dark:border-slate-700">
+                            <span class="text-gray-600 dark:text-gray-400" data-i18n="profile_birthday">Tanggal Lahir</span>
+                            <span class="font-medium dark:text-white" id="display-birthday">15 Januari 2003</span>
                         </div>
                         <div class="flex justify-between items-center py-2">
-                            <span class="text-gray-600">Alamat</span>
-                            <span class="font-medium" id="display-address">Jakarta, Indonesia</span>
+                            <span class="text-gray-600 dark:text-gray-400" data-i18n="profile_address">Alamat</span>
+                            <span class="font-medium dark:text-white" id="display-address">Jakarta, Indonesia</span>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Financial Settings -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-semibold">
-                            <i class="fas fa-cog text-emerald-600 mr-2"></i>Pengaturan Keuangan
+                        <h3 class="text-xl font-semibold dark:text-white">
+                            <i class="fas fa-cog text-emerald-600 mr-2"></i><span data-i18n="profile_financial_settings">Pengaturan Keuangan</span>
                         </h3>
                         <button onclick="openEditFinancialModal()" class="text-emerald-600 hover:text-emerald-800 text-sm">
-                            <i class="fas fa-edit mr-1"></i>Edit
+                            <i class="fas fa-edit mr-1"></i><span data-i18n="edit">Edit</span>
                         </button>
                     </div>
                     <div class="space-y-4">
-                        <div class="flex justify-between items-center py-2 border-b">
-                            <span class="text-gray-600">Mata Uang</span>
-                            <span class="font-medium" id="display-currency">IDR (Rupiah)</span>
+                        <div class="flex justify-between items-center py-2 border-b dark:border-slate-700">
+                            <span class="text-gray-600 dark:text-gray-400" data-i18n="profile_currency">Mata Uang</span>
+                            <span class="font-medium dark:text-white" id="display-currency">IDR (Rupiah)</span>
                         </div>
-                        <div class="flex justify-between items-center py-2 border-b">
-                            <span class="text-gray-600">Format Angka</span>
-                            <span class="font-medium" id="display-number-format">1.000.000</span>
+                        <div class="flex justify-between items-center py-2 border-b dark:border-slate-700">
+                            <span class="text-gray-600 dark:text-gray-400" data-i18n="profile_number_format">Format Angka</span>
+                            <span class="font-medium dark:text-white" id="display-number-format">1.000.000</span>
                         </div>
-                        <div class="flex justify-between items-center py-2 border-b">
-                            <span class="text-gray-600">Tanggal Gajian</span>
-                            <span class="font-medium" id="display-payday">Setiap Tanggal 1</span>
+                        <div class="flex justify-between items-center py-2 border-b dark:border-slate-700">
+                            <span class="text-gray-600 dark:text-gray-400" data-i18n="profile_payday">Tanggal Gajian</span>
+                            <span class="font-medium dark:text-white" id="display-payday">Setiap Tanggal 1</span>
                         </div>
-                        <div class="flex justify-between items-center py-2 border-b">
-                            <span class="text-gray-600">Target Tabungan</span>
-                            <span class="font-medium" id="display-savings-target">Rp 600.000/bulan</span>
+                        <div class="flex justify-between items-center py-2 border-b dark:border-slate-700">
+                            <span class="text-gray-600 dark:text-gray-400" data-i18n="profile_savings_target">Target Tabungan</span>
+                            <span class="font-medium dark:text-white" id="display-savings-target">Rp 600.000/bulan</span>
                         </div>
                         <div class="flex justify-between items-center py-2">
-                            <span class="text-gray-600">Notifikasi Budget</span>
+                            <span class="text-gray-600 dark:text-gray-400" data-i18n="profile_budget_notification">Notifikasi Budget</span>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" class="sr-only peer" checked>
                                 <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
@@ -234,42 +247,42 @@
             <!-- App Settings -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 <!-- App Preferences -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-semibold mb-4">
-                        <i class="fas fa-sliders-h text-emerald-600 mr-2"></i>Preferensi Aplikasi
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4 dark:text-white">
+                        <i class="fas fa-sliders-h text-emerald-600 mr-2"></i><span data-i18n="profile_app_preferences">Preferensi Aplikasi</span>
                     </h3>
                     <div class="space-y-4">
-                        <div class="flex justify-between items-center py-2 border-b">
-                            <span class="text-gray-600 dark:text-gray-300">Tema</span>
+                        <div class="flex justify-between items-center py-2 border-b dark:border-slate-700">
+                            <span class="text-gray-600 dark:text-gray-400" data-i18n="profile_theme">Tema</span>
                             <select id="theme-dropdown" class="border rounded-lg px-3 py-1 text-sm bg-white dark:bg-slate-700 dark:border-gray-600 dark:text-gray-200" onchange="window.themeManager.setTheme(this.value)">
                                 <option value="light">Light</option>
                                 <option value="dark">Dark</option>
                                 <option value="auto" selected>Auto</option>
                             </select>
                         </div>
-<div class="flex justify-between items-center py-2 border-b">
-                            <span class="text-gray-600" data-i18n="profile_language">Bahasa</span>
+                        <div class="flex justify-between items-center py-2 border-b dark:border-slate-700">
+                            <span class="text-gray-600 dark:text-gray-400" data-i18n="profile_language">Bahasa</span>
                             <select id="language-dropdown" class="border rounded-lg px-3 py-1 text-sm bg-white dark:bg-slate-700 dark:border-gray-600 dark:text-gray-200" onchange="window.i18nManager.setLanguage(this.value)">
                                 <option value="id" selected>Indonesia</option>
                                 <option value="en">English</option>
                             </select>
                         </div>
-                        <div class="flex justify-between items-center py-2 border-b">
-                            <span class="text-gray-600">Notifikasi</span>
+                        <div class="flex justify-between items-center py-2 border-b dark:border-slate-700">
+                            <span class="text-gray-600 dark:text-gray-400" data-i18n="profile_notifications">Notifikasi</span>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" class="sr-only peer" checked>
                                 <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
                             </label>
                         </div>
-                        <div class="flex justify-between items-center py-2 border-b">
-                            <span class="text-gray-600">Reminder Harian</span>
+                        <div class="flex justify-between items-center py-2 border-b dark:border-slate-700">
+                            <span class="text-gray-600 dark:text-gray-400" data-i18n="profile_daily_reminder">Reminder Harian</span>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" class="sr-only peer">
                                 <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
                             </label>
                         </div>
                         <div class="flex justify-between items-center py-2">
-                            <span class="text-gray-600">Auto Backup</span>
+                            <span class="text-gray-600 dark:text-gray-400" data-i18n="profile_auto_backup">Auto Backup</span>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" class="sr-only peer" checked>
                                 <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
@@ -279,32 +292,32 @@
                 </div>
                 
                 <!-- Security -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-semibold mb-4">
-                        <i class="fas fa-shield-alt text-emerald-600 mr-2"></i>Keamanan
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4 dark:text-white">
+                        <i class="fas fa-shield-alt text-emerald-600 mr-2"></i><span data-i18n="profile_security">Keamanan</span>
                     </h3>
                     <div class="space-y-4">
-                        <div class="flex justify-between items-center py-2 border-b">
+                        <div class="flex justify-between items-center py-2 border-b dark:border-slate-700">
                             <div>
-                                <span class="text-gray-600 block">Kata Sandi</span>
-                                <span class="text-sm text-gray-400">Terakhir diubah 30 hari lalu</span>
+                                <span class="text-gray-600 dark:text-gray-400 block" data-i18n="profile_password">Kata Sandi</span>
+                                <span class="text-sm text-gray-400" data-i18n="profile_password_changed">Terakhir diubah 30 hari lalu</span>
                             </div>
-                            <button class="text-emerald-600 hover:text-emerald-800 font-medium text-sm">Ubah</button>
+                            <button class="text-emerald-600 hover:text-emerald-800 font-medium text-sm" data-i18n="profile_change">Ubah</button>
                         </div>
-                        <div class="flex justify-between items-center py-2 border-b">
+                        <div class="flex justify-between items-center py-2 border-b dark:border-slate-700">
                             <div>
-                                <span class="text-gray-600 block">Verifikasi Dua Faktor</span>
-                                <span class="text-sm text-gray-400">Tambahkan keamanan ekstra</span>
+                                <span class="text-gray-600 dark:text-gray-400 block" data-i18n="profile_2fa">Verifikasi Dua Faktor</span>
+                                <span class="text-sm text-gray-400" data-i18n="profile_2fa_desc">Tambahkan keamanan ekstra</span>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" class="sr-only peer">
                                 <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
                             </label>
                         </div>
-                        <div class="flex justify-between items-center py-2 border-b">
+                        <div class="flex justify-between items-center py-2 border-b dark:border-slate-700">
                             <div>
-                                <span class="text-gray-600 block">Biometrik</span>
-                                <span class="text-sm text-gray-400">Face ID / Fingerprint</span>
+                                <span class="text-gray-600 dark:text-gray-400 block" data-i18n="profile_biometric">Biometrik</span>
+                                <span class="text-sm text-gray-400" data-i18n="profile_biometric_desc">Face ID / Fingerprint</span>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" class="sr-only peer" checked>
@@ -313,29 +326,32 @@
                         </div>
                         <div class="flex justify-between items-center py-2">
                             <div>
-                                <span class="text-gray-600 block">Sesi Aktif</span>
-                                <span class="text-sm text-gray-400">1 perangkat</span>
+                                <span class="text-gray-600 dark:text-gray-400 block" data-i18n="profile_active_sessions">Sesi Aktif</span>
+                                <span class="text-sm text-gray-400">1 <span data-i18n="device">perangkat</span></span>
                             </div>
-                            <button class="text-red-500 hover:text-red-700 font-medium text-sm">Keluar</button>
+                            <button class="text-red-500 hover:text-red-700 font-medium text-sm" data-i18n="profile_logout_device">Keluar</button>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Account Actions -->
-            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-                <h3 class="text-xl font-semibold mb-4">
-                    <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>Akun
+            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 mb-8">
+                <h3 class="text-xl font-semibold mb-4 dark:text-white">
+                    <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i><span data-i18n="profile_account">Akun</span>
                 </h3>
                 <div class="flex flex-wrap gap-4">
                     <button class="flex items-center bg-blue-100 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-200 transition">
-                        <i class="fas fa-download mr-2"></i>Export Data
+                        <i class="fas fa-download mr-2"></i><span data-i18n="profile_export_data">Export Data</span>
                     </button>
                     <button class="flex items-center bg-purple-100 text-purple-700 px-4 py-2 rounded-lg hover:bg-purple-200 transition">
-                        <i class="fas fa-history mr-2"></i>Riwayat Aktivitas
+                        <i class="fas fa-history mr-2"></i><span data-i18n="profile_activity_history">Riwayat Aktivitas</span>
+                    </button>
+                    <button onclick="resetAllData()" class="flex items-center bg-orange-100 text-orange-700 px-4 py-2 rounded-lg hover:bg-orange-200 transition">
+                        <i class="fas fa-undo mr-2"></i><span data-i18n="reset_all_data">Reset All Data</span>
                     </button>
                     <button onclick="openDeleteModal()" class="flex items-center bg-red-100 text-red-700 px-4 py-2 rounded-lg hover:bg-red-200 transition">
-                        <i class="fas fa-trash mr-2"></i>Hapus Akun
+                        <i class="fas fa-trash mr-2"></i><span data-i18n="profile_delete_account">Hapus Akun</span>
                     </button>
                 </div>
             </div>
@@ -350,32 +366,32 @@
 
     <!-- Edit Profile Modal -->
     <div id="edit-profile-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
-            <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-4 dark:text-white" data-i18n="edit_profile">Edit Profile</h3>
             <form id="edit-profile-form">
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Nama Lengkap</label>
-                    <input type="text" id="edit-name" class="w-full p-2 border rounded-lg" value="John Doe">
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-300" data-i18n="profile_full_name">Nama Lengkap</label>
+                    <input type="text" id="edit-name" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white" value="John Doe">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Email</label>
-                    <input type="email" id="edit-email" class="w-full p-2 border rounded-lg" value="johndoe@example.com">
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-300" data-i18n="profile_email">Email</label>
+                    <input type="email" id="edit-email" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white" value="johndoe@example.com">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Nomor Telepon</label>
-                    <input type="tel" id="edit-phone" class="w-full p-2 border rounded-lg" value="+62 812 3456 7890">
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-300" data-i18n="profile_phone">Nomor Telepon</label>
+                    <input type="tel" id="edit-phone" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white" value="+62 812 3456 7890">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Alamat</label>
-                    <input type="text" id="edit-address" class="w-full p-2 border rounded-lg" value="Jakarta, Indonesia">
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-300" data-i18n="profile_address">Alamat</label>
+                    <input type="text" id="edit-address" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white" value="Jakarta, Indonesia">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Tanggal Lahir</label>
-                    <input type="date" id="edit-birthday" class="w-full p-2 border rounded-lg" value="2003-01-15">
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-300" data-i18n="profile_birthday">Tanggal Lahir</label>
+                    <input type="date" id="edit-birthday" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white" value="2003-01-15">
                 </div>
                 <div class="flex justify-end">
-                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeEditProfileModal()">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Simpan</button>
+                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeEditProfileModal()" data-i18n="cancel">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition" data-i18n="save">Simpan</button>
                 </div>
             </form>
         </div>
@@ -383,20 +399,20 @@
 
     <!-- Edit Photo Modal -->
     <div id="edit-photo-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
-            <h3 class="text-xl font-semibold mb-4">Ganti Foto Profil</h3>
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-4 dark:text-white" data-i18n="change_profile_photo">Ganti Foto Profil</h3>
             <div class="text-center mb-4">
                 <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-4xl font-bold mb-4" id="preview-avatar">
                     JD
                 </div>
                 <input type="file" id="photo-input" class="hidden" accept="image/*" onchange="previewPhoto(event)">
-                <label for="photo-input" class="cursor-pointer text-emerald-600 hover:text-emerald-800">
-                    <i class="fas fa-upload mr-2"></i>Pilih Foto
+                <label for="photo-input" class="cursor-pointer text-emerald-600 hover:text-emerald-800 dark:text-emerald-400">
+                    <i class="fas fa-upload mr-2"></i><span data-i18n="choose_photo">Pilih Foto</span>
                 </label>
             </div>
             <div class="flex justify-end">
-                <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeEditPhotoModal()">Batal</button>
-                <button type="button" onclick="savePhoto()" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Simpan</button>
+                <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeEditPhotoModal()" data-i18n="cancel">Batal</button>
+                <button type="button" onclick="savePhoto()" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition" data-i18n="save">Simpan</button>
             </div>
         </div>
     </div>
@@ -408,28 +424,28 @@
                 <div class="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
                     <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
                 </div>
-                <h3 class="text-xl font-semibold mb-2">Hapus Akun?</h3>
-                <p class="text-gray-600 mb-4">Tindakan ini tidak dapat dibatalkan. Semua data Anda akan dihapus secara permanen.</p>
+                <h3 class="text-xl font-semibold mb-2 dark:text-white" data-i18n="delete_account">Hapus Akun?</h3>
+                <p class="text-gray-600 dark:text-gray-400 mb-4" data-i18n="delete_account_confirm_text">Tindakan ini tidak dapat dibatalkan. Semua data Anda akan dihapus secara permanen.</p>
             </div>
             <div class="mb-4">
-                <label class="block text-sm font-medium mb-2">Ketik "HAPUS" untuk konfirmasi</label>
-                <input type="text" id="delete-confirm" class="w-full p-2 border rounded-lg" placeholder="HAPUS">
+                <label class="block text-sm font-medium mb-2 dark:text-gray-300" data-i18n="delete_confirm_instruction">Ketik "HAPUS" untuk konfirmasi</label>
+                <input type="text" id="delete-confirm" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="HAPUS" data-i18n-placeholder="HAPUS">
             </div>
             <div class="flex justify-end gap-2">
-                <button type="button" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeDeleteModal()">Batal</button>
-                <button type="button" onclick="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">Hapus Akun</button>
+                <button type="button" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeDeleteModal()" data-i18n="cancel">Batal</button>
+                <button type="button" onclick="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition" data-i18n="profile_delete_account">Hapus Akun</button>
             </div>
         </div>
     </div>
 
     <!-- Edit Financial Settings Modal -->
     <div id="edit-financial-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
-            <h3 class="text-xl font-semibold mb-4">Edit Pengaturan Keuangan</h3>
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-4 dark:text-white" data-i18n="edit_financial_settings">Edit Pengaturan Keuangan</h3>
             <form id="edit-financial-form">
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Mata Uang</label>
-                    <select id="edit-currency" class="w-full p-2 border rounded-lg">
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-300" data-i18n="profile_currency">Mata Uang</label>
+                    <select id="edit-currency" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white">
                         <option value="IDR (Rupiah)" selected>IDR (Rupiah)</option>
                         <option value="USD (Dollar)">USD (Dollar)</option>
                         <option value="EUR (Euro)">EUR (Euro)</option>
@@ -440,8 +456,8 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Format Angka</label>
-                    <select id="edit-number-format" class="w-full p-2 border rounded-lg">
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-300" data-i18n="profile_number_format">Format Angka</label>
+                    <select id="edit-number-format" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white">
                         <option value="1.000.000" selected>1.000.000 (Indonesia)</option>
                         <option value="1,000,000">1,000,000 (US/UK)</option>
                         <option value="1 000 000">1 000 000 (France)</option>
@@ -449,8 +465,8 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Tanggal Gajian</label>
-                    <select id="edit-payday" class="w-full p-2 border rounded-lg">
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-300" data-i18n="profile_payday">Tanggal Gajian</label>
+                    <select id="edit-payday" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white">
                         <option value="1" selected>1</option>
                         <option value="5">5</option>
                         <option value="10">10</option>
@@ -461,12 +477,12 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Target Tabungan (per bulan)</label>
-                    <input type="number" id="edit-savings-target" class="w-full p-2 border rounded-lg" value="600000" min="0" step="10000">
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-300" data-i18n="profile_savings_target">Target Tabungan (per bulan)</label>
+                    <input type="number" id="edit-savings-target" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white" value="600000" min="0" step="10000">
                 </div>
                 <div class="flex justify-end">
-                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeEditFinancialModal()">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Simpan</button>
+                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeEditFinancialModal()" data-i18n="cancel">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition" data-i18n="save">Simpan</button>
                 </div>
             </form>
         </div>
@@ -526,7 +542,12 @@
             const birthdayParts = profileData.birthday.split(' ');
             if (birthdayParts.length === 3) {
                 const day = birthdayParts[0].padStart(2, '0');
-                const months = { 'Januari': '01', 'Februari': '02', 'Maret': '03', 'April': '04', 'Mei': '05', 'Juni': '06', 'Juli': '07', 'Agustus': '08', 'September': '09', 'Oktober': '10', 'November': '11', 'Desember': '12' };
+                const months = {
+                    'Januari': '01', 'Februari': '02', 'Maret': '03', 'April': '04', 'Mei': '05', 'Juni': '06',
+                    'Juli': '07', 'Agustus': '08', 'September': '09', 'Oktober': '10', 'November': '11', 'Desember': '12',
+                    'January': '01', 'February': '02', 'March': '03', 'May': '05', 'June': '06', 'July': '07', 'August': '08',
+                    'October': '10', 'December': '12'
+                };
                 const month = months[birthdayParts[1]] || '01';
                 const year = birthdayParts[2];
                 document.getElementById('edit-birthday').value = `${year}-${month}-${day}`;
@@ -586,7 +607,12 @@
         function formatBirthday(dateStr) {
             const date = new Date(dateStr);
             const day = date.getDate();
-            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            const months = [
+                window.i18nManager.t('month_jan'), window.i18nManager.t('month_feb'), window.i18nManager.t('month_mar'),
+                window.i18nManager.t('month_apr'), window.i18nManager.t('month_may'), window.i18nManager.t('month_jun'),
+                window.i18nManager.t('month_jul'), window.i18nManager.t('month_aug'), window.i18nManager.t('month_sep'),
+                window.i18nManager.t('month_oct'), window.i18nManager.t('month_nov'), window.i18nManager.t('month_dec')
+            ];
             const month = months[date.getMonth()];
             const year = date.getFullYear();
             return `${day} ${month} ${year}`;
@@ -616,7 +642,7 @@
             document.getElementById('display-birthday').textContent = profileData.birthday;
 
             closeEditProfileModal();
-            alert('Profile berhasil diperbarui!');
+            showAlert(window.i18nManager.t('profile_update_success'));
         });
 
         document.getElementById('edit-financial-form').addEventListener('submit', function(e) {
@@ -632,11 +658,11 @@
 
             document.getElementById('display-currency').textContent = financialData.currency;
             document.getElementById('display-number-format').textContent = financialData.numberFormat;
-            document.getElementById('display-payday').textContent = 'Setiap Tanggal ' + financialData.payday;
-            document.getElementById('display-savings-target').textContent = currencySymbol + ' ' + formattedSavings + '/bulan';
+            document.getElementById('display-payday').textContent = window.i18nManager.t('every_day_x').replace('{day}', financialData.payday);
+            document.getElementById('display-savings-target').textContent = currencySymbol + ' ' + formattedSavings + '/' + window.i18nManager.t('month');
 
             closeEditFinancialModal();
-            alert('Pengaturan keuangan berhasil diperbarui!');
+            showAlert(window.i18nManager.t('financial_settings_update_success'));
         });
 
         function getInitials(name) {
@@ -667,16 +693,16 @@
             }
             
             closeEditPhotoModal();
-            alert('Foto profil berhasil diperbarui!');
+            showAlert(window.i18nManager.t('photo_update_success'));
         }
 
         function confirmDelete() {
             const confirmText = document.getElementById('delete-confirm').value;
             if (confirmText === 'HAPUS') {
-                alert('Akun akan dihapus. Fitur ini memerlukan konfirmasi tambahan.');
+                showAlert(window.i18nManager.t('delete_account_confirm_feature'));
                 closeDeleteModal();
             } else {
-                alert('Ketik "HAPUS" untuk melanjutkan');
+                showAlert(window.i18nManager.t('delete_confirm_instruction'));
             }
         }
 
@@ -710,11 +736,39 @@
                 overlay.classList.add('hidden');
             }
         }
+
+        async function resetAllData() {
+            if (confirm(window.i18nManager.t('reset_confirm_msg') || "Are you sure you want to reset all data for the demo?")) {
+                try {
+                    const response = await fetch('/reset_data', { method: 'POST' });
+                    const result = await response.json();
+                    if (result.success) {
+                        alert(window.i18nManager.t('reset_success_msg') || "All data has been reset.");
+                        window.location.reload();
+                    } else {
+                        alert("Error: " + result.error);
+                    }
+                } catch (error) {
+                    console.error('Error resetting data:', error);
+                    alert("Failed to reset data.");
+                }
+            }
+        }
+        function handleLogout() {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = '/logout';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('isLoggedIn') !== 'true') {
+                window.location.href = 'login.html';
+            }
+        });
     </script>
 
-    <script src="static/notifications.js"></script>
-    <script src="static/theme.js"></script>
-    <script src="static/i18n.js"></script>
+    <script src="{{ url_for('static', filename='notifications.js') }}"></script>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
 </body>
 </html>
-

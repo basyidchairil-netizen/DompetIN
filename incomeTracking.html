@@ -83,8 +83,8 @@
                 <h1 class="text-2xl font-bold">Dompetin</h1>
                 <!-- Language and Theme Toggle -->
                 <div class="flex items-center gap-2">
-                    <button onclick="window.i18nManager.toggleLanguage()" class="p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Language">
-                        <span class="text-sm font-medium">ID</span>
+                    <button onclick="window.i18nManager.toggleLanguage()" class="language-toggle p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Language">
+                        <span class="lang-text text-sm font-medium">ID</span>
                     </button>
                     <button onclick="window.themeManager.cycleTheme()" class="p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Theme">
                         <span class="theme-icon-light"><i class="fas fa-sun text-yellow-300"></i></span>
@@ -94,23 +94,26 @@
                 </div>
             </div>
             <nav class="mt-8">
-<a href="dashboard.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
-                    <i class="fas fa-home mr-3"></i>Home
+                <a href="dashboard.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-home mr-3"></i><span data-i18n="sidebar_home">Home</span>
                 </a>
                 <a href="incomeTracking.html" class="sidebar-link block py-2 px-4 bg-emerald-600">
-                    <i class="fas fa-money-bill-wave mr-3"></i>Income Tracking
+                    <i class="fas fa-money-bill-wave mr-3"></i><span data-i18n="sidebar_income_tracking">Income Tracking</span>
                 </a>
                 <a href="budgetplaning.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
-                    <i class="fas fa-chart-pie mr-3"></i>Budget Planning
+                    <i class="fas fa-chart-pie mr-3"></i><span data-i18n="sidebar_budget_planning">Budget Planning</span>
                 </a>
-<a href="analysis.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
-                    <i class="fas fa-chart-line mr-3"></i>Analysis
+                <a href="smart_saving.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-piggy-bank mr-3"></i><span data-i18n="sidebar_smart_saving">Smart Saving</span>
+                </a>
+                <a href="analysis.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-chart-line mr-3"></i><span data-i18n="sidebar_analysis">Analysis</span>
                 </a>
                 <a href="profile.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
-                    <i class="fas fa-user mr-3"></i>Profile
+                    <i class="fas fa-user mr-3"></i><span data-i18n="sidebar_profile">Profile</span>
                 </a>
-                <a href="index.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600 mt-8">
-                    <i class="fas fa-sign-out-alt mr-3"></i>Logout
+                <a href="javascript:void(0)" onclick="handleLogout()" class="sidebar-link block py-2 px-4 hover:bg-emerald-600 mt-8">
+                    <i class="fas fa-sign-out-alt mr-3"></i><span data-i18n="sidebar_logout">Logout</span>
                 </a>
             </nav>
         </div>
@@ -121,8 +124,8 @@
         <div class="flex-1 md:ml-64 p-4 md:p-8">
             <!-- Header -->
             <div class="mb-8">
-                <h2 class="text-4xl font-bold text-gray-900 mb-2">Budget Tracking</h2>
-                <p class="text-lg text-gray-600">Catat pemasukan dan pengeluaran harian Anda</p>
+                <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-2" data-i18n="income_title">Budget Tracking</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400" data-i18n="income_subtitle">Record your daily income and expenses</p>
             </div>
 
             <!-- Day Selector -->
@@ -131,8 +134,8 @@
                     <i class="fas fa-chevron-left text-emerald-600"></i>
                 </button>
                 <div class="text-center">
-                    <h3 class="text-2xl font-semibold" id="current-day">Hari Ini</h3>
-                    <p class="text-sm text-gray-500" id="current-date">Selasa, 14 Januari 2025</p>
+                    <h3 class="text-2xl font-semibold dark:text-white" id="current-day" data-i18n="income_today">Hari Ini</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400" id="current-date">{{ global_data.current_date_formatted }}</p>
                 </div>
                 <button class="bg-white px-4 py-2 rounded-lg shadow hover:shadow-md transition" onclick="changeDay(1)">
                     <i class="fas fa-chevron-right text-emerald-600"></i>
@@ -147,8 +150,8 @@
                             <i class="fas fa-arrow-up text-green-600 text-xl"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">Pemasukan</p>
-                            <p class="text-2xl font-bold text-green-600" id="today-income">Rp 0</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="income_income">Pemasukan</p>
+                            <p class="text-2xl font-bold text-green-600" id="today-income">{{ global_data.today_income | fmt_rupiah }}</p>
                         </div>
                     </div>
                 </div>
@@ -159,8 +162,8 @@
                             <i class="fas fa-arrow-down text-red-600 text-xl"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">Pengeluaran</p>
-                            <p class="text-2xl font-bold text-red-600" id="today-expense">Rp 0</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="income_expense">Pengeluaran</p>
+                            <p class="text-2xl font-bold text-red-600" id="today-expense">{{ global_data.today_expense | fmt_rupiah }}</p>
                         </div>
                     </div>
                 </div>
@@ -171,8 +174,8 @@
                             <i class="fas fa-wallet text-blue-600 text-xl"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">Sisa Hari Ini</p>
-                            <p class="text-2xl font-bold text-blue-600" id="today-remaining">Rp 0</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="income_remaining">Sisa Hari Ini</p>
+                            <p class="text-2xl font-bold text-blue-600" id="today-remaining">{{ (global_data.today_income - global_data.today_expense) | fmt_rupiah }}</p>
                         </div>
                     </div>
                 </div>
@@ -183,8 +186,37 @@
                             <i class="fas fa-chart-line text-purple-600 text-xl"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">Status Hari Ini</p>
-                            <p class="text-2xl font-bold" id="today-status">Normal</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="income_status_today">Status Hari Ini</p>
+                            {% set today_percent = 0 %}
+                            {% if global_data.today_income > 0 %}
+                                {% set today_percent = ((global_data.today_expense / global_data.today_income) * 100)|round(0)|int %}
+                            {% endif %}
+                            
+                            {% if global_data.today_income == 0 and global_data.today_expense > 0 %}
+                                {% set status_key = 'status_very_spendy' %}
+                                {% set status_color = 'text-red-500' %}
+                                {% set status_text = 'Sangat Boros' %}
+                            {% elif today_percent > 80 %}
+                                {% set status_key = 'status_very_spendy' %}
+                                {% set status_color = 'text-red-500' %}
+                                {% set status_text = 'Sangat Boros' %}
+                            {% elif today_percent > 50 %}
+                                {% set status_key = 'status_spendy' %}
+                                {% set status_color = 'text-yellow-500' %}
+                                {% set status_text = 'Boros' %}
+                            {% elif today_percent > 30 %}
+                                {% set status_key = 'status_thrifty' %}
+                                {% set status_color = 'text-green-400' %}
+                                {% set status_text = 'Hemat' %}
+                            {% else %}
+                                {% set status_key = 'status_very_thrifty' %}
+                                {% set status_color = 'text-green-600' %}
+                                {% set status_text = 'Sangat Hemat' %}
+                            {% endif %}
+                            
+                            <p class="text-2xl font-bold {{ status_color }}" id="today-status" data-i18n="{{ status_key }}">
+                                {{ status_text }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -194,35 +226,54 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Transaction List -->
                 <div class="lg:col-span-2">
-                    <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-2xl font-semibold">Riwayat Transaksi</h3>
-                            <div class="flex gap-2">
-                                <button onclick="openTransactionModal('income')" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
-                                    <i class="fas fa-plus mr-2"></i>Pemasukan
-                                </button>
-                                <button onclick="openTransactionModal('expense')" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
-                                    <i class="fas fa-minus mr-2"></i>Pengeluaran
-                                </button>
-                            </div>
+                            <h3 class="text-2xl font-semibold dark:text-white" data-i18n="income_transaction_history">Riwayat Transaksi</h3>
                         </div>
                         
                         <!-- Filter Tabs -->
                         <div class="flex gap-2 mb-4">
-                            <button onclick="filterTransactions('all')" class="filter-btn active px-4 py-2 rounded-lg bg-emerald-100 text-emerald-700 font-medium" data-filter="all">
+                            <button onclick="filterTransactions('all')" class="filter-btn active px-4 py-2 rounded-lg bg-emerald-100 text-emerald-700 font-medium" data-filter="all" data-i18n="income_all">
                                 Semua
                             </button>
-                            <button onclick="filterTransactions('income')" class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-medium hover:bg-gray-200" data-filter="income">
+                            <button onclick="filterTransactions('income')" class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 dark:bg-slate-700 dark:text-gray-200" data-filter="income" data-i18n="income_income">
                                 Pemasukan
                             </button>
-                            <button onclick="filterTransactions('expense')" class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-medium hover:bg-gray-200" data-filter="expense">
+                            <button onclick="filterTransactions('expense')" class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 dark:bg-slate-700 dark:text-gray-200" data-filter="expense" data-i18n="income_expense">
                                 Pengeluaran
                             </button>
                         </div>
                         
                         <!-- Transaction Items -->
                         <div class="space-y-3" id="transaction-list">
-                            <!-- Transactions will be populated by JavaScript -->
+                            {% if transactions %}
+                                {% for t in transactions %}
+                                <div class="transaction-item border border-gray-200 dark:border-slate-700 rounded-lg p-4 hover:shadow-md transition flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3 {{ 'bg-green-100 text-green-600' if t.type == 'income' else 'bg-red-100 text-red-600' }}">
+                                            <i class="fas {{ 'fa-plus' if t.type == 'income' else 'fa-minus' }}"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold dark:text-white">{{ t.description }}</h4>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400" data-i18n="category_{{ t.category }}">{{ t.category }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-lg font-bold {{ 'text-green-600' if t.type == 'income' else 'text-red-600' }}">
+                                            {{ '+' if t.type == 'income' else '-' }}{{ t.amount | fmt_rupiah }}
+                                        </p>
+                                        <button onclick="deleteTransaction({{ t.id }})" class="text-xs text-red-500 hover:text-red-700">
+                                            <i class="fas fa-trash"></i> <span data-i18n="delete">Hapus</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="text-center py-8 text-gray-500">
+                                    <i class="fas fa-receipt text-4xl mb-3"></i>
+                                    <p data-i18n="income_no_transactions">Belum ada transaksi hari ini</p>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -230,53 +281,73 @@
                 <!-- Right Side - Summary & Tips -->
                 <div class="space-y-6">
                     <!-- Daily Budget Status -->
-                    <div class="bg-white rounded-xl shadow-lg p-6">
-                        <h3 class="text-xl font-semibold mb-4">Status Harian</h3>
+                    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4 dark:text-white" data-i18n="income_daily_status">Status Harian</h3>
                         <div class="text-center mb-4">
                             <div class="relative w-32 h-32 mx-auto">
                                 <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                                     <!-- Background circle -->
                                     <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb" stroke-width="10"/>
+                                    {% set dash_offset = 283 - (283 * [today_percent, 100]|min / 100) %}
+                                    {% set stroke_color = '#10b981' %}
+                                    {% if today_percent > 100 or (global_data.today_income == 0 and global_data.today_expense > 0) %}{% set stroke_color = '#dc2626' %}
+                                    {% elif today_percent > 80 %}{% set stroke_color = '#ef4444' %}
+                                    {% elif today_percent > 50 %}{% set stroke_color = '#f59e0b' %}
+                                    {% endif %}
                                     <!-- Progress circle with dynamic color -->
-                                    <circle id="daily-progress" cx="50" cy="50" r="45" fill="none" stroke="#10b981" stroke-width="10" 
-                                        stroke-dasharray="283" stroke-dashoffset="0" stroke-linecap="round"
+                                    <circle id="daily-progress" cx="50" cy="50" r="45" fill="none" stroke="{{ stroke_color }}" stroke-width="10" 
+                                        stroke-dasharray="283" stroke-dashoffset="{{ dash_offset }}" stroke-linecap="round"
                                         style="transition: stroke-dashoffset 0.5s ease, stroke 0.5s ease;"/>
                                 </svg>
                                 <div class="absolute inset-0 flex items-center justify-center flex-col">
-                                    <span class="text-2xl font-bold" id="daily-percent">0%</span>
-                                    <span class="text-xs text-gray-500">terpakai</span>
+                                    <span class="text-2xl font-bold dark:text-white" id="daily-percent">{{ today_percent }}%</span>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400" data-i18n="income_used">terpakai</span>
                                 </div>
                             </div>
                         </div>
                         <div class="text-center">
-                            <p class="text-sm text-gray-600">Total Pemasukan: <span class="font-bold" id="daily-budget">Rp 100.000</span></p>
-                            <p class="text-sm text-gray-500 mt-1" id="daily-message">Hari yang baik!</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400"><span data-i18n="income_total_income">Total Pemasukan</span>: <span class="font-bold" id="daily-budget">{{ global_data.today_income | fmt_rupiah }}</span></p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1" id="daily-message">
+                                {% if global_data.today_income == 0 and global_data.today_expense == 0 %}
+                                    <span class="text-gray-500" data-i18n="income_good_day">Hari yang baik!</span>
+                                {% elif global_data.today_income == 0 and global_data.today_expense > 0 %}
+                                    <span class="text-red-600 font-bold" data-i18n="status_over">⚠️ Over</span>
+                                {% elif global_data.today_expense == 0 %}
+                                    <span class="text-emerald-600" data-i18n="no_expense_yet">✅ Belum ada pengeluaran</span>
+                                {% elif today_percent > 100 %}
+                                    <span class="text-red-600 font-bold" data-i18n="status_over">⚠️ Over</span>
+                                {% elif today_percent > 80 %}
+                                    <span class="text-red-500 font-bold" data-i18n="status_boros">⚠️ Boros</span>
+                                {% else %}
+                                    <span class="text-emerald-600" data-i18n="status_normal">✅ Normal</span>
+                                {% endif %}
+                            </p>
                         </div>
                     </div>
                     
                     <!-- Kategori Pengeluaran Hari Ini -->
-                    <div class="bg-white rounded-xl shadow-lg p-6">
-                        <h3 class="text-xl font-semibold mb-4">Kategori Pengeluaran</h3>
+                    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4 dark:text-white" data-i18n="income_expense_categories">Kategori Pengeluaran</h3>
                         <div class="space-y-3" id="category-summary">
                             <!-- Will be populated by JavaScript -->
                         </div>
                     </div>
                     
                     <!-- Quick Tips -->
-                    <div class="bg-white rounded-xl shadow-lg p-6">
-                        <h3 class="text-xl font-semibold mb-4">Tips Harian</h3>
+                    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4 dark:text-white" data-i18n="income_daily_tips">Tips Harian</h3>
                         <div class="space-y-3">
                             <div class="flex items-start">
                                 <i class="fas fa-lightbulb text-yellow-500 mr-3 mt-1"></i>
-                                <p class="text-sm text-gray-600">Catat setiap transaksi agar keuangan Anda terkontrol</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="income_tip1">Catat setiap transaksi agar keuangan Anda terkontrol</p>
                             </div>
                             <div class="flex items-start">
                                 <i class="fas fa-lightbulb text-yellow-500 mr-3 mt-1"></i>
-                                <p class="text-sm text-gray-600">Jangan lupa sisihkan 20% untuk tabungan</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="income_tip2">Jangan lupa sisihkan 20% untuk tabungan</p>
                             </div>
                             <div class="flex items-start">
                                 <i class="fas fa-lightbulb text-yellow-500 mr-3 mt-1"></i>
-                                <p class="text-sm text-gray-600">Review pengeluaran setiap malam</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="income_tip3">Review pengeluaran setiap malam</p>
                             </div>
                         </div>
                     </div>
@@ -287,55 +358,55 @@
 
     <!-- Add Transaction Modal -->
     <div id="transaction-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
-            <h3 class="text-xl font-semibold mb-4" id="modal-title">Tambah Transaksi</h3>
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-4 dark:text-white" id="modal-title" data-i18n="income_add_transaction">Tambah Transaksi</h3>
             <form id="transaction-form">
                 <input type="hidden" id="transaction-type" value="expense">
                 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Deskripsi</label>
-                    <input type="text" id="transaction-desc" class="w-full p-2 border rounded-lg" placeholder="e.g. Makan siang" required>
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-200" data-i18n="income_description">Deskripsi</label>
+                    <input type="text" id="transaction-desc" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="e.g. Makan siang" data-i18n-placeholder="income_description" required>
                 </div>
                 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Jumlah (Rp)</label>
-                    <input type="number" id="transaction-amount" class="w-full p-2 border rounded-lg" placeholder="e.g. 25000" required>
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-200" data-i18n="income_amount">Jumlah (Rp)</label>
+                    <input type="number" id="transaction-amount" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="e.g. 25000" data-i18n-placeholder="income_amount" required>
                 </div>
                 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Kategori</label>
-                    <select id="transaction-category" class="w-full p-2 border rounded-lg" required>
-                        <option value="">Pilih Kategori</option>
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-200" data-i18n="income_category">Kategori</label>
+                    <select id="transaction-category" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white" required>
+                        <option value="" data-i18n="select_category">Pilih Kategori</option>
                         <!-- Income categories -->
-                        <optgroup label="Pemasukan" id="income-categories">
-                            <option value="salary">Gaji</option>
-                            <option value="allowance">Uang Saku</option>
-                            <option value="freelance">Freelance</option>
-                            <option value="bonus">Bonus</option>
-                            <option value="other-income">Lainnya</option>
+                        <optgroup label="Pemasukan" id="income-categories" data-i18n="income_income">
+                            <option value="salary" data-i18n="category_salary">Gaji</option>
+                            <option value="allowance" data-i18n="category_allowance">Uang Saku</option>
+                            <option value="freelance" data-i18n="category_freelance">Freelance</option>
+                            <option value="bonus" data-i18n="category_bonus">Bonus</option>
+                            <option value="other-income" data-i18n="category_other_income">Lainnya</option>
                         </optgroup>
                         <!-- Expense categories -->
-                        <optgroup label="Pengeluaran" id="expense-categories">
-                            <option value="food">Makanan</option>
-                            <option value="transport">Transportasi</option>
-                            <option value="shopping">Belanja</option>
-                            <option value="entertainment">Hiburan</option>
-                            <option value="bills">Tagihan</option>
-                            <option value="education">Pendidikan</option>
-                            <option value="health">Kesehatan</option>
-                            <option value="other-expense">Lainnya</option>
+                        <optgroup label="Pengeluaran" id="expense-categories" data-i18n="income_expense">
+                            <option value="food" data-i18n="category_food">Makanan</option>
+                            <option value="transport" data-i18n="category_transport">Transportasi</option>
+                            <option value="shopping" data-i18n="category_shopping">Belanja</option>
+                            <option value="entertainment" data-i18n="category_entertainment">Hiburan</option>
+                            <option value="bills" data-i18n="category_bills">Tagihan</option>
+                            <option value="education" data-i18n="category_education">Pendidikan</option>
+                            <option value="health" data-i18n="category_health">Kesehatan</option>
+                            <option value="other-expense" data-i18n="category_other_expense">Lainnya</option>
                         </optgroup>
                     </select>
                 </div>
                 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Catatan (Opsional)</label>
-                    <textarea id="transaction-notes" class="w-full p-2 border rounded-lg" rows="2" placeholder="Tambahkan catatan..."></textarea>
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-200" data-i18n="income_notes">Catatan (Opsional)</label>
+                    <textarea id="transaction-notes" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white" rows="2" placeholder="Tambahkan catatan..." data-i18n-placeholder="income_notes"></textarea>
                 </div>
                 
                 <div class="flex justify-end">
-                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeTransactionModal()">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Simpan</button>
+                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeTransactionModal()" data-i18n="income_cancel">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition" data-i18n="income_save">Simpan</button>
                 </div>
             </form>
         </div>
@@ -343,7 +414,7 @@
 
     <script>
         // Data - will be loaded from server
-        let transactions = [];
+        let transactions = {{ transactions | tojson }};
         
         let currentDate = new Date();
         let dailyBudget = 100000; // Default daily budget
@@ -351,8 +422,10 @@
         // Load transactions from server
         async function loadTransactions() {
             const dateStr = currentDate.toISOString().split('T')[0];
+            const monthStr = dateStr.substring(0, 7); // YYYY-MM
             try {
-                const response = await fetch(`/get_transactions?date=${dateStr}`);
+                // Fetch for the entire month
+                const response = await fetch(`/get_transactions?month=${monthStr}`);
                 const data = await response.json();
                 transactions = data;
             } catch (error) {
@@ -401,14 +474,39 @@
             const today = new Date();
             const isToday = currentDate.toDateString() === today.toDateString();
             
-            document.getElementById('current-day').textContent = isToday ? 'Hari Ini' : dayNames[currentDate.getDay()];
-            document.getElementById('current-date').textContent = `${currentDate.getDate()} ${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            const dayNamesArr = [
+                window.i18nManager.t('day_sunday'),
+                window.i18nManager.t('day_monday'),
+                window.i18nManager.t('day_tuesday'),
+                window.i18nManager.t('day_wednesday'),
+                window.i18nManager.t('day_thursday'),
+                window.i18nManager.t('day_friday'),
+                window.i18nManager.t('day_saturday')
+            ];
+            
+            const monthNamesArr = [
+                window.i18nManager.t('month_january'),
+                window.i18nManager.t('month_february'),
+                window.i18nManager.t('month_march'),
+                window.i18nManager.t('month_april'),
+                window.i18nManager.t('month_may'),
+                window.i18nManager.t('month_june'),
+                window.i18nManager.t('month_july'),
+                window.i18nManager.t('month_august'),
+                window.i18nManager.t('month_september'),
+                window.i18nManager.t('month_october'),
+                window.i18nManager.t('month_november'),
+                window.i18nManager.t('month_december')
+            ];
+            
+            document.getElementById('current-day').textContent = isToday ? window.i18nManager.t('income_today') : dayNamesArr[currentDate.getDay()];
+            document.getElementById('current-date').textContent = `${currentDate.getDate()} ${monthNamesArr[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
         }
 
         // Modal functions
         function openTransactionModal(type) {
             document.getElementById('transaction-type').value = type;
-            document.getElementById('modal-title').textContent = type === 'income' ? 'Tambah Pemasukan' : 'Tambah Pengeluaran';
+            document.getElementById('modal-title').textContent = type === 'income' ? window.i18nManager.t('income_add_income') : window.i18nManager.t('income_add_expense');
             document.getElementById('transaction-category').value = '';
             
             // Update button color
@@ -448,10 +546,11 @@
         // Render transactions
         function renderTransactions() {
             const dateStr = currentDate.toISOString().split('T')[0];
+            const currentMonth = dateStr.substring(0, 7);
             const filtered = transactions.filter(t => {
-                const matchDate = t.date === dateStr;
+                const matchMonth = t.date.substring(0, 7) === currentMonth;
                 const matchFilter = currentFilter === 'all' || t.type === currentFilter;
-                return matchDate && matchFilter;
+                return matchMonth && matchFilter;
             });
             
             const container = document.getElementById('transaction-list');
@@ -460,7 +559,7 @@
                 container.innerHTML = `
                     <div class="text-center py-8 text-gray-500">
                         <i class="fas fa-receipt text-4xl mb-3"></i>
-                        <p>Belum ada transaksi hari ini</p>
+                        <p data-i18n="income_no_transactions">${window.i18nManager.t('income_no_transactions')}</p>
                     </div>
                 `;
                 return;
@@ -471,8 +570,19 @@
                 const iconClass = isIncome ? 'fa-arrow-up bg-green-100 text-green-600' : 'fa-arrow-down bg-red-100 text-red-600';
                 const amountClass = isIncome ? 'text-green-600' : 'text-red-600';
                 const categoryNames = {
-                    'salary': 'Gaji', 'allowance': 'Uang Saku', 'freelance': 'Freelance', 'bonus': 'Bonus', 'other-income': 'Lainnya',
-                    'food': 'Makanan', 'transport': 'Transportasi', 'shopping': 'Belanja', 'entertainment': 'Hiburan', 'bills': 'Tagihan', 'education': 'Pendidikan', 'health': 'Kesehatan', 'other-expense': 'Lainnya'
+                    'salary': window.i18nManager.t('category_salary'), 
+                    'allowance': window.i18nManager.t('category_allowance'), 
+                    'freelance': window.i18nManager.t('category_freelance'), 
+                    'bonus': window.i18nManager.t('category_bonus'), 
+                    'other-income': window.i18nManager.t('category_other_income'),
+                    'food': window.i18nManager.t('category_food'), 
+                    'transport': window.i18nManager.t('category_transport'), 
+                    'shopping': window.i18nManager.t('category_shopping'), 
+                    'entertainment': window.i18nManager.t('category_entertainment'), 
+                    'bills': window.i18nManager.t('category_bills'), 
+                    'education': window.i18nManager.t('category_education'), 
+                    'health': window.i18nManager.t('category_health'), 
+                    'other-expense': window.i18nManager.t('category_other_expense')
                 };
                 
                 return `
@@ -489,7 +599,7 @@
                         <div class="text-right">
                             <p class="text-lg font-bold ${amountClass}">${isIncome ? '+' : '-'}Rp ${parseInt(t.amount).toLocaleString('id-ID')}</p>
                             <button onclick="deleteTransaction(${t.id})" class="text-xs text-red-500 hover:text-red-700">
-                                <i class="fas fa-trash"></i> Hapus
+                                <i class="fas fa-trash"></i> <span data-i18n="delete">${window.i18nManager.t('delete')}</span>
                             </button>
                         </div>
                     </div>
@@ -499,7 +609,7 @@
 
         // Delete transaction
         function deleteTransaction(id) {
-            showConfirm('Yakin ingin menghapus transaksi ini?', () => {
+            showConfirm(window.i18nManager.t('delete_confirm'), () => {
                 transactions = transactions.filter(t => t.id !== id);
                 renderTransactions();
                 updateSummary();
@@ -535,14 +645,16 @@
 
         // Fungsi untuk mendapatkan status text berdasarkan persentase
         function getStatusForPercentage(percent, expense, income) {
-            if (income === 0) return { text: 'Tidak Ada Pemasukan', color: 'text-gray-500' };
-            if (expense === 0) return { text: 'Belum Terpakai', color: 'text-emerald-600' };
-            if (percent <= 25) return { text: 'Sangat Hemat', color: 'text-emerald-600' };
-            if (percent <= 50) return { text: 'Hemat', color: 'text-lime-600' };
-            if (percent <= 75) return { text: 'Normal', color: 'text-amber-600' };
-            if (percent <= 90) return { text: 'Boross', color: 'text-orange-500' };
-            if (percent <= 100) return { text: 'Sangat Boros!', color: 'text-red-500' };
-            return { text: 'KELEBIHAN!', color: 'text-red-600' };
+            if (income === 0) {
+                return expense > 0 
+                    ? { text: window.i18nManager.t('status_very_spendy') || 'Sangat Boros', color: 'text-red-500', key: 'status_very_spendy' }
+                    : { text: window.i18nManager.t('status_no_income') || 'Belum Ada Data', color: 'text-gray-500', key: 'status_no_income' };
+            }
+            
+            if (percent <= 30) return { text: window.i18nManager.t('status_very_thrifty') || 'Sangat Hemat', color: 'text-green-600', key: 'status_very_thrifty' };
+            if (percent <= 50) return { text: window.i18nManager.t('status_thrifty') || 'Hemat', color: 'text-green-400', key: 'status_thrifty' };
+            if (percent <= 80) return { text: window.i18nManager.t('status_spendy') || 'Boros', color: 'text-yellow-500', key: 'status_spendy' };
+            return { text: window.i18nManager.t('status_very_spendy') || 'Sangat Boros', color: 'text-red-500', key: 'status_very_spendy' };
         }
 
         // Update summary
@@ -555,65 +667,78 @@
             const remaining = income - expense;
             
             // Update today's overview
+            // Update today's overview
             document.getElementById('today-income').textContent = 'Rp ' + income.toLocaleString('id-ID');
             document.getElementById('today-expense').textContent = 'Rp ' + expense.toLocaleString('id-ID');
             document.getElementById('today-remaining').textContent = 'Rp ' + remaining.toLocaleString('id-ID');
             
-            // Hitung persentase berdasarkan income (bukan daily budget)
-            // Jika income 0, maka gunakan dailyBudget sebagai denominator
-            const denominator = income > 0 ? income : dailyBudget;
-            const dailyPercent = denominator > 0 ? Math.round((expense / denominator) * 100) : 0;
+            // Percentage based on today's income
+            let dailyPercent = 0;
+            if (income > 0) {
+                dailyPercent = Math.round((expense / income) * 100);
+            } else if (expense > 0) {
+                dailyPercent = 100; // If there is expense but no income, show 100%
+            }
             
-            // Dapatkan warna dan status berdasarkan persentase
+            // Get color and status
             const progressColor = getColorForPercentage(dailyPercent);
             const statusInfo = getStatusForPercentage(dailyPercent, expense, income);
             
             // Update status
             const statusEl = document.getElementById('today-status');
-            statusEl.textContent = statusInfo.text;
-            statusEl.className = 'text-2xl font-bold ' + statusInfo.color;
-            
-            // Update warna remaining berdasarkan status
-            const remainingEl = document.getElementById('today-remaining');
-            if (remaining < 0) {
-                remainingEl.className = 'text-2xl font-bold text-red-600';
-            } else if (dailyPercent > 75) {
-                remainingEl.className = 'text-2xl font-bold text-orange-500';
-            } else if (dailyPercent > 50) {
-                remainingEl.className = 'text-2xl font-bold text-amber-500';
-            } else {
-                remainingEl.className = 'text-2xl font-bold text-blue-600';
+            if (statusEl) {
+                statusEl.textContent = statusInfo.text;
+                statusEl.setAttribute('data-i18n', statusInfo.key);
+                statusEl.className = 'text-2xl font-bold ' + statusInfo.color;
             }
             
-            // Update daily progress dengan warna gradient
+            // Update remaining color
+            const remainingEl = document.getElementById('today-remaining');
+            if (remainingEl) {
+                if (remaining < 0) {
+                    remainingEl.className = 'text-2xl font-bold text-red-600';
+                } else {
+                    remainingEl.className = 'text-2xl font-bold text-blue-600';
+                }
+            }
+            
+            // Update circular progress
             const progressEl = document.getElementById('daily-progress');
-            const offset = 283 - (283 * Math.min(dailyPercent, 100) / 100);
-            progressEl.setAttribute('stroke-dashoffset', offset);
-            progressEl.setAttribute('stroke', progressColor);
+            if (progressEl) {
+                // Circumference is 2*PI*R = 2 * 3.14 * 45 ≈ 283
+                const offset = 283 - (283 * Math.min(dailyPercent, 100) / 100);
+                progressEl.setAttribute('stroke-dashoffset', offset);
+                progressEl.setAttribute('stroke', progressColor);
+            }
             
-            // Update persentase
-            document.getElementById('daily-percent').textContent = dailyPercent + '%';
-            document.getElementById('daily-percent').style.color = progressColor;
-            document.getElementById('daily-budget').textContent = 'Rp ' + income.toLocaleString('id-ID');
+            // Update labels
+            const percentEl = document.getElementById('daily-percent');
+            if (percentEl) {
+                percentEl.textContent = dailyPercent + '%';
+                percentEl.style.color = progressColor;
+            }
             
-            // Update pesan berdasarkan persentase
+            const budgetEl = document.getElementById('daily-budget');
+            if (budgetEl) {
+                budgetEl.textContent = 'Rp ' + income.toLocaleString('id-ID');
+            }
+            
+            // Update message
             const messageEl = document.getElementById('daily-message');
-            if (income === 0) {
-                messageEl.innerHTML = '<span class="text-gray-500">Tambahkan pemasukan terlebih dahulu</span>';
-            } else if (expense === 0) {
-                messageEl.innerHTML = '<span class="text-emerald-600">✅ belum ada pengeluaran hari ini</span>';
-            } else if (dailyPercent > 100) {
-                messageEl.innerHTML = '<span class="text-red-600 font-bold">⚠️ Anda melebihi pemasukan!</span>';
-            } else if (dailyPercent > 90) {
-                messageEl.innerHTML = '<span class="text-red-500 font-bold">⚠️ Hampir menghabiskan semua pemasukan</span>';
-            } else if (dailyPercent > 75) {
-                messageEl.innerHTML = '<span class="text-orange-500">⚠️ Pengeluaran sudah banyak</span>';
-            } else if (dailyPercent > 50) {
-                messageEl.innerHTML = '<span class="text-amber-500">⚡ Pengeluaran sedang berlangsung</span>';
-            } else if (dailyPercent > 25) {
-                messageEl.innerHTML = '<span class="text-lime-600">✅ Pengeluaran terkontrol</span>';
-            } else {
-                messageEl.innerHTML = '<span class="text-emerald-600">✅ Sangat hemat!</span>';
+            if (messageEl) {
+                if (income === 0 && expense === 0) {
+                    messageEl.innerHTML = `<span class="text-gray-500" data-i18n="income_good_day">${window.i18nManager.t('income_good_day')}</span>`;
+                } else if (income === 0 && expense > 0) {
+                    messageEl.innerHTML = `<span class="text-red-600 font-bold" data-i18n="status_over">⚠️ ${window.i18nManager.t('status_over')}</span>`;
+                } else if (expense === 0) {
+                    messageEl.innerHTML = `<span class="text-emerald-600" data-i18n="no_expense_yet">✅ ${window.i18nManager.t('no_expense_yet')}</span>`;
+                } else if (dailyPercent > 100) {
+                    messageEl.innerHTML = `<span class="text-red-600 font-bold" data-i18n="status_over">⚠️ ${window.i18nManager.t('status_over')}</span>`;
+                } else if (dailyPercent > 80) {
+                    messageEl.innerHTML = `<span class="text-red-500 font-bold" data-i18n="status_boros">⚠️ ${window.i18nManager.t('status_boros')}</span>`;
+                } else {
+                    messageEl.innerHTML = `<span class="text-emerald-600" data-i18n="status_normal">✅ ${window.i18nManager.t('status_normal')}</span>`;
+                }
             }
             
             // Update category summary
@@ -622,10 +747,15 @@
                 expenseByCategory[t.category] = (expenseByCategory[t.category] || 0) + parseInt(t.amount);
             });
             
-            const categoryNames = {
-                'food': 'Makanan', 'transport': 'Transportasi', 'shopping': 'Belanja', 
-                'entertainment': 'Hiburan', 'bills': 'Tagihan', 'education': 'Pendidikan', 
-                'health': 'Kesehatan', 'other-expense': 'Lainnya'
+            const categoryNamesObj = {
+                'food': window.i18nManager.t('category_food'), 
+                'transport': window.i18nManager.t('category_transport'), 
+                'shopping': window.i18nManager.t('category_shopping'), 
+                'entertainment': window.i18nManager.t('category_entertainment'), 
+                'bills': window.i18nManager.t('category_bills'), 
+                'education': window.i18nManager.t('category_education'), 
+                'health': window.i18nManager.t('category_health'), 
+                'other-expense': window.i18nManager.t('category_other_expense')
             };
             const categoryIcons = {
                 'food': 'fa-utensils', 'transport': 'fa-car', 'shopping': 'fa-shopping-bag',
@@ -641,7 +771,7 @@
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <i class="fas ${categoryIcons[cat] || 'fa-ellipsis-h'} text-gray-500 mr-3"></i>
-                            <span class="text-sm text-gray-600">${categoryNames[cat] || 'Lainnya'}</span>
+                            <span class="text-sm text-gray-600">${categoryNamesObj[cat] || window.i18nManager.t('category_other_expense')}</span>
                         </div>
                         <span class="font-semibold text-red-600">Rp ${amt.toLocaleString('id-ID')}</span>
                     </div>
@@ -704,10 +834,21 @@
                 overlay.classList.add('hidden');
             }
         }
+        function handleLogout() {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = '/logout';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('isLoggedIn') !== 'true') {
+                window.location.href = 'login.html';
+            }
+        });
     </script>
-    <script src="static/notifications.js"></script>
+    <script src="{{ url_for('static', filename='notifications.js') }}"></script>
 
     <script src="{{ url_for('static', filename='theme.js') }}"></script>
-    <script src="static/i18n.js"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
 </body>
 </html>

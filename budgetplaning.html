@@ -54,6 +54,9 @@
             transform: rotate(-90deg);
         }
     </style>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
+    <script src="{{ url_for('static', filename='notifications.js') }}"></script>
 </head>
 <body class="bg-emerald-50 text-gray-800">
     <!-- Sidebar -->
@@ -67,27 +70,40 @@
         </div>
 
         <div id="sidebar" class="w-64 bg-emerald-700 text-white h-screen fixed dark:bg-emerald-800 transition-transform duration-300 transform -translate-x-full md:translate-x-0 z-[50]">
-            <div class="p-4">
+            <div class="p-4 flex justify-between items-center">
                 <h1 class="text-2xl font-bold">Dompetin</h1>
+                <div class="flex items-center gap-1">
+                    <button onclick="window.i18nManager.toggleLanguage()" class="language-toggle p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Language">
+                        <span class="lang-text text-sm font-medium">ID</span>
+                    </button>
+                    <button onclick="window.themeManager.cycleTheme()" class="p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Theme">
+                        <span class="theme-icon-light"><i class="fas fa-sun text-yellow-300 text-sm"></i></span>
+                        <span class="theme-icon-dark hidden"><i class="fas fa-moon text-blue-300 text-sm"></i></span>
+                        <span class="theme-icon-auto hidden"><i class="fas fa-circle-half-stroke text-gray-300 text-sm"></i></span>
+                    </button>
+                </div>
             </div>
             <nav class="mt-8">
                 <a href="dashboard.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
-                    <i class="fas fa-home mr-3"></i>Home
+                    <i class="fas fa-home mr-3"></i><span data-i18n="sidebar_home">Home</span>
                 </a>
                 <a href="incomeTracking.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
-                    <i class="fas fa-money-bill-wave mr-3"></i>Income Tracking
+                    <i class="fas fa-money-bill-wave mr-3"></i><span data-i18n="sidebar_income_tracking">Income Tracking</span>
                 </a>
                 <a href="budgetplaning.html" class="sidebar-link block py-2 px-4 bg-emerald-600">
-                    <i class="fas fa-chart-pie mr-3"></i>Budget Planning
+                    <i class="fas fa-chart-pie mr-3"></i><span data-i18n="sidebar_budget_planning">Budget Planning</span>
                 </a>
-<a href="analysis.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
-                    <i class="fas fa-chart-line mr-3"></i>Analysis
+                <a href="smart_saving.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-piggy-bank mr-3"></i><span data-i18n="sidebar_smart_saving">Smart Saving</span>
+                </a>
+                <a href="analysis.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-chart-line mr-3"></i><span data-i18n="sidebar_analysis">Analysis</span>
                 </a>
                 <a href="profile.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
-                    <i class="fas fa-user mr-3"></i>Profile
+                    <i class="fas fa-user mr-3"></i><span data-i18n="sidebar_profile">Profile</span>
                 </a>
-                <a href="index.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600 mt-8">
-                    <i class="fas fa-sign-out-alt mr-3"></i>Logout
+                <a href="javascript:void(0)" onclick="handleLogout()" class="sidebar-link block py-2 px-4 hover:bg-emerald-600 mt-8">
+                    <i class="fas fa-sign-out-alt mr-3"></i><span data-i18n="sidebar_logout">Logout</span>
                 </a>
             </nav>
         </div>
@@ -98,8 +114,8 @@
         <div class="flex-1 md:ml-64 p-4 md:p-8">
             <!-- Header -->
             <div class="mb-8">
-                <h2 class="text-4xl font-bold text-gray-900 mb-2">Budget Planning</h2>
-                <p class="text-lg text-gray-600">Plan and manage your monthly budgets by category</p>
+                <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-2" data-i18n="budget_title">Budget Planning</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400" data-i18n="budget_subtitle">Plan and manage your monthly budgets by category</p>
             </div>
 
             <!-- Month Selector -->
@@ -107,7 +123,7 @@
                 <button class="bg-white px-4 py-2 rounded-lg shadow hover:shadow-md transition" onclick="changeMonth(-1)">
                     <i class="fas fa-chevron-left text-emerald-600"></i>
                 </button>
-                <h3 class="text-2xl font-semibold" id="current-month">January 2024</h3>
+                <h3 class="text-2xl font-semibold" id="current-month">{{ global_data.current_month_name }} {{ global_data.current_year }}</h3>
                 <button class="bg-white px-4 py-2 rounded-lg shadow hover:shadow-md transition" onclick="changeMonth(1)">
                     <i class="fas fa-chevron-right text-emerald-600"></i>
                 </button>
@@ -115,16 +131,16 @@
 
             <!-- Budget Overview Cards -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
                     <div class="flex items-center mb-4">
                         <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mr-4">
                             <i class="fas fa-wallet text-emerald-600 text-xl"></i>
                         </div>
                         <div class="flex-1">
-                            <p class="text-sm text-gray-500">Total Budget</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="budget_total_budget">Total Anggaran</p>
                             <div class="flex items-center">
-                                <p class="text-2xl font-bold text-gray-900" id="total-budget">Rp 3.000.000</p>
-                                <button onclick="openEditBudgetModal()" class="ml-2 text-emerald-600 hover:text-emerald-800">
+                                <p class="text-2xl font-bold text-gray-900 dark:text-white" id="total-budget">{{ global_data.total_budget | fmt_rupiah }}</p>
+                                <button onclick="triggerTotalBudgetEdit()" class="ml-2 text-emerald-600 hover:text-emerald-800">
                                     <i class="fas fa-edit text-sm"></i>
                                 </button>
                             </div>
@@ -132,38 +148,42 @@
                     </div>
                 </div>
                 
-                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
                     <div class="flex items-center mb-4">
                         <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
                             <i class="fas fa-arrow-up text-green-600 text-xl"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">Total Spent</p>
-                            <p class="text-2xl font-bold text-green-600" id="total-spent">Rp 1.850.000</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="budget_total_spent">Total Terpakai</p>
+                            <p class="text-2xl font-bold text-green-600" id="total-spent">{{ global_data.monthly_expense | fmt_rupiah }}</p>
                         </div>
                     </div>
                 </div>
                 
-                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
                     <div class="flex items-center mb-4">
                         <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
                             <i class="fas fa-piggy-bank text-blue-600 text-xl"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">Remaining</p>
-                            <p class="text-2xl font-bold text-blue-600" id="total-remaining">Rp 1.150.000</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="budget_remaining">Remaining</p>
+                            <p class="text-2xl font-bold text-blue-600" id="total-remaining">{{ (global_data.total_budget - global_data.monthly_expense) | fmt_rupiah }}</p>
                         </div>
                     </div>
                 </div>
                 
-                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
                     <div class="flex items-center mb-4">
                         <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
                             <i class="fas fa-percentage text-purple-600 text-xl"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">Budget Used</p>
-                            <p class="text-2xl font-bold text-purple-600" id="budget-used">62%</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="budget_used">Budget Terpakai</p>
+                            {% set used = 0 %}
+                            {% if global_data.total_budget > 0 %}
+                                {% set used = ((global_data.monthly_expense / global_data.total_budget) * 100)|round(0) %}
+                            {% endif %}
+                            <p class="text-2xl font-bold text-purple-600" id="budget-used">{{ used }}%</p>
                         </div>
                     </div>
                 </div>
@@ -173,129 +193,65 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Budget Categories List -->
                 <div class="lg:col-span-2">
-                    <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-2xl font-semibold">Budget Categories</h3>
+                            <h3 class="text-2xl font-semibold dark:text-white" data-i18n="budget_categories">Budget Categories</h3>
                             <button onclick="openBudgetModal()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition">
-                                <i class="fas fa-plus mr-2"></i>Add Category
+                                <i class="fas fa-plus mr-2"></i><span data-i18n="budget_add_category">Add Category</span>
                             </button>
                         </div>
                         
                         <!-- Category Items -->
                         <div class="space-y-4" id="budget-categories">
-                            <!-- Uang Makan -->
-                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center mr-3">
-                                            <i class="fas fa-utensils text-orange-600"></i>
-                                        </div>
-                                        <div>
-                                            <h4 class="font-semibold">Food/Dining</h4>
-                                            <p class="text-sm text-gray-500">Rp 0 / Rp 1.500.000</p>
-                                        </div>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="text-sm font-medium text-green-600">0%</span>
-                                    </div>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-orange-500 h-2 rounded-full" style="width: 0%"></div>
-                                </div>
-                            </div>
+                            {% set categories = [
+                                {'id': 'food', 'name': 'category_food', 'icon': 'fa-utensils', 'color': 'orange', 'label': 'Makanan'},
+                                {'id': 'transport', 'name': 'category_transport', 'icon': 'fa-car', 'color': 'blue', 'label': 'Transportasi'},
+                                {'id': 'bills', 'name': 'category_bills', 'icon': 'fa-wifi', 'color': 'cyan', 'label': 'Tagihan'},
+                                {'id': 'entertainment', 'name': 'category_entertainment', 'icon': 'fa-film', 'color': 'pink', 'label': 'Hiburan'},
+                                {'id': 'shopping', 'name': 'category_shopping', 'icon': 'fa-shopping-bag', 'color': 'purple', 'label': 'Belanja'},
+                                {'id': 'savings', 'name': 'category_savings', 'icon': 'fa-piggy-bank', 'color': 'green', 'label': 'Tabungan'}
+                            ] %}
+
+                            {% for cat in categories %}
+                            {% set spent = global_data.category_spent.get(cat.id, 0) %}
+                            {% set budget = global_data.category_budgets.get(cat.id, 0) %}
+                            {% set percent = 0 %}
+                            {% if budget > 0 %}
+                                {% set percent = ((spent / budget) * 100)|round(0)|int %}
+                                {% if percent > 100 %}{% set percent = 100 %}{% endif %}
+                            {% endif %}
                             
-                            <!-- Transportasi -->
-                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                            <div class="border border-gray-200 dark:border-slate-700 rounded-lg p-4 hover:shadow-md transition">
                                 <div class="flex items-center justify-between mb-2">
                                     <div class="flex items-center">
-                                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                                            <i class="fas fa-car text-blue-600"></i>
+                                        <div class="w-10 h-10 bg-{{ cat.color }}-100 dark:bg-{{ cat.color }}-900/30 rounded-full flex items-center justify-center mr-3">
+                                            <i class="fas {{ cat.icon }} text-{{ cat.color }}-600"></i>
                                         </div>
                                         <div>
-                                            <h4 class="font-semibold">Transportasi</h4>
-                                            <p class="text-sm text-gray-500">Rp 0 / Rp 450.000</p>
+                                            <h4 class="font-semibold dark:text-white" data-i18n="{{ cat.name }}">{{ cat.label }}</h4>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                                {{ spent | fmt_rupiah }} / {{ budget | fmt_rupiah }}
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="text-right">
-                                        <span class="text-sm font-medium text-green-600">0%</span>
+                                        <span class="text-sm font-medium {{ 'text-red-600' if percent >= 90 else 'text-emerald-600' }}">{{ percent }}%</span>
                                     </div>
                                 </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-blue-500 h-2 rounded-full" style="width: 0%"></div>
+                                <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2">
+                                    <div class="bg-{{ cat.color }}-500 h-2 rounded-full transition-all duration-500" style="width: {{ percent }}%"></div>
                                 </div>
                             </div>
-                            
-                            <!-- Paket Kuota -->
-                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 bg-cyan-100 rounded-full flex items-center justify-center mr-3">
-                                            <i class="fas fa-wifi text-cyan-600"></i>
-                                        </div>
-                                        <div>
-                                            <h4 class="font-semibold">Paket Kuota</h4>
-                                            <p class="text-sm text-gray-500">Rp 0 / Rp 100.000</p>
-                                        </div>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="text-sm font-medium text-green-600">0%</span>
-                                    </div>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-cyan-500 h-2 rounded-full" style="width: 0%"></div>
-                                </div>
-                            </div>
-                            
-                            <!-- Shopping & Hiburan -->
-                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center mr-3">
-                                            <i class="fas fa-shopping-bag text-pink-600"></i>
-                                        </div>
-                                        <div>
-                                            <h4 class="font-semibold">Shopping & Hiburan</h4>
-                                            <p class="text-sm text-gray-500">Rp 0 / Rp 650.000</p>
-                                        </div>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="text-sm font-medium text-green-600">0%</span>
-                                    </div>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-pink-500 h-2 rounded-full" style="width: 0%"></div>
-                                </div>
-                            </div>
-                            
-                            <!-- Tabungan -->
-                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                                            <i class="fas fa-piggy-bank text-green-600"></i>
-                                        </div>
-                                        <div>
-                                            <h4 class="font-semibold">Tabungan</h4>
-                                            <p class="text-sm text-gray-500">Rp 0 / Rp 300.000</p>
-                                        </div>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="text-sm font-medium text-green-600">0%</span>
-                                    </div>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
-                                </div>
-                            </div>
+                            {% endfor %}
                         </div>
                     </div>
 
                     <!-- Smart Saving Section (New Feature) -->
-                    <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
+                    <div class="mt-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-2xl font-semibold">Smart Saving Goals 🎯</h3>
+                            <h3 class="text-2xl font-semibold dark:text-white"><span data-i18n="saving_goals_title">Smart Saving Goals</span> 🎯</h3>
                             <button onclick="openSavingModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-                                <i class="fas fa-plus mr-2"></i>Add Goal
+                                <i class="fas fa-plus mr-2"></i><span data-i18n="saving_add_goal">Add Goal</span>
                             </button>
                         </div>
                         <div id="saving-goals-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -307,23 +263,23 @@
                 <!-- Right Side - Budget Tips & Summary -->
                 <div class="space-y-6">
                     <!-- Budget Status -->
-                    <div class="bg-white rounded-xl shadow-lg p-6">
-                        <h3 class="text-xl font-semibold mb-4">Budget Status</h3>
+                    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4 dark:text-white" data-i18n="budget_status">Budget Status</h3>
                         <div class="flex justify-center mb-4">
                             <div class="relative w-40 h-40">
                                 <svg class="w-full h-full progress-ring" viewBox="0 0 100 100">
                                     <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb" stroke-width="10"/>
                                     <circle cx="50" cy="50" r="45" fill="none" stroke="#10b981" stroke-width="10" 
-                                        stroke-dasharray="283" stroke-dashoffset="107" stroke-linecap="round"/>
+                                        stroke-dasharray="283" stroke-dashoffset="283" stroke-linecap="round"/>
                                 </svg>
                                 <div class="absolute inset-0 flex items-center justify-center flex-col">
-                                    <span class="text-3xl font-bold text-emerald-600">62%</span>
-                                    <span class="text-sm text-gray-500">Used</span>
+                                    <span class="text-3xl font-bold text-emerald-600">{{ used }}%</span>
+                                    <span class="text-sm text-gray-500 dark:text-gray-400" data-i18n="budget_used">Used</span>
                                 </div>
                             </div>
                         </div>
                         <div class="text-center">
-                            <p class="text-gray-600">You have <span class="font-bold text-emerald-600">Rp 1.150.000</span> remaining this month</p>
+                            <p class="text-gray-600">You have <span class="font-bold text-emerald-600">{{ (global_data.total_budget - global_data.monthly_expense) | fmt_rupiah }}</span> remaining this month</p>
                         </div>
                     </div>
                     
@@ -334,70 +290,70 @@
                                 <i class="fas fa-robot text-white"></i>
                             </div>
                             <div>
-                                <h3 class="text-lg font-semibold text-emerald-800">AI Budget Assistant</h3>
-                                <p class="text-xs text-emerald-600">Asisten keuangan pintar</p>
+                                <h3 class="text-lg font-semibold text-emerald-800" data-i18n="ai_assistant_title">Asisten Keuangan AI</h3>
+                                <p class="text-xs text-emerald-600" data-i18n="ai_assistant_subtitle">Asisten keuangan pintar</p>
                             </div>
                         </div>
-                        <p class="text-emerald-700 text-sm mb-4">Tanyakan langsung kepada AI tentang tips budget yang sesuai dengan kondisi keuangan Anda!</p>
+                        <p class="text-emerald-700 text-sm mb-4" data-i18n="ai_assistant_desc">Tanyakan langsung kepada AI tentang tips budget yang sesuai dengan kondisi keuangan Anda!</p>
                         <div class="space-y-2">
                             <button onclick="askAI('tips hemat')" class="w-full text-left bg-white p-3 rounded-lg text-sm hover:bg-emerald-100 transition border border-emerald-200 flex items-center">
                                 <span class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                                     <i class="fas fa-lightbulb text-yellow-600 text-xs"></i>
                                 </span>
-                                <span class="text-gray-700">Tips hemat keuangan</span>
+                                <span class="text-gray-700" data-i18n="ai_saving_tips">Tips hemat keuangan</span>
                             </button>
                             <button onclick="askAI('analisis budget')" class="w-full text-left bg-white p-3 rounded-lg text-sm hover:bg-emerald-100 transition border border-emerald-200 flex items-center">
                                 <span class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                                     <i class="fas fa-chart-pie text-blue-600 text-xs"></i>
                                 </span>
-                                <span class="text-gray-700">Analisis budget saya</span>
+                                <span class="text-gray-700" data-i18n="ai_budget_analysis">Analisis budget saya</span>
                             </button>
                             <button onclick="askAI('tips menabung')" class="w-full text-left bg-white p-3 rounded-lg text-sm hover:bg-emerald-100 transition border border-emerald-200 flex items-center">
                                 <span class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                                     <i class="fas fa-piggy-bank text-purple-600 text-xs"></i>
                                 </span>
-                                <span class="text-gray-700">Tips menabung</span>
+                                <span class="text-gray-700" data-i18n="ai_saving_strategies">Tips menabung</span>
                             </button>
                         </div>
-                        <button onclick="toggleChat()" class="w-full mt-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-3 px-4 rounded-lg hover:from-emerald-600 hover:to-teal-600 transition shadow-md font-medium">
-                            <i class="fas fa-comments mr-2"></i>Buka Chat
+                        <button id="open_chat" onclick="toggleChat()" class="w-full mt-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-3 px-4 rounded-lg hover:from-emerald-600 hover:to-teal-600 transition shadow-md font-medium">
+                            <i class="fas fa-comments mr-2"></i><span data-i18n="open_chat">Buka Chat</span>
                         </button>
                     </div>
                     
                     <!-- Tips -->
-                    <div class="bg-white rounded-xl shadow-lg p-6">
-                        <h3 class="text-xl font-semibold mb-4">Budget Tips</h3>
+                    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4 dark:text-white" data-i18n="budget_tips">Budget Tips</h3>
                         <div class="space-y-3">
                             <div class="flex items-start">
                                 <i class="fas fa-lightbulb text-yellow-500 mr-3 mt-1"></i>
-                                <p class="text-sm text-gray-600">Try the 50/30/20 rule: 50% needs, 30% wants, 20% savings</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="budget_tip_1">Try the 50/30/20 rule: 50% needs, 30% wants, 20% savings</p>
                             </div>
                             <div class="flex items-start">
                                 <i class="fas fa-lightbulb text-yellow-500 mr-3 mt-1"></i>
-                                <p class="text-sm text-gray-600">Review your spending weekly to stay on track</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="budget_tip_2">Review your spending weekly to stay on track</p>
                             </div>
                             <div class="flex items-start">
                                 <i class="fas fa-lightbulb text-yellow-500 mr-3 mt-1"></i>
-                                <p class="text-sm text-gray-600">Set aside unspent budget for emergency funds</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="budget_tip_3">Set aside unspent budget for emergency funds</p>
                             </div>
                         </div>
                     </div>
                     
 <!-- Quick Actions -->
-                    <div class="bg-white rounded-xl shadow-lg p-6">
-                        <h3 class="text-xl font-semibold mb-4">Quick Actions</h3>
+                    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4 dark:text-white" data-i18n="quick_actions">Quick Actions</h3>
                         <div class="space-y-2">
                             <button onclick="openBudgetModal()" class="w-full bg-emerald-100 text-emerald-700 py-2 px-4 rounded-lg hover:bg-emerald-200 transition text-left">
-                                <i class="fas fa-plus-circle mr-2"></i>Add Budget Category
+                                <i class="fas fa-plus-circle mr-2"></i><span data-i18n="budget_add_category">Add Budget Category</span>
                             </button>
                             <button class="w-full bg-blue-100 text-blue-700 py-2 px-4 rounded-lg hover:bg-blue-200 transition text-left">
-                                <i class="fas fa-download mr-2"></i>Export Budget Report
+                                <i class="fas fa-download mr-2"></i><span data-i18n="export_report">Export Budget Report</span>
                             </button>
                             <button class="w-full bg-purple-100 text-purple-700 py-2 px-4 rounded-lg hover:bg-purple-200 transition text-left">
-                                <i class="fas fa-copy mr-2"></i>Copy from Last Month
+                                <i class="fas fa-copy mr-2"></i><span data-i18n="copy_last_month">Copy from Last Month</span>
                             </button>
                             <button onclick="toggleChat()" class="w-full bg-amber-100 text-amber-700 py-2 px-4 rounded-lg hover:bg-amber-200 transition text-left">
-                                <i class="fas fa-robot mr-2"></i>AI Assistant (Ollama)
+                                <i class="fas fa-robot mr-2"></i><span data-i18n="ai_assistant">AI Assistant (Ollama)</span>
                             </button>
                         </div>
                     </div>
@@ -408,36 +364,36 @@
 
 <!-- Add Budget Category Modal -->
     <div id="budget-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
-            <h3 class="text-xl font-semibold mb-4">Add Budget Category</h3>
-            <form id="budget-form">
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-4 dark:text-white" data-i18n="budget_add_category">Add Budget Category</h3>
+            <form id="budget-form" method="POST" action="/add_category">
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Category Name</label>
-                    <select id="category-select" class="w-full p-2 border rounded-lg" required onchange="handleCategoryChange()">
-                        <option value="">Select Category</option>
-                        <option value="uangmakan">Uang Makan</option>
-                        <option value="transportasi">Transportasi</option>
-                        <option value="paketkuota">Paket Kuota</option>
-                        <option value="shoppinghiburan">Shopping & Hiburan</option>
-                        <option value="tabungan">Tabungan</option>
-                        <option value="other">Other</option>
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-200" data-i18n="category_name">Nama Kategori</label>
+                    <select id="category-select" name="category_name" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white" required onchange="handleCategoryChange()">
+                        <option value="" data-i18n="select_category">Pilih Kategori</option>
+                        <option value="uangmakan" data-i18n="category_food">Uang Makan</option>
+                        <option value="transportasi" data-i18n="category_transport">Transportasi</option>
+                        <option value="paketkuota" data-i18n="category_bills">Paket Kuota</option>
+                        <option value="shoppinghiburan" data-i18n="category_entertainment">Shopping & Hiburan</option>
+                        <option value="tabungan" data-i18n="category_savings">Tabungan</option>
+                        <option value="other" data-i18n="category_other">Lainnya</option>
                     </select>
                 </div>
                 <div class="mb-4 hidden" id="other-name-container">
-                    <label class="block text-sm font-medium mb-2">Custom Category Name</label>
-                    <input type="text" id="other-name" class="w-full p-2 border rounded-lg" placeholder="Enter category name">
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-200" data-i18n="custom_category_name">Nama Kategori Kustom</label>
+                    <input type="text" id="other-name" name="custom_category_name" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="Masukkan nama kategori">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Monthly Budget Amount (Rp)</label>
-                    <input type="number" id="budget-amount" class="w-full p-2 border rounded-lg" placeholder="e.g. 500000" required>
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-200" data-i18n="budget_percentage">Persentase Budget (%)</label>
+                    <input type="number" id="budget-percentage" name="percentage" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="contoh: 30" min="0" max="100" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Notes (Optional)</label>
-                    <textarea id="budget-notes" class="w-full p-2 border rounded-lg" rows="2" placeholder="Add any notes..."></textarea>
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-200" data-i18n="budget_notes">Catatan (Opsional)</label>
+                    <textarea id="budget-notes" name="notes" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white" rows="2" placeholder="Tambah catatan..."></textarea>
                 </div>
                 <div class="flex justify-end">
-                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeBudgetModal()">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Save Budget</button>
+                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeBudgetModal()" data-i18n="cancel">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition" data-i18n="save_budget">Simpan Budget</button>
                 </div>
             </form>
         </div>
@@ -555,37 +511,7 @@
         </div>
     </div>
 
-    <!-- Smart Saving Modal -->
-    <div id="saving-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
-            <h3 class="text-xl font-semibold mb-4">Add Saving Goal 🚀</h3>
-            <form id="saving-form">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Apa yang ingin kamu beli?</label>
-                    <input type="text" id="saving-item" class="w-full p-2 border rounded-lg" placeholder="e.g. iPhone 16" required>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Harga Target (Rp)</label>
-                    <input type="number" id="saving-target" class="w-full p-2 border rounded-lg" placeholder="e.g. 15000000" required>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Tabungan Saat Ini (Rp)</label>
-                    <input type="number" id="saving-current" class="w-full p-2 border rounded-lg" value="0">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Target Tanggal Tercapai</label>
-                    <input type="date" id="saving-date" class="w-full p-2 border rounded-lg" required>
-                </div>
-                <div id="smart-saving-result" class="mb-4 p-3 bg-blue-50 rounded-lg hidden">
-                    <p class="text-sm text-blue-800" id="saving-calc-text"></p>
-                </div>
-                <div class="flex justify-end">
-                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeSavingModal()">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Save Goal</button>
-                </div>
-            </form>
-        </div>
-    </div>
+
 
     <!-- Add Savings Modal -->
     <div id="add-savings-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
@@ -610,22 +536,27 @@
 
     <!-- Edit Total Budget Modal -->
     <div id="edit-budget-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
-            <h3 class="text-xl font-semibold mb-4">Edit Total Budget</h3>
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-4 dark:text-white" data-i18n="edit_total_budget">Allocation Mode</h3>
             <form id="edit-budget-form">
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Total Monthly Budget (Rp)</label>
-                    <input type="number" id="edit-total-budget" class="w-full p-2 border rounded-lg" placeholder="e.g. 3000000" required>
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-200">Total Income to Allocate (Rp)</label>
+                    <input type="number" id="edit-total-budget" class="w-full p-2 border rounded-lg bg-gray-100 dark:bg-slate-700 dark:border-slate-600 dark:text-white" readonly>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">
-                        <input type="checkbox" id="auto-allocate" class="mr-2" checked>
-                        Auto-alocate categories (50/30/20 rule)
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-200">
+                        <input type="checkbox" id="auto-allocate" class="mr-2" checked onchange="toggleManualAllocation()">
+                        <span data-i18n="auto_allocate">Auto-allocate categories (50/30/20 rule)</span>
                     </label>
                 </div>
-                <div class="flex justify-end">
-                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeEditBudgetModal()">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Update Budget</button>
+                
+                <div id="manual-allocation-div" class="hidden mb-4 max-h-60 overflow-y-auto pr-2">
+                    <!-- Category inputs injected by JS -->
+                </div>
+                
+                <div class="flex justify-end mt-4">
+                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" onclick="closeEditBudgetModal()" data-i18n="cancel">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition" data-i18n="save_budget">Save Allocation</button>
                 </div>
             </form>
         </div>
@@ -635,19 +566,29 @@
         // Month navigation
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 
                         'July', 'August', 'September', 'October', 'November', 'December'];
-        let currentMonthIndex = 0;
-        let currentYear = 2024;
+        let currentMonthIndex = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
 
         function changeMonth(direction) {
             currentMonthIndex += direction;
-            if (currentMonthIndex > 11) {
-                currentMonthIndex = 0;
-                currentYear++;
-            } else if (currentMonthIndex < 0) {
+            if (currentMonthIndex < 0) {
                 currentMonthIndex = 11;
                 currentYear--;
+            } else if (currentMonthIndex > 11) {
+                currentMonthIndex = 0;
+                currentYear++;
             }
             document.getElementById('current-month').textContent = months[currentMonthIndex] + ' ' + currentYear;
+        }
+
+        function handleCategoryChange() {
+            const select = document.getElementById('category-select');
+            const otherContainer = document.getElementById('other-name-container');
+            if (select.value === 'other') {
+                otherContainer.classList.remove('hidden');
+            } else {
+                otherContainer.classList.add('hidden');
+            }
         }
 
         // Modal functions
@@ -659,21 +600,6 @@
             document.getElementById('budget-modal').classList.add('hidden');
         }
 
-        // Form submission
-        document.getElementById('budget-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const category = document.getElementById('category-select').value;
-            const amount = document.getElementById('budget-amount').value;
-            const notes = document.getElementById('budget-notes').value;
-            
-            if (category && amount) {
-                alert('Budget added successfully!\nCategory: ' + category + '\nAmount: Rp ' + parseInt(amount).toLocaleString('id-ID'));
-                closeBudgetModal();
-                // Reset form
-                this.reset();
-            }
-        });
-
         // Close modal when clicking outside
         document.getElementById('budget-modal').addEventListener('click', function(e) {
             if (e.target === this) {
@@ -681,8 +607,21 @@
             }
         });
 
-// Initialize
-        document.getElementById('current-month').textContent = months[currentMonthIndex] + ' ' + currentYear;
+        const monthsArrInit = [
+            window.i18nManager.t('month_january') || 'January',
+            window.i18nManager.t('month_february') || 'February',
+            window.i18nManager.t('month_march') || 'March',
+            window.i18nManager.t('month_april') || 'April',
+            window.i18nManager.t('month_may') || 'May',
+            window.i18nManager.t('month_june') || 'June',
+            window.i18nManager.t('month_july') || 'July',
+            window.i18nManager.t('month_august') || 'August',
+            window.i18nManager.t('month_september') || 'September',
+            window.i18nManager.t('month_october') || 'October',
+            window.i18nManager.t('month_november') || 'November',
+            window.i18nManager.t('month_december') || 'December'
+        ];
+        document.getElementById('current-month').textContent = '{{ global_data.current_month_name }} {{ global_data.current_year }}';
 
         // Chat functions
         function toggleChat() {
@@ -781,12 +720,12 @@
                 
                 // Fallback responses
                 const fallbackResponses = {
-                    'tips hemat': "Berikut tips hemat keuangan untuk Anda:\n\n1. Masak sendiri di kos - bisa hemat hingga Rp 500.000/bulan\n2. Gunakan transportasi publik atau berbagi rides\n3. Beli paket data yang sesuai kebutuhan\n4. Batasi jajan di luar maksimal 2x/minggu\n5. Catat setiap pengeluaran dengan Dompetin",
-                    'analisis budget': "Analisis budget Anda:\n\n✅ Alokasi sudah cukup baik\n• Food 45% = Rp 1.350.000 (cukup untuk makan 3x sehari)\n• Transport 15% = Rp 450.000 (cukup untuk commuting)\n• Tabungan 20% = Rp 600.000 (sesuai standar)\n\n💡 Saran: Pertahankan pola ini dan evaluasi setiap bulan!",
-                    'tips menabung': "Tips menabung efektif:\n\n1. Sisihkan 20% langsung saat terima uang\n2. Simpan di rekening terpisah\n3. Gunakan metode uang封 (envelope)\n4. Tetapkan target tabungan bulanan\n5. Jangan pernah蹭 tabungan untuk hal non-darurat!"
+                    'tips hemat': window.i18nManager.t('ai_fallback_tips'),
+                    'analisis budget': window.i18nManager.t('ai_fallback_analysis'),
+                    'tips menabung': window.i18nManager.t('ai_fallback_saving')
                 };
                 
-                const response = fallbackResponses[question] || "Maaf, terjadi kesalahan. Pastikan Ollama server sedang berjalan.";
+                const response = fallbackResponses[question] || window.i18nManager.t('ai_error_ollama');
                 
                 chatMessages.innerHTML += `
                     <div class="mb-4">
@@ -904,20 +843,66 @@
 
         // Budget data - can be updated
         let budgetData = {
-            totalBudget: 3000000,
-            totalSpent: 1850000,
+            totalBudget: {{ global_data.total_budget }},
+            totalSpent: {{ global_data.monthly_expense }},
             categories: [
-                { name: 'Food/Dining', spent: 0, budget: 1500000, icon: 'utensils', color: 'orange' },
-                { name: 'Transportasi', spent: 0, budget: 450000, icon: 'car', color: 'blue' },
-                { name: 'Paket Kuota', spent: 0, budget: 100000, icon: 'wifi', color: 'cyan' },
-                { name: 'Shopping & Hiburan', spent: 0, budget: 650000, icon: 'shopping-bag', color: 'pink' },
-                { name: 'Tabungan', spent: 0, budget: 300000, icon: 'piggy-bank', color: 'green' }
+                { name: 'Food/Dining', key: 'category_food', spent: {{ global_data.category_spent.get('food', 0) }}, budget: {{ global_data.category_budgets.get('food', 0) }}, icon: 'utensils', color: 'orange' },
+                { name: 'Transportasi', key: 'category_transport', spent: {{ global_data.category_spent.get('transport', 0) }}, budget: {{ global_data.category_budgets.get('transport', 0) }}, icon: 'car', color: 'blue' },
+                { name: 'Paket Kuota', key: 'category_bills', spent: {{ global_data.category_spent.get('bills', 0) }}, budget: {{ global_data.category_budgets.get('bills', 0) }}, icon: 'wifi', color: 'cyan' },
+                { name: 'Shopping & Hiburan', key: 'category_entertainment', spent: {{ global_data.category_spent.get('entertainment', 0) + global_data.category_spent.get('shopping', 0) }}, budget: {{ global_data.category_budgets.get('entertainment', 0) }}, icon: 'shopping-bag', color: 'pink' },
+                { name: 'Tabungan', key: 'category_savings', spent: {{ global_data.category_spent.get('savings', 0) }}, budget: {{ global_data.category_budgets.get('savings', 0) }}, icon: 'piggy-bank', color: 'green' }
             ]
         };
+
+
+        function toggleManualAllocation() {
+            const isAuto = document.getElementById('auto-allocate').checked;
+            const manualDiv = document.getElementById('manual-allocation-div');
+            if (isAuto) {
+                manualDiv.classList.add('hidden');
+            } else {
+                manualDiv.classList.remove('hidden');
+                manualDiv.innerHTML = '';
+                budgetData.categories.forEach((cat, index) => {
+                    manualDiv.innerHTML += `
+                        <div class="mb-3">
+                            <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">${window.i18nManager.t(cat.key)}</label>
+                            <input type="number" id="manual-alloc-${index}" class="w-full p-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white manual-alloc-input" value="${cat.budget}" min="0">
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        async function triggerTotalBudgetEdit() {
+            const currentBudget = {{ global_data.total_budget }};
+            const newAmount = prompt("Masukkan total budget bulanan baru (Rp):", currentBudget);
+            if (newAmount !== null) {
+                const amount = parseFloat(newAmount);
+                if (!isNaN(amount) && amount >= 0) {
+                    try {
+                        const res = await fetch('/update_total_budget', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ amount: amount })
+                        });
+                        if (res.ok) {
+                            window.location.reload();
+                        } else {
+                            alert("Gagal memperbarui budget.");
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert("Terjadi kesalahan koneksi.");
+                    }
+                }
+            }
+        }
 
         // Edit Budget Modal functions
         function openEditBudgetModal() {
             document.getElementById('edit-total-budget').value = budgetData.totalBudget;
+            toggleManualAllocation();
             document.getElementById('edit-budget-modal').classList.remove('hidden');
         }
 
@@ -970,11 +955,11 @@
             const savings = totalBudget * 0.20; // 20% savings
 
             budgetData.categories = [
-                { name: 'Food/Dining', spent: 0, budget: Math.round(needs * 0.60), icon: 'utensils', color: 'orange' },
-                { name: 'Transportasi', spent: 0, budget: Math.round(needs * 0.25), icon: 'car', color: 'blue' },
-                { name: 'Paket Kuota', spent: 0, budget: Math.round(needs * 0.15), icon: 'wifi', color: 'cyan' },
-                { name: 'Shopping & Hiburan', spent: 0, budget: wants, icon: 'shopping-bag', color: 'pink' },
-                { name: 'Tabungan', spent: 0, budget: savings, icon: 'piggy-bank', color: 'green' }
+                { name: 'Food/Dining', key: 'category_food', spent: 0, budget: Math.round(needs * 0.60), icon: 'utensils', color: 'orange' },
+                { name: 'Transportasi', key: 'category_transport', spent: 0, budget: Math.round(needs * 0.25), icon: 'car', color: 'blue' },
+                { name: 'Paket Kuota', key: 'category_bills', spent: 0, budget: Math.round(needs * 0.15), icon: 'wifi', color: 'cyan' },
+                { name: 'Shopping & Hiburan', key: 'category_entertainment', spent: 0, budget: wants, icon: 'shopping-bag', color: 'pink' },
+                { name: 'Tabungan', key: 'category_savings', spent: 0, budget: savings, icon: 'piggy-bank', color: 'green' }
             ];
         }
 
@@ -993,8 +978,8 @@
                                     <i class="fas fa-${cat.icon} text-${cat.color}-600"></i>
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold">${cat.name}</h4>
-                                    <p class="text-sm text-gray-500">Rp ${cat.spent.toLocaleString('id-ID')} / Rp ${cat.budget.toLocaleString('id-ID')}</p>
+                                    <h4 class="font-semibold dark:text-white" data-i18n="${cat.key}">${window.i18nManager.t(cat.key)}</h4>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Rp ${cat.spent.toLocaleString('id-ID')} / Rp ${cat.budget.toLocaleString('id-ID')}</p>
                                 </div>
                             </div>
                             <div class="text-right">
@@ -1013,42 +998,54 @@
         // Handle edit budget form submission
         document.getElementById('edit-budget-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const newTotalBudget = parseInt(document.getElementById('edit-total-budget').value);
+            const newTotalBudget = budgetData.totalBudget; // Always equal to total income
             const autoAllocate = document.getElementById('auto-allocate').checked;
 
-            if (newTotalBudget && newTotalBudget > 0) {
+            if (newTotalBudget >= 0) {
                 try {
-                    // Save to server
-                    await fetch('/api/total_budget', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ amount: newTotalBudget })
-                    });
-
-                    budgetData.totalBudget = newTotalBudget;
-
+                    let newBudgets = [];
                     if (autoAllocate) {
                         autoAllocateBudget(newTotalBudget);
-                        // Save category budgets to server too
-                        for (const cat of budgetData.categories) {
-                            await fetch('/api/budgets', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ category: cat.name, amount: cat.budget })
-                            });
+                        newBudgets = budgetData.categories;
+                    } else {
+                        // Validate manual allocation sum
+                        let sum = 0;
+                        const inputs = document.querySelectorAll('.manual-alloc-input');
+                        inputs.forEach((input, index) => {
+                            const val = parseInt(input.value) || 0;
+                            sum += val;
+                            budgetData.categories[index].budget = val;
+                        });
+                        if (sum > newTotalBudget) {
+                            alert(window.i18nManager.t('budget_update_fail') + ' Allocation exceeds total income!');
+                            return;
                         }
+                        newBudgets = budgetData.categories;
+                    }
+
+                    // Save category budgets to server
+                    for (const cat of newBudgets) {
+                        await fetch("{{ url_for('api_budgets') }}", {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ category: cat.name, amount: cat.budget })
+                        });
                     }
 
                     updateBudgetCalculations();
                     closeEditBudgetModal();
 
-                    showAlert('Total budget berhasil diupdate menjadi Rp ' + newTotalBudget.toLocaleString('id-ID'));
+                    showAlert(window.i18nManager.t('budget_update_success').replace('{amount}', newTotalBudget.toLocaleString('id-ID')));
                 } catch (error) {
                     console.error('Error saving budget:', error);
-                    showAlert('Gagal menyimpan budget ke server.');
+                    showAlert(window.i18nManager.t('budget_update_fail'));
                 }
             }
         });
+
+        // Form submission handled by standard POST
+        // document.getElementById('budget-form').addEventListener('submit', ...) removed to allow standard action="/add_category"
+
 
         // Close edit modal when clicking outside
         document.getElementById('edit-budget-modal').addEventListener('click', function(e) {
@@ -1094,7 +1091,7 @@
                     const remaining = target - current;
                     const daily = remaining / diffDays;
                     resultDiv.classList.remove('hidden');
-                    resultText.innerHTML = `Kamu harus menabung <strong>Rp ${Math.ceil(daily).toLocaleString('id-ID')}</strong> per hari selama ${diffDays} hari agar targetmu tercapai! 🚀`;
+                    resultText.innerHTML = window.i18nManager.t('saving_calc_text').replace('{amount}', Math.ceil(daily).toLocaleString('id-ID')).replace('{days}', diffDays);
                 } else {
                     resultDiv.classList.add('hidden');
                 }
@@ -1140,9 +1137,9 @@
                 
                 if (goals.length === 0) {
                     container.innerHTML = `
-                        <div class="text-center py-10 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 col-span-full">
+                        <div class="text-center py-10 bg-gray-50 dark:bg-slate-700 rounded-xl border-2 border-dashed border-gray-200 dark:border-slate-600 col-span-full">
                             <i class="fas fa-piggy-bank text-4xl text-gray-300 mb-3"></i>
-                            <p class="text-gray-500">Belum ada target tabungan. Yuk, mulai buat goal pertamamu!</p>
+                            <p class="text-gray-500 dark:text-gray-400" data-i18n="saving_no_goals">${window.i18nManager.t('saving_no_goals')}</p>
                         </div>
                     `;
                     return;
@@ -1165,8 +1162,8 @@
                                     <i class="fas fa-gift text-blue-600 text-xl"></i>
                                 </div>
                                 <div class="flex-1">
-                                    <h4 class="font-bold text-gray-800 text-lg">${goal.item_name}</h4>
-                                    <p class="text-xs text-gray-500">Target: Rp ${goal.target_amount.toLocaleString('id-ID')}</p>
+                                    <h4 class="font-bold text-gray-800 dark:text-white text-lg">${goal.item_name}</h4>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400"><span data-i18n="saving_target">Target</span>: Rp ${goal.target_amount.toLocaleString('id-ID')}</p>
                                 </div>
                                 <button onclick="confirmDeleteGoal(${goal.id})" class="text-gray-300 hover:text-red-500 transition p-1">
                                     <i class="fas fa-trash-alt"></i>
@@ -1175,8 +1172,8 @@
 
                             <div class="mb-4">
                                 <div class="flex justify-between items-center mb-1">
-                                    <span class="text-xs font-semibold text-blue-600">${progress}% Tercapai</span>
-                                    <span class="text-xs text-gray-400">Rp ${goal.current_amount.toLocaleString('id-ID')} terkumpul</span>
+                                    <span class="text-xs font-semibold text-blue-600">${progress}% <span data-i18n="achieved">${window.i18nManager.t('achieved')}</span></span>
+                                    <span class="text-xs text-gray-400">Rp ${goal.current_amount.toLocaleString('id-ID')} <span data-i18n="collected">${window.i18nManager.t('collected')}</span></span>
                                 </div>
                                 <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
                                     <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-full rounded-full transition-all duration-1000" style="width: ${progress}%"></div>
@@ -1184,18 +1181,18 @@
                             </div>
 
                             <div class="grid grid-cols-2 gap-3 mb-4">
-                                <div class="bg-blue-50 p-2 rounded-lg">
-                                    <p class="text-[10px] text-blue-600 uppercase font-bold">Tabungan / Hari</p>
-                                    <p class="text-sm font-bold text-blue-800">Rp ${dailySaving > 0 ? dailySaving.toLocaleString('id-ID') : '0'}</p>
+                                <div class="bg-blue-50 dark:bg-slate-700 p-2 rounded-lg">
+                                    <p class="text-[10px] text-blue-600 dark:text-blue-400 uppercase font-bold" data-i18n="saving_per_day">Tabungan / Hari</p>
+                                    <p class="text-sm font-bold text-blue-800 dark:text-blue-200">Rp ${dailySaving > 0 ? dailySaving.toLocaleString('id-ID') : '0'}</p>
                                 </div>
-                                <div class="bg-indigo-50 p-2 rounded-lg">
-                                    <p class="text-[10px] text-indigo-600 uppercase font-bold">Sisa Waktu</p>
-                                    <p class="text-sm font-bold text-indigo-800">${diffDays > 0 ? diffDays + ' Hari' : 'Selesai'}</p>
+                                <div class="bg-indigo-50 dark:bg-slate-700 p-2 rounded-lg">
+                                    <p class="text-[10px] text-indigo-600 dark:text-indigo-400 uppercase font-bold" data-i18n="remaining_time">Sisa Waktu</p>
+                                    <p class="text-sm font-bold text-indigo-800 dark:text-indigo-200">${diffDays > 0 ? diffDays + ' ' + window.i18nManager.t('days') : window.i18nManager.t('finished')}</p>
                                 </div>
                             </div>
 
                             <button onclick="openAddSavingsModal(${goal.id}, '${goal.item_name}')" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2.5 rounded-xl text-sm font-bold hover:shadow-lg transition-all duration-300 flex items-center justify-center">
-                                <i class="fas fa-plus-circle mr-2"></i>Tambah Tabungan
+                                <i class="fas fa-plus-circle mr-2"></i><span data-i18n="saving_add_saving">Tambah Tabungan</span>
                             </button>
                         </div>
                     `;
@@ -1205,7 +1202,7 @@
                 container.innerHTML = `
                     <div class="col-span-full p-4 bg-red-50 text-red-700 rounded-xl border border-red-100 flex items-center">
                         <i class="fas fa-exclamation-triangle mr-3"></i>
-                        <p class="text-sm">Gagal memuat data. Pastikan server Flask sudah dijalankan (python app.py).</p>
+                        <p class="text-sm" data-i18n="error_loading_data">${window.i18nManager.t('error_loading_data')}</p>
                     </div>
                 `;
             }
@@ -1213,7 +1210,7 @@
 
         function openAddSavingsModal(id, name) {
             document.getElementById('add-savings-goal-id').value = id;
-            document.getElementById('add-savings-item-name').textContent = `Target: ${name}`;
+            document.getElementById('add-savings-item-name').textContent = `${window.i18nManager.t('saving_target')}: ${name}`;
             document.getElementById('add-savings-modal').classList.remove('hidden');
         }
 
@@ -1236,7 +1233,7 @@
                 if (response.ok) {
                     closeAddSavingsModal();
                     loadSavingGoals();
-                    showAlert('Tabungan berhasil ditambahkan! Terus semangat menabung ya! 💪');
+                    showAlert(window.i18nManager.t('saving_add_success'));
                 }
             } catch (error) {
                 console.error('Error updating goal:', error);
@@ -1244,7 +1241,7 @@
         });
 
         function confirmDeleteGoal(id) {
-            showConfirm('Hapus target tabungan ini? Tindakan ini tidak dapat dibatalkan.', () => {
+            showConfirm(window.i18nManager.t('delete_confirm_goal'), () => {
                 deleteGoal(id);
             });
         }
@@ -1281,6 +1278,11 @@
 
                 loadSavingGoals();
                 updateBudgetCalculations();
+                
+                // Ensure i18n is applied to dynamic content
+                if (window.i18nManager) {
+                    window.i18nManager.updatePageTranslations();
+                }
             } catch (error) {
                 console.error('Initialization error:', error);
                 loadSavingGoals();
@@ -1289,6 +1291,117 @@
         }
 
         init();
+        // AI Chat Logic
+        let chatMessages = [];
+
+        function toggleChat() {
+            const modal = document.getElementById('chat-modal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                document.getElementById('chat-input').focus();
+            }
+        }
+
+        async function askAI(query = null) {
+            const input = document.getElementById('chat-input');
+            const message = query || input.value.trim();
+            if (!message) return;
+
+            // Clear input
+            if (!query) input.value = '';
+
+            // Open chat if closed
+            const modal = document.getElementById('chat-modal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+            }
+
+            // Append user message
+            appendMessage('user', message);
+
+            // Show typing indicator
+            const typingId = 'typing-' + Date.now();
+            appendTypingIndicator(typingId);
+
+            try {
+                chatMessages.push({ role: 'user', content: message });
+                
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ messages: chatMessages })
+                });
+
+                const data = await response.json();
+                removeTypingIndicator(typingId);
+
+                if (data.success) {
+                    appendMessage('ai', data.response);
+                    chatMessages.push({ role: 'assistant', content: data.response });
+                } else {
+                    appendMessage('ai', 'Maaf, terjadi kesalahan saat menghubungi asisten AI.');
+                }
+            } catch (error) {
+                console.error('AI Error:', error);
+                removeTypingIndicator(typingId);
+                appendMessage('ai', 'Maaf, koneksi ke asisten AI terputus.');
+            }
+        }
+
+        function appendMessage(role, text) {
+            const container = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.className = 'mb-4 ' + (role === 'user' ? 'flex justify-end' : '');
+            
+            const contentClass = role === 'user' 
+                ? 'bg-emerald-600 text-white rounded-tr-none' 
+                : 'bg-white text-gray-800 rounded-tl-none border border-gray-100';
+
+            div.innerHTML = `
+                <div class="flex items-start ${role === 'user' ? 'flex-row-reverse' : ''}">
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center ${role === 'user' ? 'bg-emerald-700 ml-2' : 'bg-emerald-100 mr-2'} flex-shrink-0 mt-1">
+                        <i class="fas ${role === 'user' ? 'fa-user' : 'fa-robot'} ${role === 'user' ? 'text-white' : 'text-emerald-600'} text-xs"></i>
+                    </div>
+                    <div class="${contentClass} p-3 rounded-xl shadow-sm max-w-[85%]">
+                        <p class="text-sm whitespace-pre-line">${text}</p>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function appendTypingIndicator(id) {
+            const container = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = 'mb-4';
+            div.innerHTML = `
+                <div class="flex items-start">
+                    <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2 mt-1 flex-shrink-0">
+                        <i class="fas fa-robot text-emerald-600 text-sm"></i>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg rounded-tl-none shadow-sm flex items-center gap-1">
+                        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0s"></div>
+                        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function removeTypingIndicator(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        document.getElementById('chat-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            askAI();
+        });
+
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebar-overlay');
@@ -1300,8 +1413,18 @@
                 overlay.classList.add('hidden');
             }
         }
+        function handleLogout() {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = '/logout';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('isLoggedIn') !== 'true') {
+                window.location.href = 'login.html';
+            }
+        });
     </script>
-    <script src="static/notifications.js"></script>
-    <script src="static/i18n.js"></script>
+
 </body>
 </html>

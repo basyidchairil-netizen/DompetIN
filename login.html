@@ -38,20 +38,34 @@
             background: rgba(255, 255, 255, 0.95);
         }
     </style>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
 </head>
 <body class="login-bg">
     <div class="min-h-screen flex items-center justify-center p-4">
         <div class="login-card w-full max-w-md p-8 rounded-2xl shadow-2xl">
-            <!-- Logo -->
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-emerald-600">Dompetin</h1>
-                <p class="text-gray-600 mt-2">Manage your finances with ease</p>
+            <!-- Logo and Controls -->
+            <div class="flex justify-between items-start mb-8">
+                <div class="text-left">
+                    <h1 class="text-3xl font-bold text-emerald-600">Dompetin</h1>
+                    <p class="text-gray-600 mt-2" data-i18n="login_title">Manage your finances with ease</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="window.i18nManager.toggleLanguage()" class="language-toggle p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition" title="Toggle Language">
+                        <span class="lang-text font-medium text-sm text-emerald-600">EN</span>
+                    </button>
+                    <button onclick="window.themeManager.cycleTheme()" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition" title="Toggle Theme">
+                        <span class="theme-icon-light"><i class="fas fa-sun text-amber-500 text-sm"></i></span>
+                        <span class="theme-icon-dark hidden"><i class="fas fa-moon text-blue-500 text-sm"></i></span>
+                        <span class="theme-icon-auto hidden"><i class="fas fa-circle-half-stroke text-gray-500 text-sm"></i></span>
+                    </button>
+                </div>
             </div>
 
             <!-- Login Form -->
             <form id="loginForm" class="space-y-6">
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2" data-i18n="login_email">
                         <i class="fas fa-envelope mr-2 text-emerald-600"></i>Email
                     </label>
                     <input 
@@ -61,11 +75,12 @@
                         required 
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition"
                         placeholder="your@email.com"
+                        data-i18n-placeholder="login_email"
                     >
                 </div>
 
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2" data-i18n="login_password">
                         <i class="fas fa-lock mr-2 text-emerald-600"></i>Password
                     </label>
                     <input 
@@ -75,22 +90,23 @@
                         required 
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition"
                         placeholder="••••••••"
+                        data-i18n-placeholder="login_password"
                     >
                 </div>
 
                 <div class="flex items-center justify-between">
                     <label class="flex items-center">
                         <input type="checkbox" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
-                        <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                        <span class="ml-2 text-sm text-gray-600" data-i18n="login_remember">Remember me</span>
                     </label>
-                    <a href="#" class="text-sm text-emerald-600 hover:text-emerald-700">Forgot password?</a>
+                    <a href="#" class="text-sm text-emerald-600 hover:text-emerald-700" data-i18n="login_forgot">Forgot password?</a>
                 </div>
 
                 <button 
                     type="submit" 
                     class="w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                 >
-                    <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    <i class="fas fa-sign-in-alt mr-2"></i><span data-i18n="login_btn">Login</span>
                 </button>
             </form>
 
@@ -100,7 +116,7 @@
                     <div class="w-full border-t border-gray-300"></div>
                 </div>
                 <div class="relative flex justify-center text-sm">
-                    <span class="px-4 bg-white text-gray-500">Or continue with</span>
+                    <span class="px-4 bg-white text-gray-500" data-i18n="login_or">Or continue with</span>
                 </div>
             </div>
 
@@ -108,48 +124,63 @@
             <div class="grid grid-cols-2 gap-4">
                 <button class="flex items-center justify-center py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
                     <i class="fab fa-google text-red-500 mr-2"></i>
-                    <span class="text-sm font-medium text-gray-700">Google</span>
+                    <span class="text-sm font-medium text-gray-700" data-i18n="login_google">Google</span>
                 </button>
                 <button class="flex items-center justify-center py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
                     <i class="fab fa-facebook text-blue-600 mr-2"></i>
-                    <span class="text-sm font-medium text-gray-700">Facebook</span>
+                    <span class="text-sm font-medium text-gray-700" data-i18n="login_facebook">Facebook</span>
                 </button>
             </div>
 
             <!-- Register Link -->
             <p class="text-center mt-6 text-gray-600">
-                Don't have an account? 
-                <a href="#" class="text-emerald-600 font-semibold hover:text-emerald-700">Sign up</a>
+                <span data-i18n="login_no_account">Don't have an account?</span> 
+                <a href="#" class="text-emerald-600 font-semibold hover:text-emerald-700" data-i18n="login_signup">Sign up</a>
             </p>
         </div>
     </div>
 
     <script>
         // Handle login form submission
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            // Simple validation
-            if (email && password) {
-                // Simulate login - in real app, this would be a backend call
-                // Store login status
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('userEmail', email);
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
                 
-                // Redirect to dashboard
-                window.location.href = 'dashboard.html';
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Clear any old session data first
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    
+                    // Store new status
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userEmail', email);
+                    
+                    // Redirect to dashboard
+                    window.location.href = 'dashboard.html';
+                } else {
+                    alert(data.message || 'Login failed');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('An error occurred during login');
             }
         });
 
-        // Check if already logged in
+        // Check if already logged in - but let the server handle strict protection
         document.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('isLoggedIn') === 'true') {
-                // Already logged in, redirect to dashboard
-                window.location.href = 'dashboard.html';
-            }
+            // If the user lands here, we should probably clear localStorage to be safe
+            // unless they are already logged in according to BOTH client and server.
         });
     </script>
 </body>

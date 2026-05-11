@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Saving - Dompetin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            50:'#ecfdf5',100:'#d1fae5',200:'#a7f3d0',300:'#6ee7b7',
+                            400:'#34d399',500:'#10b981',600:'#059669',700:'#047857',
+                            800:'#065f46',900:'#064e3b'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4,0,0.6,1) infinite',
+                        'slide-in': 'slideIn 0.4s ease-out'
+                    },
+                    keyframes: {
+                        slideIn: { from: {opacity:'0',transform:'translateY(-10px)'}, to: {opacity:'1',transform:'translateY(0)'} }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; }
+        .goal-card { animation: slideIn 0.4s ease-out; }
+        @keyframes slideIn { from {opacity:0;transform:translateY(-10px)} to {opacity:1;transform:translateY(0)} }
+        .shimmer { background: linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+        .at-risk-glow { box-shadow: 0 0 0 3px rgba(239,68,68,0.3), 0 4px 20px rgba(239,68,68,0.15); }
+    </style>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
+</head>
+<body class="bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-white min-h-screen transition-colors duration-300">
+
+    <!-- Sidebar Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- ── Sidebar ── -->
+        <div id="sidebar" class="w-64 bg-emerald-700 text-white h-screen fixed dark:bg-emerald-800 transition-transform duration-300 transform -translate-x-full md:translate-x-0 z-50">
+            <div class="p-4 flex justify-between items-center">
+                <h1 class="text-2xl font-bold">Dompetin</h1>
+                <div class="flex items-center gap-1">
+                    <button onclick="window.i18nManager.toggleLanguage()" class="language-toggle p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Language">
+                        <span class="lang-text text-sm font-medium">ID</span>
+                    </button>
+                    <button onclick="window.themeManager.cycleTheme()" class="p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Theme">
+                        <span class="theme-icon-light"><i class="fas fa-sun text-yellow-300 text-sm"></i></span>
+                        <span class="theme-icon-dark hidden"><i class="fas fa-moon text-blue-300 text-sm"></i></span>
+                        <span class="theme-icon-auto hidden"><i class="fas fa-circle-half-stroke text-gray-300 text-sm"></i></span>
+                    </button>
+                </div>
+            </div>
+            <nav class="mt-4">
+                <a href="dashboard.html" class="flex items-center px-6 py-3 hover:bg-emerald-600 transition">
+                    <i class="fas fa-home w-6"></i><span data-i18n="sidebar_home">Home</span>
+                </a>
+                <a href="incomeTracking.html" class="flex items-center px-6 py-3 hover:bg-emerald-600 transition">
+                    <i class="fas fa-wallet w-6"></i><span data-i18n="sidebar_income_tracking">Income Tracking</span>
+                </a>
+                <a href="budgetplaning.html" class="flex items-center px-6 py-3 hover:bg-emerald-600 transition">
+                    <i class="fas fa-chart-pie w-6"></i><span data-i18n="sidebar_budget_planning">Budget Planning</span>
+                </a>
+                <a href="smart_saving.html" class="flex items-center px-6 py-3 bg-emerald-800 border-l-4 border-white transition">
+                    <i class="fas fa-piggy-bank w-6"></i><span data-i18n="sidebar_smart_saving">Smart Saving</span>
+                </a>
+                <a href="analysis.html" class="flex items-center px-6 py-3 hover:bg-emerald-600 transition">
+                    <i class="fas fa-chart-line w-6"></i><span data-i18n="sidebar_analysis">Analysis</span>
+                </a>
+                <a href="profile.html" class="flex items-center px-6 py-3 hover:bg-emerald-600 transition">
+                    <i class="fas fa-user w-6"></i><span data-i18n="sidebar_profile">Profile</span>
+                </a>
+            </nav>
+            <div class="absolute bottom-6 px-6 w-full">
+                <a href="javascript:void(0)" onclick="handleLogout()" class="flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-red-700 transition text-sm text-red-300">
+                    <i class="fas fa-sign-out-alt"></i><span data-i18n="sidebar_logout">Logout</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- ── Main Content ── -->
+        <div class="flex-1 md:ml-64 overflow-y-auto">
+
+            <!-- Top Bar -->
+            <div class="sticky top-0 z-30 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-4">
+                    <button class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700" onclick="toggleSidebar()">
+                        <i class="fas fa-bars text-gray-600 dark:text-gray-300"></i>
+                    </button>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800 dark:text-white" data-i18n="ss_title">Menabung Pintar</h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="ss_subtitle">Pantau target menabung & jaga budget harianmu</p>
+                    </div>
+                </div>
+                <button id="btn-new-goal"
+                    class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-semibold text-sm flex items-center gap-2 shadow-md hover:shadow-lg transition">
+                    <i class="fas fa-plus"></i>
+                    <span data-i18n="ss_new_goal">Target Baru</span>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-6">
+
+                <!-- ⚠️ Budget Guard Alert Banner -->
+                <div id="guard-banner" class="hidden bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 rounded-2xl p-5 at-risk-glow space-y-2 animate-pulse-slow">
+                    <!-- Filled by JS -->
+                </div>
+
+                <!-- ── Today's Snapshot ── -->
+                <div>
+                    <h3 class="text-base font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-3 flex items-center gap-2">
+                        <i class="fas fa-shield-alt text-emerald-500"></i>
+                        <span data-i18n="ss_budget_guard">Budget Guard — Today</span>
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow border border-gray-100 dark:border-slate-700">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1" data-i18n="ss_today_spending">Today's Spending</p>
+                            <p id="stat-today-spending" class="text-xl font-bold text-red-500">Rp 0</p>
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow border border-gray-100 dark:border-slate-700">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1" data-i18n="ss_today_income">Today's Income</p>
+                            <p id="stat-today-income" class="text-xl font-bold text-emerald-600">Rp 0</p>
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow border border-gray-100 dark:border-slate-700">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1" data-i18n="ss_daily_target">Daily Saving Target</p>
+                            <p id="stat-daily-target" class="text-xl font-bold text-blue-600">—</p>
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow border border-gray-100 dark:border-slate-700">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1" data-i18n="ss_safe_to_spend">Safe to Spend</p>
+                            <p id="stat-safe-spend" class="text-xl font-bold text-amber-500">—</p>
+                        </div>
+                    </div>
+
+                    <!-- Spending Meter -->
+                    <div class="mt-4 bg-white dark:bg-slate-800 rounded-2xl p-5 shadow border border-gray-100 dark:border-slate-700">
+                        <div class="flex justify-between items-center mb-2">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-300" data-i18n="ss_spending_meter">Daily Spending Meter</p>
+                            <span id="spending-meter-label" class="text-sm font-bold text-gray-700 dark:text-white">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-4 overflow-hidden">
+                            <div id="spending-meter-bar" class="h-4 rounded-full bg-emerald-500 transition-all duration-700" style="width:0%"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-400 mt-1">
+                            <span data-i18n="ss_meter_safe">Safe Zone</span>
+                            <span data-i18n="ss_meter_danger">Danger Zone</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Goal Cards ── -->
+                <div>
+                    <h3 class="text-base font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-3 flex items-center gap-2">
+                        <i class="fas fa-bullseye text-emerald-500"></i>
+                        <span data-i18n="ss_my_goals">My Saving Goals</span>
+                    </h3>
+
+                    <!-- Empty State -->
+                    <div id="goals-empty" class="hidden text-center py-16 bg-white dark:bg-slate-800 rounded-2xl shadow border border-dashed border-gray-300 dark:border-slate-600">
+                        <div class="text-6xl mb-4">🐷</div>
+                        <p class="text-lg font-semibold text-gray-600 dark:text-gray-300" data-i18n="ss_no_goals">No saving goals yet</p>
+                        <p class="text-sm text-gray-400 dark:text-gray-500 mt-1" data-i18n="ss_no_goals_hint">Create your first goal to start saving smartly!</p>
+                        <button onclick="SmartSaving.openModal('new-goal-modal')"
+                            class="mt-5 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-xl font-semibold text-sm transition">
+                            <i class="fas fa-plus mr-2"></i><span data-i18n="ss_new_goal">New Goal</span>
+                        </button>
+                    </div>
+
+                    <div id="goals-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <!-- ── Tips Section ── -->
+                <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white shadow-lg">
+                    <h3 class="text-lg font-bold mb-3 flex items-center gap-2">
+                        <i class="fas fa-lightbulb text-yellow-300"></i>
+                        <span data-i18n="ss_tips_title">Smart Saving Tips</span>
+                    </h3>
+                    <ul class="space-y-2 text-sm opacity-90">
+                        <li class="flex items-start gap-2"><span>💡</span><span data-i18n="ss_tip1">Set a realistic deadline — not too tight, not too loose.</span></li>
+                        <li class="flex items-start gap-2"><span>📉</span><span data-i18n="ss_tip2">If you miss a day, the system recalculates automatically — don't panic!</span></li>
+                        <li class="flex items-start gap-2"><span>🚦</span><span data-i18n="ss_tip3">Keep the spending meter in the green zone every day.</span></li>
+                        <li class="flex items-start gap-2"><span>🏆</span><span data-i18n="ss_tip4">Celebrate small milestones — reaching 25%, 50%, 75% is worth it!</span></li>
+                    </ul>
+                </div>
+
+            </div><!-- /p-6 -->
+        </div><!-- /main -->
+    </div><!-- /flex -->
+
+    <!-- ── New Goal Modal ── -->
+    <div id="new-goal-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md p-7">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white" data-i18n="ss_new_goal_title">Set a New Saving Goal</h3>
+                <button data-close-modal="new-goal-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl leading-none">&times;</button>
+            </div>
+            <form id="new-goal-form" class="space-y-4" method="POST" action="/add_saving_goal">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" data-i18n="ss_item_name">Nama Barang</label>
+                    <input name="item_name" type="text" required
+                        placeholder="contoh: Laptop, iPhone, Liburan..."
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" data-i18n="ss_target_price">Harga Target (Rp)</label>
+                        <input name="target_amount" type="number" min="1" required
+                            placeholder="5000000"
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" data-i18n="ss_current_savings">Tabungan Saat Ini (Rp)</label>
+                        <input name="current_amount" type="number" min="0" value="0"
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" data-i18n="ss_deadline_date">Tenggat Waktu</label>
+                    <input name="target_date" id="input-deadline" type="date" required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" data-i18n="ss_notes">Catatan (Opsional)</label>
+                    <input name="notes" type="text" placeholder="contoh: Hadiah ulang tahun..."
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm">
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" data-close-modal="new-goal-modal"
+                        class="flex-1 py-3 rounded-xl border border-gray-300 dark:border-slate-600 text-gray-600 dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-slate-700 transition text-sm" data-i18n="cancel">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition text-sm">
+                        <i class="fas fa-plus mr-2"></i><span data-i18n="ss_create_goal">Buat Tujuan</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        function handleLogout() {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = '/logout';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('isLoggedIn') !== 'true') {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+    <script src="{{ url_for('static', filename='notifications.js') }}"></script>
+    <script src="{{ url_for('static', filename='smart_saving.js') }}"></script>
+</body>
+</html>

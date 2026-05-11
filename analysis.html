@@ -57,26 +57,40 @@
         </div>
 
         <div id="sidebar" class="w-64 bg-emerald-700 text-white h-screen fixed dark:bg-emerald-800 transition-transform duration-300 transform -translate-x-full md:translate-x-0 z-[50]">
-            <div class="p-4">
+            <div class="p-4 flex justify-between items-center">
                 <h1 class="text-2xl font-bold">Dompetin</h1>
+                <div class="flex items-center gap-1">
+                    <button onclick="window.i18nManager.toggleLanguage()" class="language-toggle p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Language">
+                        <span class="lang-text text-sm font-medium">ID</span>
+                    </button>
+                    <button onclick="window.themeManager.cycleTheme()" class="p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Theme">
+                        <span class="theme-icon-light"><i class="fas fa-sun text-yellow-300 text-sm"></i></span>
+                        <span class="theme-icon-dark hidden"><i class="fas fa-moon text-blue-300 text-sm"></i></span>
+                        <span class="theme-icon-auto hidden"><i class="fas fa-circle-half-stroke text-gray-300 text-sm"></i></span>
+                    </button>
+                </div>
             </div>
             <nav class="mt-8">
                 <a href="dashboard.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
-                    <i class="fas fa-home mr-3"></i>Home
+                    <i class="fas fa-home mr-3"></i><span data-i18n="sidebar_home">Home</span>
                 </a>
                 <a href="incomeTracking.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
-                    <i class="fas fa-money-bill-wave mr-3"></i>Income Tracking
+                    <i class="fas fa-money-bill-wave mr-3"></i><span data-i18n="sidebar_income_tracking">Income Tracking</span>
                 </a>
                 <a href="budgetplaning.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
-                    <i class="fas fa-chart-pie mr-3"></i>Budget Planning
+                    <i class="fas fa-chart-pie mr-3"></i><span data-i18n="sidebar_budget_planning">Budget Planning</span>
+                </a>
+                <a href="smart_saving.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
+                    <i class="fas fa-piggy-bank mr-3"></i><span data-i18n="sidebar_smart_saving">Smart Saving</span>
                 </a>
                 <a href="analysis.html" class="sidebar-link block py-2 px-4 bg-emerald-600">
-                    <i class="fas fa-chart-line mr-3"></i>Analysis
+                    <i class="fas fa-chart-line mr-3"></i><span data-i18n="sidebar_analysis">Analysis</span>
                 </a>
                 <a href="profile.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600">
-                    <i class="fas fa-user mr-3"></i>Profile
-                <a href="index.html" class="sidebar-link block py-2 px-4 hover:bg-emerald-600 mt-8">
-                    <i class="fas fa-sign-out-alt mr-3"></i>Logout
+                    <i class="fas fa-user mr-3"></i><span data-i18n="sidebar_profile">Profile</span>
+                </a>
+                <a href="javascript:void(0)" onclick="handleLogout()" class="sidebar-link block py-2 px-4 hover:bg-emerald-600 mt-8">
+                    <i class="fas fa-sign-out-alt mr-3"></i><span data-i18n="sidebar_logout">Logout</span>
                 </a>
             </nav>
         </div>
@@ -87,8 +101,8 @@
         <div class="flex-1 md:ml-64 p-4 md:p-8">
             <!-- Header -->
             <div class="mb-8">
-                <h2 class="text-4xl font-bold text-gray-900 mb-2">Financial Analysis</h2>
-                <p class="text-lg text-gray-600">Analisis mendalam kondisi keuangan Anda</p>
+                <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-2" data-i18n="financial_analysis_title">Financial Analysis</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400" data-i18n="financial_analysis_subtitle">Analisis mendalam kondisi keuangan Anda</p>
             </div>
 
             <!-- Time Period Selector -->
@@ -97,11 +111,11 @@
                     <i class="fas fa-chevron-left text-emerald-600"></i>
                 </button>
                 <div class="flex gap-2">
-                    <button onclick="setPeriod('week')" class="period-btn px-4 py-2 rounded-lg font-medium transition" data-period="week">Minggu Ini</button>
-                    <button onclick="setPeriod('month')" class="period-btn px-4 py-2 rounded-lg font-medium transition bg-emerald-100 text-emerald-700" data-period="month">Bulan Ini</button>
-                    <button onclick="setPeriod('year')" class="period-btn px-4 py-2 rounded-lg font-medium transition" data-period="year">Tahun Ini</button>
+                    <button onclick="setPeriod('week')" class="period-btn px-4 py-2 rounded-lg font-medium transition" data-period="week" data-i18n="period_this_week">Minggu Ini</button>
+                    <button onclick="setPeriod('month')" class="period-btn px-4 py-2 rounded-lg font-medium transition bg-emerald-100 text-emerald-700" data-period="month" data-i18n="period_this_month">Bulan Ini</button>
+                    <button onclick="setPeriod('year')" class="period-btn px-4 py-2 rounded-lg font-medium transition" data-period="year" data-i18n="period_this_year">Tahun Ini</button>
                 </div>
-                <button onclick="changePeriod(1)" class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
+                <button onclick="changePeriod(direction)" class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
                     <i class="fas fa-chevron-right text-emerald-600"></i>
                 </button>
             </div>
@@ -114,11 +128,11 @@
                             <i class="fas fa-arrow-up text-green-600 text-xl"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">Total Pemasukan</p>
-                            <p class="text-2xl font-bold text-green-600" id="total-income">Rp 3.000.000</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="stat_total_income">Total Pemasukan</p>
+                            <p class="text-2xl font-bold text-green-600" id="total-income">{{ global_data.monthly_income | fmt_rupiah }}</p>
                         </div>
                     </div>
-                    <p class="text-xs text-gray-500">Periode yang dipilih</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400" data-i18n="period_selected">Periode yang dipilih</p>
                 </div>
                 
                 <div class="stat-card bg-white p-6 rounded-xl shadow-lg">
@@ -127,11 +141,11 @@
                             <i class="fas fa-arrow-down text-red-600 text-xl"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">Total Pengeluaran</p>
-                            <p class="text-2xl font-bold text-red-600" id="total-expense">Rp 1.850.000</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="stat_total_expense">Total Pengeluaran</p>
+                            <p class="text-2xl font-bold text-red-600" id="total-expense">{{ global_data.monthly_expense | fmt_rupiah }}</p>
                         </div>
                     </div>
-                    <p class="text-xs text-gray-500">Periode yang dipilih</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400" data-i18n="period_selected">Periode yang dipilih</p>
                 </div>
                 
                 <div class="stat-card bg-white p-6 rounded-xl shadow-lg">
@@ -140,11 +154,11 @@
                             <i class="fas fa-wallet text-blue-600 text-xl"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">Total Saving</p>
-                            <p class="text-2xl font-bold text-blue-600" id="total-saving">Rp 1.150.000</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="stat_total_saving">Total Saving</p>
+                            <p class="text-2xl font-bold text-blue-600" id="total-saving">{{ global_data.monthly_savings | fmt_rupiah }}</p>
                         </div>
                     </div>
-                    <p class="text-xs text-gray-500">Sisa setelah pengeluaran</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400" data-i18n="after_expenses_desc">Sisa setelah pengeluaran</p>
                 </div>
                 
                 <div class="stat-card bg-white p-6 rounded-xl shadow-lg">
@@ -153,19 +167,23 @@
                             <i class="fas fa-percentage text-purple-600 text-xl"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">Saving Rate</p>
-                            <p class="text-2xl font-bold text-purple-600" id="saving-rate">38%</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="stat_saving_rate">Saving Rate</p>
+                            {% set sr = 0 %}
+                            {% if global_data.monthly_income > 0 %}
+                                {% set sr = ((global_data.monthly_savings / global_data.monthly_income) * 100)|round(1) %}
+                            {% endif %}
+                            <p class="text-2xl font-bold text-purple-600" id="saving-rate">{{ sr }}%</p>
                         </div>
                     </div>
-                    <p class="text-xs text-gray-500">Target: 20%+</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400" data-i18n="saving_rate_target">Target: 20%+</p>
                 </div>
             </div>
 
             <!-- Charts Row 1 -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 <!-- Spending by Category (Pie Chart) -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-semibold mb-4">Pengeluaran per Kategori</h3>
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4 dark:text-white" data-i18n="spending_by_category">Pengeluaran per Kategori</h3>
                     <div class="relative h-64">
                         <canvas id="categoryPieChart"></canvas>
                     </div>
@@ -175,8 +193,8 @@
                 </div>
                 
                 <!-- Monthly Trend (Bar Chart) -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-semibold mb-4">Tren Pemasukan vs Pengeluaran</h3>
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4 dark:text-white" data-i18n="income_vs_expense_trend">Tren Pemasukan vs Pengeluaran</h3>
                     <div class="relative h-64">
                         <canvas id="trendChart"></canvas>
                     </div>
@@ -186,16 +204,16 @@
             <!-- Charts Row 2 -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                 <!-- Budget vs Actual -->
-                <div class="bg-white rounded-xl shadow-lg p-6 lg:col-span-2">
-                    <h3 class="text-xl font-semibold mb-4">Budget vs Pengeluaran Aktual</h3>
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 lg:col-span-2">
+                    <h3 class="text-xl font-semibold mb-4 dark:text-white" data-i18n="budget_vs_actual">Budget vs Pengeluaran Aktual</h3>
                     <div class="relative h-64">
                         <canvas id="budgetVsActualChart"></canvas>
                     </div>
                 </div>
                 
                 <!-- Daily Spending Heatmap -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-semibold mb-4">Pola Pengeluaran Mingguan</h3>
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4 dark:text-white" data-i18n="weekly_spending_pattern">Pola Pengeluaran Mingguan</h3>
                     <div class="space-y-2" id="weekly-pattern">
                         <!-- Will be populated by JS -->
                     </div>
@@ -205,84 +223,63 @@
             <!-- Insights Section -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 <!-- Financial Insights -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-semibold mb-4">
-                        <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>Financial Insights
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4 dark:text-white">
+                        <i class="fas fa-lightbulb text-yellow-500 mr-2"></i><span data-i18n="financial_insights">Financial Insights</span>
                     </h3>
                     <div class="space-y-4" id="insights-list">
                         <div class="flex items-start p-3 bg-emerald-50 rounded-lg">
                             <i class="fas fa-check-circle text-emerald-600 mr-3 mt-1"></i>
                             <div>
                                 <p class="font-medium text-emerald-800">Saving Rate Baik</p>
-                                <p class="text-sm text-gray-600">Tingkattabungan Anda 38% sudah di atas target 20%</p>
+                                <p class="text-sm text-gray-600">Tingkat tabungan Anda sudah di atas target 20%</p>
                             </div>
                         </div>
                         <div class="flex items-start p-3 bg-orange-50 rounded-lg">
                             <i class="fas fa-exclamation-circle text-orange-500 mr-3 mt-1"></i>
                             <div>
-                                <p class="font-medium text-orange-800">Peningkatan Pengeluaran Makanan</p>
-                                <p class="text-sm text-gray-600">Pengeluaran makanan naik 15% dari bulan lalu</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start p-3 bg-blue-50 rounded-lg">
-                            <i class="fas fa-chart-line text-blue-600 mr-3 mt-1"></i>
-                            <div>
-                                <p class="font-medium text-blue-800">Tren Positif</p>
-                                <p class="text-sm text-gray-600">Pengeluaran bulan ini menurun 10% dari bulan lalu</p>
+                                <p class="font-medium text-orange-800">Waspada Pengeluaran</p>
+                                <p class="text-sm text-gray-600">Pantau pengeluaran variabel Anda bulan ini.</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Budget Recommendations -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-semibold mb-4">
-                        <i class="fas fa-robot text-emerald-600 mr-2"></i>Rekomendasi Budget
+                <!-- Summary Section -->
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4 dark:text-white">
+                        <i class="fas fa-info-circle text-emerald-600 mr-2"></i><span data-i18n="analysis_summary">Ringkasan Analisis</span>
                     </h3>
-                    <div class="space-y-3" id="recommendations">
-                        <div class="p-3 bg-gray-50 rounded-lg">
-                            <p class="font-medium text-gray-800">Kurangi pengeluaran hiburan</p>
-                            <p class="text-sm text-gray-600">Hiburan menghabiskan 18% dari budget, pertimbangkan untuk mengurangi 5%</p>
-                        </div>
-                        <div class="p-3 bg-gray-50 rounded-lg">
-                            <p class="font-medium text-gray-800">Tingkatkan tabungan darurat</p>
-                            <p class="text-sm text-gray-600">Tabungan saat ini Rp 600.000/bln, target minimal Rp 1.000.000/bln</p>
-                        </div>
-                        <div class="p-3 bg-gray-50 rounded-lg">
-                            <p class="font-medium text-gray-800">Budget makanan sudah optimal</p>
-                            <p class="text-sm text-gray-600">Alokasi makanan 45% sudah sesuai kebutuhan mahasiswa</p>
-                        </div>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <p class="text-gray-700 leading-relaxed">Analisis keuangan Anda menunjukkan tren yang stabil. Untuk saran yang lebih mendalam dan bantuan perencanaan anggaran, silakan gunakan fitur <strong>Asisten AI</strong> di halaman <strong>Budget Planning</strong>.</p>
                     </div>
-                    <button onclick="openAIRecommendation()" class="w-full mt-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-3 px-4 rounded-lg hover:from-emerald-600 hover:to-teal-600 transition shadow-md font-medium">
-                        <i class="fas fa-robot mr-2"></i>Minta Saran AI
-                    </button>
                 </div>
             </div>
 
             <!-- Transaction History Table -->
-            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 mb-8">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-xl font-semibold">Riwayat Transaksi Terakhir</h3>
+                    <h3 class="text-xl font-semibold dark:text-white" data-i18n="recent_transactions">Riwayat Transaksi Terakhir</h3>
                     <div class="flex gap-2">
-                        <select id="filter-category" class="px-3 py-2 border rounded-lg text-sm" onchange="filterTransactions()">
-                            <option value="all">Semua Kategori</option>
-                            <option value="food">Makanan</option>
-                            <option value="transport">Transportasi</option>
-                            <option value="shopping">Belanja</option>
-                            <option value="entertainment">Hiburan</option>
-                            <option value="bills">Tagihan</option>
+                        <select id="filter-category" class="px-3 py-2 border rounded-lg text-sm dark:bg-slate-700 dark:border-slate-600 dark:text-white" onchange="filterTransactions()">
+                            <option value="all" data-i18n="all_categories">Semua Kategori</option>
+                            <option value="food" data-i18n="category_food">Makanan</option>
+                            <option value="transport" data-i18n="category_transport">Transportasi</option>
+                            <option value="shopping" data-i18n="category_shopping">Belanja</option>
+                            <option value="entertainment" data-i18n="category_entertainment">Hiburan</option>
+                            <option value="bills" data-i18n="category_bills">Tagihan</option>
                         </select>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
                         <thead>
-                            <tr class="border-b">
-                                <th class="pb-3 text-sm font-semibold text-gray-600">Tanggal</th>
-                                <th class="pb-3 text-sm font-semibold text-gray-600">Deskripsi</th>
-                                <th class="pb-3 text-sm font-semibold text-gray-600">Kategori</th>
-                                <th class="pb-3 text-sm font-semibold text-gray-600">Tipe</th>
-                                <th class="pb-3 text-sm font-semibold text-gray-600 text-right">Jumlah</th>
+                            <tr class="border-b dark:border-slate-700">
+                                <th class="pb-3 text-sm font-semibold text-gray-600 dark:text-gray-400" data-i18n="table_date">Tanggal</th>
+                                <th class="pb-3 text-sm font-semibold text-gray-600 dark:text-gray-400" data-i18n="table_description">Deskripsi</th>
+                                <th class="pb-3 text-sm font-semibold text-gray-600 dark:text-gray-400" data-i18n="table_category">Kategori</th>
+                                <th class="pb-3 text-sm font-semibold text-gray-600 dark:text-gray-400" data-i18n="table_type">Tipe</th>
+                                <th class="pb-3 text-sm font-semibold text-gray-600 dark:text-gray-400 text-right" data-i18n="table_amount">Jumlah</th>
                             </tr>
                         </thead>
                         <tbody id="transaction-table">
@@ -293,75 +290,34 @@
             </div>
 
             <!-- Export Section -->
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h3 class="text-xl font-semibold mb-4">Export Laporan</h3>
+            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-semibold mb-4 dark:text-white" data-i18n="export_report">Export Laporan</h3>
                 <div class="flex gap-4">
                     <button onclick="exportReport('csv')" class="flex items-center bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg hover:bg-emerald-200 transition">
-                        <i class="fas fa-file-csv mr-2"></i>Export CSV
+                        <i class="fas fa-file-csv mr-2"></i><span data-i18n="export_csv">Export CSV</span>
                     </button>
                     <button onclick="exportReport('pdf')" class="flex items-center bg-red-100 text-red-700 px-4 py-2 rounded-lg hover:bg-red-200 transition">
-                        <i class="fas fa-file-pdf mr-2"></i>Export PDF
+                        <i class="fas fa-file-pdf mr-2"></i><span data-i18n="export_pdf">Export PDF</span>
                     </button>
                     <button onclick="printReport()" class="flex items-center bg-blue-100 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-200 transition">
-                        <i class="fas fa-print mr-2"></i>Print
+                        <i class="fas fa-print mr-2"></i><span data-i18n="print_report">Print</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- AI Recommendation Modal -->
-    <div id="ai-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
-            <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-4 flex justify-between items-center">
-                <h3 class="text-lg font-semibold"><i class="fas fa-robot mr-2"></i>AI Financial Analysis</h3>
-                <button onclick="closeAIRecommendation()" class="text-white hover:text-emerald-200">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            <div class="p-4 max-h-96 overflow-y-auto" id="ai-response">
-                <div class="flex items-start mb-4">
-                    <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2 mt-1">
-                        <i class="fas fa-robot text-emerald-600 text-sm"></i>
-                    </div>
-                    <div class="bg-gray-50 p-3 rounded-lg rounded-tl-none">
-                        <p class="text-sm">Halo! Saya akan menganalisis keuangan Anda berdasarkan data yang ada. Silakan tunggu sebentar...</p>
-                    </div>
-                </div>
-            </div>
-            <div class="p-4 border-t">
-                <form id="ai-form" class="flex gap-2">
-                    <input type="text" id="ai-input" class="flex-1 px-4 py-2 border rounded-lg" placeholder="Tanyakan tentang finances Anda...">
-                    <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
+    <script src="{{ url_for('static', filename='notifications.js') }}"></script>
 
     <script>
-        // Sample Data
-        let transactions = [
-            { id: 1, type: 'income', desc: 'Uang Saku', amount: 3000000, category: 'allowance', date: '2025-01-01', notes: 'Bulanan' },
-            { id: 2, type: 'expense', desc: 'Makan Siang', amount: 25000, category: 'food', date: '2025-01-02', notes: '' },
-            { id: 3, type: 'expense', desc: 'Ojol', amount: 15000, category: 'transport', date: '2025-01-02', notes: '' },
-            { id: 4, type: 'expense', desc: 'Makan Malam', amount: 35000, category: 'food', date: '2025-01-02', notes: '' },
-            { id: 5, type: 'expense', desc: 'Kuota Internet', amount: 150000, category: 'bills', date: '2025-01-03', notes: '' },
-            { id: 6, type: 'expense', desc: 'Nonton Film', amount: 50000, category: 'entertainment', date: '2025-01-04', notes: '' },
-            { id: 7, type: 'expense', desc: 'Belanja Buku', amount: 200000, category: 'shopping', date: '2025-01-05', notes: '' },
-            { id: 8, type: 'expense', desc: 'Uang Makan', amount: 500000, category: 'food', date: '2025-01-10', notes: '' },
-        ];
-
+        // Data from server
+        let transactions = {{ global_data.transactions | tojson | safe }};
+        let weeklySpendingData = {{ global_data.weekly_spending | tojson | safe }};
         let budgetData = {
-            totalBudget: 3000000,
-            categories: [
-                { name: 'Food', budget: 1350000, spent: 850000, color: '#f97316' },
-                { name: 'Transport', budget: 450000, spent: 250000, color: '#3b82f6' },
-                { name: 'Entertainment', budget: 450000, spent: 350000, color: '#ec4899' },
-                { name: 'Bills', budget: 300000, spent: 200000, color: '#8b5cf6' },
-                { name: 'Shopping', budget: 450000, spent: 200000, color: '#14b8a6' }
-            ]
+            totalBudget: {{ global_data.total_budget }},
+            categories: {{ global_data.category_comparison | tojson | safe }}
         };
 
         // Charts
@@ -369,12 +325,15 @@
 
         // Initialize charts
         function initCharts() {
+            if (!window.i18nManager || !window.i18nManager.t) return;
+
             // Category Pie Chart
             const categoryCtx = document.getElementById('categoryPieChart').getContext('2d');
+            if (categoryPieChart) categoryPieChart.destroy();
             categoryPieChart = new Chart(categoryCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: budgetData.categories.map(c => c.name),
+                    labels: budgetData.categories.map(c => window.i18nManager.t(c.key)),
                     datasets: [{
                         data: budgetData.categories.map(c => c.spent),
                         backgroundColor: budgetData.categories.map(c => c.color),
@@ -385,31 +344,34 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            display: false
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => ' ' + window.i18nManager.t(budgetData.categories[ctx.dataIndex].key) + ': Rp ' + ctx.raw.toLocaleString('id-ID')
+                            }
                         }
                     }
                 }
             });
 
-            // Update legend
             updateCategoryLegend();
 
             // Trend Chart
             const trendCtx = document.getElementById('trendChart').getContext('2d');
+            if (trendChart) trendChart.destroy();
             trendChart = new Chart(trendCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    labels: [{{ global_data.current_month_name | tojson }}],
                     datasets: [
                         {
-                            label: 'Pemasukan',
-                            data: [3000000, 3000000, 3200000, 3000000, 3000000, 3500000],
+                            label: window.i18nManager.t('income'),
+                            data: [{{ global_data.monthly_income }}],
                             backgroundColor: '#10b981'
                         },
                         {
-                            label: 'Pengeluaran',
-                            data: [1850000, 2100000, 1950000, 1800000, 1700000, 1650000],
+                            label: window.i18nManager.t('expense'),
+                            data: [{{ global_data.monthly_expense }}],
                             backgroundColor: '#ef4444'
                         }
                     ]
@@ -421,9 +383,7 @@
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                callback: function(value) {
-                                    return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
-                                }
+                                callback: (v) => 'Rp ' + (v / 1000000).toFixed(1) + 'M'
                             }
                         }
                     }
@@ -432,18 +392,19 @@
 
             // Budget vs Actual Chart
             const budgetCtx = document.getElementById('budgetVsActualChart').getContext('2d');
+            if (budgetVsActualChart) budgetVsActualChart.destroy();
             budgetVsActualChart = new Chart(budgetCtx, {
                 type: 'bar',
                 data: {
-                    labels: budgetData.categories.map(c => c.name),
+                    labels: budgetData.categories.map(c => window.i18nManager.t(c.key)),
                     datasets: [
                         {
-                            label: 'Budget',
+                            label: window.i18nManager.t('budget'),
                             data: budgetData.categories.map(c => c.budget),
                             backgroundColor: '#d1d5db'
                         },
                         {
-                            label: 'Actual',
+                            label: window.i18nManager.t('actual'),
                             data: budgetData.categories.map(c => c.spent),
                             backgroundColor: budgetData.categories.map(c => c.color)
                         }
@@ -456,9 +417,7 @@
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                callback: function(value) {
-                                    return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
-                                }
+                                callback: (v) => 'Rp ' + (v / 1000000).toFixed(1) + 'M'
                             }
                         }
                     }
@@ -468,19 +427,19 @@
 
         function updateCategoryLegend() {
             const legendContainer = document.getElementById('category-legend');
+            if (!legendContainer) return;
             legendContainer.innerHTML = budgetData.categories.map(c => `
                 <div class="flex items-center">
                     <div class="w-3 h-3 rounded-full mr-2" style="background-color: ${c.color}"></div>
-                    <span class="text-sm text-gray-600">${c.name}</span>
-                    <span class="text-sm font-medium ml-auto">Rp ${c.spent.toLocaleString('id-ID')}</span>
+                    <span class="text-sm text-gray-600 dark:text-gray-400" data-i18n="${c.key}">${window.i18nManager.t(c.key)}</span>
+                    <span class="text-sm font-medium ml-auto dark:text-white">Rp ${c.spent.toLocaleString('id-ID')}</span>
                 </div>
             `).join('');
         }
 
-        // Update overview stats
         function updateStats() {
-            const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-            const totalExpense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+            const totalIncome = {{ global_data.monthly_income }};
+            const totalExpense = {{ global_data.monthly_expense }};
             const totalSaving = totalIncome - totalExpense;
             const savingRate = totalIncome > 0 ? Math.round((totalSaving / totalIncome) * 100) : 0;
 
@@ -489,42 +448,46 @@
             document.getElementById('total-saving').textContent = 'Rp ' + totalSaving.toLocaleString('id-ID');
             document.getElementById('saving-rate').textContent = savingRate + '%';
 
-            // Update saving rate color
             const savingRateEl = document.getElementById('saving-rate');
-            if (savingRate >= 20) {
-                savingRateEl.className = 'text-2xl font-bold text-purple-600';
-            } else if (savingRate >= 10) {
-                savingRateEl.className = 'text-2xl font-bold text-yellow-600';
-            } else {
-                savingRateEl.className = 'text-2xl font-bold text-red-600';
+            if (savingRateEl) {
+                if (savingRate >= 20) {
+                    savingRateEl.className = 'text-2xl font-bold text-emerald-600';
+                } else if (savingRate >= 10) {
+                    savingRateEl.className = 'text-2xl font-bold text-amber-500';
+                } else {
+                    savingRateEl.className = 'text-2xl font-bold text-red-500';
+                }
             }
         }
 
-        // Update transaction table
         function updateTransactionTable(filter = 'all') {
             const tbody = document.getElementById('transaction-table');
+            if (!tbody) return;
             let filtered = transactions;
 
             if (filter !== 'all') {
                 filtered = transactions.filter(t => t.category === filter);
             }
 
-            // Sort by date descending
             filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             tbody.innerHTML = filtered.slice(0, 10).map(t => {
                 const isIncome = t.type === 'income';
                 const categoryNames = {
-                    'food': 'Makanan', 'transport': 'Transportasi', 'shopping': 'Belanja',
-                    'entertainment': 'Hiburan', 'bills': 'Tagihan', 'allowance': 'Uang Saku'
+                    'food': window.i18nManager.t('category_food'),
+                    'transport': window.i18nManager.t('category_transport'),
+                    'shopping': window.i18nManager.t('category_shopping'),
+                    'entertainment': window.i18nManager.t('category_entertainment'),
+                    'bills': window.i18nManager.t('category_bills'),
+                    'allowance': window.i18nManager.t('category_allowance')
                 };
                 
                 return `
-                    <tr class="border-b hover:bg-gray-50">
-                        <td class="py-3 text-sm">${formatDate(t.date)}</td>
-                        <td class="py-3 text-sm font-medium">${t.desc}</td>
-                        <td class="py-3 text-sm"><span class="px-2 py-1 bg-gray-100 rounded text-xs">${categoryNames[t.category] || t.category}</span></td>
-                        <td class="py-3 text-sm"><span class="px-2 py-1 rounded text-xs ${isIncome ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">${isIncome ? 'Pemasukan' : 'Pengeluaran'}</span></td>
+                    <tr class="border-b dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition">
+                        <td class="py-3 text-sm dark:text-gray-300">${formatDate(t.date)}</td>
+                        <td class="py-3 text-sm font-medium dark:text-white">${t.desc || t.category}</td>
+                        <td class="py-3 text-sm"><span class="px-2 py-1 bg-gray-100 dark:bg-slate-600 rounded text-xs dark:text-gray-300">${categoryNames[t.category] || t.category}</span></td>
+                        <td class="py-3 text-sm"><span class="px-2 py-1 rounded text-xs ${isIncome ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}">${isIncome ? window.i18nManager.t('income') : window.i18nManager.t('expense')}</span></td>
                         <td class="py-3 text-sm text-right font-medium ${isIncome ? 'text-green-600' : 'text-red-600'}">${isIncome ? '+' : '-'}Rp ${t.amount.toLocaleString('id-ID')}</td>
                     </tr>
                 `;
@@ -536,275 +499,91 @@
             return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
         }
 
-        // Update weekly pattern
         function updateWeeklyPattern() {
-            const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-            const expenses = [150000, 85000, 120000, 95000, 200000, 350000, 180000];
-            const maxExpense = Math.max(...expenses);
+            const days = [
+                window.i18nManager.t('day_monday'),
+                window.i18nManager.t('day_tuesday'),
+                window.i18nManager.t('day_wednesday'),
+                window.i18nManager.t('day_thursday'),
+                window.i18nManager.t('day_friday'),
+                window.i18nManager.t('day_saturday'),
+                window.i18nManager.t('day_sunday')
+            ];
+            const expenses = weeklySpendingData;
+            const maxExpense = Math.max(...expenses, 1);
 
             const container = document.getElementById('weekly-pattern');
+            if (!container) return;
             container.innerHTML = days.map((day, i) => {
                 const percent = (expenses[i] / maxExpense) * 100;
-                const color = percent > 70 ? 'bg-red-500' : percent > 40 ? 'bg-yellow-500' : 'bg-emerald-500';
+                const color = percent > 80 ? 'bg-red-500' : percent > 50 ? 'bg-amber-500' : 'bg-emerald-500';
                 
                 return `
                     <div class="flex items-center">
-                        <span class="w-12 text-sm text-gray-600">${day}</span>
-                        <div class="flex-1 mx-2 h-4 bg-gray-100 rounded overflow-hidden">
+                        <span class="w-12 text-sm text-gray-600 dark:text-gray-400">${day}</span>
+                        <div class="flex-1 mx-2 h-4 bg-gray-100 dark:bg-slate-700 rounded overflow-hidden">
                             <div class="${color} h-full transition-all duration-500" style="width: ${percent}%"></div>
                         </div>
-                        <span class="text-xs text-gray-500 w-16 text-right">Rp ${expenses[i].toLocaleString('id-ID')}</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 w-16 text-right">Rp ${expenses[i].toLocaleString('id-ID')}</span>
                     </div>
                 `;
             }).join('');
         }
 
-        // Filter transactions
         function filterTransactions() {
             const filter = document.getElementById('filter-category').value;
             updateTransactionTable(filter);
         }
 
-        // Period selector
-        let currentPeriod = 'month';
-
-        function setPeriod(period) {
-            currentPeriod = period;
-            
-            // Update button styles
-            document.querySelectorAll('.period-btn').forEach(btn => {
-                if (btn.dataset.period === period) {
-                    btn.className = 'period-btn px-4 py-2 rounded-lg font-medium transition bg-emerald-100 text-emerald-700';
-                } else {
-                    btn.className = 'period-btn px-4 py-2 rounded-lg font-medium transition bg-gray-100 text-gray-700 hover:bg-gray-200';
-                }
-            });
-
-            // Update data based on period (in real app, this would fetch from API)
-            updateStats();
-            updateTransactionTable();
-        }
-
         function changePeriod(direction) {
-            // In real app, this would change the date range
             console.log('Change period:', direction);
         }
 
-        // AI Recommendation Modal
-        function openAIRecommendation() {
-            document.getElementById('ai-modal').classList.remove('hidden');
-            generateAIResponse();
-        }
-
-        function closeAIRecommendation() {
-            document.getElementById('ai-modal').classList.add('hidden');
-        }
-
-        async function generateAIResponse() {
-            const aiResponse = document.getElementById('ai-response');
-            
-            // Show loading
-            aiResponse.innerHTML = `
-                <div class="flex items-start mb-4">
-                    <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2 mt-1">
-                        <i class="fas fa-robot text-emerald-600 text-sm"></i>
-                    </div>
-                    <div class="bg-gray-50 p-3 rounded-lg rounded-tl-none">
-                        <p class="text-sm"><i class="fas fa-spinner fa-spin mr-2"></i>Menganalisis data keuangan Anda...</p>
-                    </div>
-                </div>
-            `;
-
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        messages: [
-                            {
-                                role: "user",
-                                content: `Anda adalah asisten AI Dompetin yang menganalisis keuangan. 
-                                Berikut data keuangan user:
-                                - Total Pemasukan: Rp 3.000.000/bulan
-                                - Total Pengeluaran: Rp 1.850.000/bulan
-                                - Tabungan: Rp 1.150.000/bulan (38%)
-                                - Budget per kategori:
-                                  * Food: Rp 850.000 terpakai dari Rp 1.350.000
-                                  * Transport: Rp 250.000 terpakai dari Rp 450.000
-                                  * Entertainment: Rp 350.000 terpakai dari Rp 450.000
-                                  * Bills: Rp 200.000 terpakai dari Rp 300.000
-                                  * Shopping: Rp 200.000 terpakai dari Rp 450.000
-                                
-                                Berikan analisis keuangan singkat (3-4 poin) dalam Bahasa Indonesia dengan emoji yang sesuai.`
-                            }
-                        ]
-                    })
-                });
-
-                const data = await response.json();
-                
-                aiResponse.innerHTML = `
-                    <div class="flex items-start mb-4">
-                        <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2 mt-1">
-                            <i class="fas fa-robot text-emerald-600 text-sm"></i>
-                        </div>
-                        <div class="bg-gray-50 p-3 rounded-lg rounded-tl-none max-w-[85%]">
-                            <p class="text-sm text-gray-800 whitespace-pre-line">${data.response}</p>
-                        </div>
-                    </div>
-                `;
-            } catch (error) {
-                // Fallback response
-                aiResponse.innerHTML = `
-                    <div class="flex items-start mb-4">
-                        <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2 mt-1">
-                            <i class="fas fa-robot text-emerald-600 text-sm"></i>
-                        </div>
-                        <div class="bg-gray-50 p-3 rounded-lg rounded-tl-none max-w-[85%]">
-                            <p class="text-sm text-gray-800">📊 <strong>Analisis Keuangan Anda:</strong></p>
-                            <p class="text-sm text-gray-800 mt-2">
-✅ <strong>Saving Rate Excellent!</strong><br>
-Tabungan 38% jauh di atas target 20%. Pertahankan!</p>
-                            <p class="text-sm text-gray-800 mt-2">
-⚠️ <strong>Hati-hati dengan Hiburan</strong><br>
-Pengeluaran hiburan 78% dari budget. Kurangi spending untuk entertainment.</p>
-                            <p class="text-sm text-gray-800 mt-2">
-💡 <strong>Rekomendasi:</strong><br>
-Alihkan 5% dari budget entertainment ke tabungan darurat.</p>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        // AI form submission
-        document.getElementById('ai-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const input = document.getElementById('ai-input').value;
-            if (!input) return;
-
-            const aiResponse = document.getElementById('ai-response');
-            
-            // Add user message
-            aiResponse.innerHTML += `
-                <div class="flex justify-end mb-4">
-                    <div class="bg-emerald-500 text-white p-3 rounded-lg rounded-tr-none max-w-[80%]">
-                        <p class="text-sm">${input}</p>
-                    </div>
-                </div>
-                <div class="flex items-start mb-4">
-                    <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2 mt-1">
-                        <i class="fas fa-robot text-emerald-600 text-sm"></i>
-                    </div>
-                    <div class="bg-gray-50 p-3 rounded-lg rounded-tl-none">
-                        <p class="text-sm"><i class="fas fa-spinner fa-spin mr-2"></i>Memproses...</p>
-                    </div>
-                </div>
-            `;
-
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        messages: [
-                            {
-                                role: "user",
-                                content: `Anda adalah asisten AI Dompetin. User bertanya: "${input}". 
-                                Jawab dalam Bahasa Indonesia yang helpful dan friendly.`
-                            }
-                        ]
-                    })
-                });
-
-                const data = await response.json();
-                
-                // Update with response
-                const messages = aiResponse.querySelectorAll('.fa-spinner');
-                messages.forEach(s => s.parentElement.parentElement.remove());
-                
-                aiResponse.innerHTML += `
-                    <div class="flex items-start mb-4">
-                        <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2 mt-1">
-                            <i class="fas fa-robot text-emerald-600 text-sm"></i>
-                        </div>
-                        <div class="bg-gray-50 p-3 rounded-lg rounded-tl-none max-w-[85%]">
-                            <p class="text-sm text-gray-800">${data.response}</p>
-                        </div>
-                    </div>
-                `;
-            } catch (error) {
-                const messages = aiResponse.querySelectorAll('.fa-spinner');
-                messages.forEach(s => s.parentElement.parentElement.remove());
-                
-                aiResponse.innerHTML += `
-                    <div class="flex items-start mb-4">
-                        <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2 mt-1">
-                            <i class="fas fa-robot text-emerald-600 text-sm"></i>
-                        </div>
-                        <div class="bg-gray-50 p-3 rounded-lg rounded-tl-none">
-                            <p class="text-sm text-gray-800">Maaf, terjadi kesalahan. Pastikan API key OpenAI sudah dikonfigurasi dengan benar.</p>
-                        </div>
-                    </div>
-                `;
-            }
-
-            document.getElementById('ai-input').value = '';
-            aiResponse.parentElement.scrollTop = aiResponse.parentElement.scrollHeight;
-        });
-
-        // Export functions
         function exportReport(format) {
             if (format === 'csv') {
                 let csv = 'Tanggal,Deskripsi,Kategori,Tipe,Jumlah\n';
-                transactions.forEach(t => {
-                    csv += `${t.date},${t.desc},${t.category},${t.type},${t.amount}\n`;
-                });
-                
+                transactions.forEach(t => csv += `${t.date},${t.desc},${t.category},${t.type},${t.amount}\n`);
                 const blob = new Blob([csv], { type: 'text/csv' });
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.href = url;
-                a.download = 'dompetin-report.csv';
-                a.click();
-            } else if (format === 'pdf') {
-                alert('Fitur export PDF akan segera tersedia!');
+                a.href = url; a.download = 'report.csv'; a.click();
             }
         }
 
-        function printReport() {
-            window.print();
-        }
+        function printReport() { window.print(); }
 
-        // Close modal when clicking outside
-        document.getElementById('ai-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeAIRecommendation();
-            }
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                initCharts();
+                updateStats();
+                updateTransactionTable();
+                updateWeeklyPattern();
+            }, 200);
         });
 
-// Initialize
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('languageChanged', () => {
             initCharts();
-            updateStats();
             updateTransactionTable();
             updateWeeklyPattern();
         });
+
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebar-overlay');
-            if (sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
-            } else {
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
-            }
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
         }
-    </script>
+        function handleLogout() {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = '/logout';
+        }
 
-    <script src="static/notifications.js"></script>
-    <script src="static/i18n.js"></script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('isLoggedIn') !== 'true') {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
 </body>
 </html>
-

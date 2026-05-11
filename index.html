@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dompetin - Budget Tracker for Students</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -29,7 +29,7 @@
                     </button>
                     <!-- Language Toggle Button -->
                     <button class="language-toggle ml-2 px-2 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition" onclick="window.i18nManager.toggleLanguage()" title="Toggle Language">
-                        <span class="lang-text font-medium text-sm" data-i18n="language">EN</span>
+                        <span class="lang-text font-medium text-sm">EN</span>
                     </button>
                     <a href="login.html" class="btn-login" data-i18n="nav_login">Login</a>
                 </div>
@@ -44,42 +44,42 @@
         <!-- Hero Section -->
         <section id="home" class="hero">
             <div class="hero-content">
-                <h1>Manage Your Money, One Step at a Time</h1>
-                <p>Dompetin is your friendly budget tracker designed for students and young adults. Take control of your finances with ease and build a brighter financial future.</p>
+                <h1 data-i18n="hero_title">Manage Your Money, One Step at a Time</h1>
+                <p data-i18n="hero_subtitle">Dompetin is your friendly budget tracker designed for students and young adults. Take control of your finances with ease and build a brighter financial future.</p>
                 <div class="cta-buttons">
-                    <a href="dashboard.html" class="btn-primary">Get Started</a>
-                    <button class="btn-secondary">Download App</button>
+                    <a href="dashboard.html" class="btn-primary" data-i18n="hero_get_started">Get Started</a>
+                    <button class="btn-secondary" data-i18n="hero_download_app">Download App</button>
                 </div>
             </div>
             <div class="hero-image">
-                <img src="LogoDompetin.png" alt="Dompetin App Screenshot">
+                <img src="{{ url_for('static', filename='LogoDompetin.png') }}" alt="Dompetin App Screenshot">
             </div>
         </section>
 
         <!-- Features Section -->
         <section id="features" class="features">
             <div class="container">
-                <h2>Features</h2>
+                <h2 data-i18n="features_title">Features</h2>
                 <div class="features-grid">
                     <div class="feature-card">
                         <i class="fas fa-chart-line"></i>
-                        <h3>Income & Expense Tracking</h3>
-                        <p>Easily record and categorize your income and expenses to stay on top of your finances.</p>
+                        <h3 data-i18n="feature_income_expense_title">Income & Expense Tracking</h3>
+                        <p data-i18n="feature_income_expense_desc">Easily record and categorize your income and expenses to stay on top of your finances.</p>
                     </div>
                     <div class="feature-card">
                         <i class="fas fa-calendar-alt"></i>
-                        <h3>Budget Planning per Category</h3>
-                        <p>Set monthly budgets for different categories and track your spending against them.</p>
+                        <h3 data-i18n="feature_budget_title">Budget Planning per Category</h3>
+                        <p data-i18n="feature_budget_desc">Set monthly budgets for different categories and track your spending against them.</p>
                     </div>
                     <div class="feature-card">
                         <i class="fas fa-lightbulb"></i>
-                        <h3>Smart Spending Insights</h3>
-                        <p>Get personalized insights and recommendations to optimize your spending habits.</p>
+                        <h3 data-i18n="feature_insights_title">Smart Spending Insights</h3>
+                        <p data-i18n="feature_insights_desc">Get personalized insights and recommendations to optimize your spending habits.</p>
                     </div>
                     <div class="feature-card">
                         <i class="fas fa-bullseye"></i>
-                        <h3>Financial Goals Tracking</h3>
-                        <p>Set and track progress towards your savings goals and financial milestones.</p>
+                        <h3 data-i18n="feature_goals_title">Financial Goals Tracking</h3>
+                        <p data-i18n="feature_goals_desc">Set and track progress towards your savings goals and financial milestones.</p>
                     </div>
                 </div>
             </div>
@@ -88,22 +88,22 @@
         <!-- Pricing Section -->
         <section id="pricing" class="pricing">
             <div class="container">
-                <h2>Pricing</h2>
+                <h2 data-i18n="pricing_title">Pricing</h2>
                 <div class="pricing-grid">
                     <div class="pricing-card">
-                        <h3>Free</h3>
-                        <div class="price">Rp0<span>/month</span></div>
+                        <h3 data-i18n="pricing_free">Free</h3>
+                        <div class="price">Rp0<span data-i18n="per_month">/month</span></div>
                         <ul>
                             <li>Basic income/expense tracking</li>
                             <li>Up to 3 categories</li>
                             <li>Monthly reports</li>
                             <li>Email support</li>
                         </ul>
-                        <button class="btn-primary">Get Started</button>
+                        <button class="btn-primary" data-i18n="pricing_get_started">Get Started</button>
                     </div>
                     <div class="pricing-card featured">
-                        <h3>Standard</h3>
-                        <div class="price">Rp30.000<span>/month</span></div>
+                        <h3 data-i18n="pricing_standard">Standard</h3>
+                        <div class="price">Rp30.000<span data-i18n="per_month">/month</span></div>
                         <ul>
                             <li>All Free features</li>
                             <li>Unlimited categories</li>
@@ -111,11 +111,11 @@
                             <li>Smart insights</li>
                             <li>Priority support</li>
                         </ul>
-                        <button class="btn-primary">Choose Standard</button>
+                        <button class="btn-primary" data-i18n="pricing_choose_standard">Choose Standard</button>
                     </div>
                     <div class="pricing-card">
-                        <h3>Premium</h3>
-                        <div class="price">Rp50.000<span>/month</span></div>
+                        <h3 data-i18n="pricing_premium">Premium</h3>
+                        <div class="price">Rp50.000<span data-i18n="per_month">/month</span></div>
                         <ul>
                             <li>All Standard features</li>
                             <li>Financial goals tracking</li>
@@ -123,7 +123,7 @@
                             <li>Export data</li>
                             <li>24/7 phone support</li>
                         </ul>
-                        <button class="btn-primary">Choose Premium</button>
+                        <button class="btn-primary" data-i18n="pricing_choose_premium">Choose Premium</button>
                     </div>
                 </div>
             </div>
@@ -132,22 +132,22 @@
         <!-- How It Works Section -->
         <section id="how-it-works" class="how-it-works">
             <div class="container">
-                <h2>How It Works</h2>
+                <h2 data-i18n="how_it_works_title">How It Works</h2>
                 <div class="steps">
                     <div class="step">
                         <div class="step-number">1</div>
-                        <h3>Record Income and Expenses</h3>
-                        <p>Log your daily transactions quickly and categorize them for better organization.</p>
+                        <h3 data-i18n="step1_title">Record Income and Expenses</h3>
+                        <p data-i18n="step1_desc">Log your daily transactions quickly and categorize them for better organization.</p>
                     </div>
                     <div class="step">
                         <div class="step-number">2</div>
-                        <h3>Set Monthly Budgets</h3>
-                        <p>Create budgets for different spending categories to stay within your limits.</p>
+                        <h3 data-i18n="step2_title">Set Monthly Budgets</h3>
+                        <p data-i18n="step2_desc">Create budgets for different spending categories to stay within your limits.</p>
                     </div>
                     <div class="step">
                         <div class="step-number">3</div>
-                        <h3>Get Insights and Recommendations</h3>
-                        <p>Receive personalized tips and insights to improve your financial habits.</p>
+                        <h3 data-i18n="step3_title">Get Insights and Recommendations</h3>
+                        <p data-i18n="step3_desc">Receive personalized tips and insights to improve your financial habits.</p>
                     </div>
                 </div>
             </div>
@@ -156,20 +156,20 @@
         <!-- About Section -->
         <section id="about" class="about">
             <div class="container">
-                <h2>About Dompetin</h2>
-                <p>Our mission is to help students become more financially aware and disciplined. We believe that everyone deserves a chance to build a secure financial future, starting with simple tools that make money management easy and fun.</p>
+                <h2 data-i18n="about_title">About Dompetin</h2>
+                <p data-i18n="about_desc">Our mission is to help students become more financially aware and disciplined. We believe that everyone deserves a chance to build a secure financial future, starting with simple tools that make money management easy and fun.</p>
                 <div class="stats">
                     <div class="stat">
                         <div class="stat-number">10,000+</div>
-                        <div class="stat-label">Students Helped</div>
+                        <div class="stat-label" data-i18n="about_students_helped">Students Helped</div>
                     </div>
                     <div class="stat">
                         <div class="stat-number">$5M+</div>
-                        <div class="stat-label">Money Saved</div>
+                        <div class="stat-label" data-i18n="about_money_saved">Money Saved</div>
                     </div>
                     <div class="stat">
                         <div class="stat-number">4.8/5</div>
-                        <div class="stat-label">User Rating</div>
+                        <div class="stat-label" data-i18n="about_user_rating">User Rating</div>
                     </div>
                 </div>
             </div>
@@ -178,30 +178,30 @@
         <!-- Contact Section -->
         <section id="contact" class="contact">
             <div class="container">
-                <h2>Contact Us</h2>
+                <h2 data-i18n="contact_title">Contact Us</h2>
                 <div class="contact-content">
                     <div class="contact-form">
                         <form id="contactForm">
                             <div class="form-group">
-                                <label for="name">Name</label>
+                                <label for="name" data-i18n="contact_name">Name</label>
                                 <input type="text" id="name" name="name" required>
                             </div>
                             <div class="form-group">
-                                <label for="email">Email</label>
+                                <label for="email" data-i18n="contact_email">Email</label>
                                 <input type="email" id="email" name="email" required>
                             </div>
                             <div class="form-group">
-                                <label for="message">Message</label>
+                                <label for="message" data-i18n="contact_message">Message</label>
                                 <textarea id="message" name="message" required></textarea>
                             </div>
-                            <button type="submit" class="btn-primary">Send Message</button>
+                            <button type="submit" class="btn-primary" data-i18n="contact_send">Send Message</button>
                         </form>
                     </div>
                     <div class="contact-info">
-                        <h3>Get in Touch</h3>
-                        <p><i class="fas fa-envelope"></i> support@dompetin.com</p>
-                        <p><i class="fas fa-phone"></i> 1-800-DOMPETIN</p>
-                        <p><i class="fas fa-clock"></i> Mon-Fri 9AM-6PM EST</p>
+                        <h3 data-i18n="contact_get_in_touch">Get in Touch</h3>
+                        <p><i class="fas fa-envelope"></i> <span data-i18n="contact_support">support@dompetin.com</span></p>
+                        <p><i class="fas fa-phone"></i> <span data-i18n="contact_phone">1-800-DOMPETIN</span></p>
+                        <p><i class="fas fa-clock"></i> <span data-i18n="contact_hours">Mon-Fri 9AM-6PM EST</span></p>
                     </div>
                 </div>
             </div>
@@ -210,7 +210,7 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2023 Dompetin. All rights reserved.</p>
+            <p>&copy; 2023 Dompetin. <span data-i18n="footer_copyright">All rights reserved.</span></p>
             <div class="social-links">
                 <a href="#"><i class="fab fa-facebook"></i></a>
                 <a href="#"><i class="fab fa-twitter"></i></a>
@@ -219,8 +219,8 @@
         </div>
     </footer>
 
-<script src="static/script.js"></script>
-    <script src="static/theme.js"></script>
-    <script src="static/i18n.js"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
 </body>
 </html>

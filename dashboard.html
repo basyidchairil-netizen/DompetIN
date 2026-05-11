@@ -1,257 +1,332 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dompetin - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
                         emerald: {
-                            50: '#ecfdf5',
-                            100: '#d1fae5',
-                            200: '#a7f3d0',
-                            300: '#6ee7b7',
-                            400: '#34d399',
-                            500: '#10b981',
-                            600: '#059669',
-                            700: '#047857',
-                            800: '#065f46',
-                            900: '#064e3b',
+                            50:'#ecfdf5',100:'#d1fae5',200:'#a7f3d0',300:'#6ee7b7',
+                            400:'#34d399',500:'#10b981',600:'#059669',700:'#047857',
+                            800:'#065f46',900:'#064e3b'
                         }
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-in-out',
-                        'slide-up': 'slideUp 0.5s ease-out',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        },
-                    },
+                    }
                 }
             }
         }
     </script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; }
+        .stat-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
+    </style>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
 </head>
-<body class="bg-emerald-50 text-gray-800 dark:bg-slate-900 dark:text-gray-100 transition-colors duration-300">
-    <!-- Sidebar -->
-    <div class="flex flex-col md:flex-row">
-        <!-- Hamburger Menu for Mobile -->
-        <div class="md:hidden bg-emerald-700 text-white p-4 flex justify-between items-center sticky top-0 z-[60]">
-            <h1 class="text-xl font-bold">Dompetin</h1>
-            <button onclick="toggleSidebar()" class="p-2 text-2xl">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
+<body class="bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-white min-h-screen transition-colors duration-300">
 
-        <div id="sidebar" class="w-64 bg-emerald-700 text-white h-screen fixed dark:bg-emerald-800 transition-transform duration-300 transform -translate-x-full md:translate-x-0 z-[50]">
+    <div class="flex h-screen overflow-hidden">
+        <!-- ── Sidebar ── -->
+        <div id="sidebar" class="w-64 bg-emerald-700 text-white h-screen fixed dark:bg-emerald-800 transition-transform duration-300 transform -translate-x-full md:translate-x-0 z-50">
             <div class="p-4 flex justify-between items-center">
                 <h1 class="text-2xl font-bold">Dompetin</h1>
-                <!-- Language and Theme Toggle -->
-                <div class="flex items-center gap-2">
-                    <button onclick="window.i18nManager.toggleLanguage()" class="p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Language">
-                        <span class="text-sm font-medium">ID</span>
+                <div class="flex items-center gap-1">
+                    <button onclick="window.i18nManager.toggleLanguage()" class="language-toggle p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Language">
+                        <span class="lang-text text-sm font-medium">ID</span>
                     </button>
                     <button onclick="window.themeManager.cycleTheme()" class="p-2 rounded-lg hover:bg-emerald-600 transition" title="Toggle Theme">
-                        <span class="theme-icon-light"><i class="fas fa-sun text-yellow-300"></i></span>
-                        <span class="theme-icon-dark hidden"><i class="fas fa-moon text-gray-300"></i></span>
-                        <span class="theme-icon-auto hidden"><i class="fas fa-circle-half-stroke text-gray-300"></i></span>
+                        <span class="theme-icon-light"><i class="fas fa-sun text-yellow-300 text-sm"></i></span>
+                        <span class="theme-icon-dark hidden"><i class="fas fa-moon text-blue-300 text-sm"></i></span>
+                        <span class="theme-icon-auto hidden"><i class="fas fa-circle-half-stroke text-gray-300 text-sm"></i></span>
                     </button>
                 </div>
             </div>
             <nav class="mt-4">
-                <a href="dashboard.html" class="block py-3 px-6 hover:bg-emerald-600 border-l-4 border-transparent hover:border-white">Home</a>
-                <a href="incomeTracking.html" class="block py-3 px-6 hover:bg-emerald-600 border-l-4 border-transparent hover:border-white">Income Tracking</a>
-                <a href="budgetplaning.html" class="block py-3 px-6 hover:bg-emerald-600 border-l-4 border-transparent hover:border-white">Budget Planning</a>
-                <a href="analysis.html" class="block py-3 px-6 hover:bg-emerald-600 border-l-4 border-transparent hover:border-white">Analysis</a>
-                <a href="profile.html" class="block py-3 px-6 hover:bg-emerald-600 border-l-4 border-transparent hover:border-white">Profile</a>
-                <a href="index.html" class="block py-3 px-6 hover:bg-emerald-600 mt-8 border-l-4 border-transparent">Logout</a>
+                <a href="dashboard.html" class="flex items-center px-6 py-3 bg-emerald-800 border-l-4 border-white">
+                    <i class="fas fa-home w-6"></i><span data-i18n="sidebar_home">Home</span>
+                </a>
+                <a href="incomeTracking.html" class="flex items-center px-6 py-3 hover:bg-emerald-600 transition">
+                    <i class="fas fa-wallet w-6"></i><span data-i18n="sidebar_income_tracking">Income Tracking</span>
+                </a>
+                <a href="budgetplaning.html" class="flex items-center px-6 py-3 hover:bg-emerald-600 transition">
+                    <i class="fas fa-chart-pie w-6"></i><span data-i18n="sidebar_budget_planning">Budget Planning</span>
+                </a>
+                <a href="smart_saving.html" class="flex items-center px-6 py-3 hover:bg-emerald-600 transition">
+                    <i class="fas fa-piggy-bank w-6"></i><span data-i18n="sidebar_smart_saving">Smart Saving</span>
+                </a>
+                <a href="analysis.html" class="flex items-center px-6 py-3 hover:bg-emerald-600 transition">
+                    <i class="fas fa-chart-line w-6"></i><span data-i18n="sidebar_analysis">Analysis</span>
+                </a>
+                <a href="profile.html" class="flex items-center px-6 py-3 hover:bg-emerald-600 transition">
+                    <i class="fas fa-user w-6"></i><span data-i18n="sidebar_profile">Profile</span>
+                </a>
+                <a href="javascript:void(0)" onclick="handleLogout()" class="flex items-center px-6 py-3 hover:bg-red-700 text-red-300 mt-4 transition">
+                    <i class="fas fa-sign-out-alt w-6"></i><span data-i18n="sidebar_logout">Logout</span>
+                </a>
             </nav>
         </div>
 
-        <!-- Overlay for Mobile -->
-        <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-[40]"></div>
+        <!-- Overlay -->
+        <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-40"></div>
 
-        <div class="flex-1 md:ml-64 p-4 md:p-8">
-            <!-- Dashboard -->
-            <div id="dashboard" class="section">
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Your Financial Dashboard</h2>
-                    <p class="text-lg text-gray-600 dark:text-gray-400">Monitor your income, expenses, and savings at a glance.</p>
-                </div>
-                <!-- Balance Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                    <div class="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
-                        <div class="flex items-center mb-4">
-                            <i class="fas fa-wallet text-3xl text-emerald-600 mr-4"></i>
-                            <h3 class="text-xl font-semibold dark:text-white">Total Balance</h3>
-                        </div>
-                        <p class="text-3xl font-bold text-emerald-600" id="total-balance">${{ balance|round(2) }}</p>
-                    </div>
-                    <div class="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
-                        <div class="flex items-center mb-4">
-                            <i class="fas fa-arrow-up text-3xl text-green-600 mr-4"></i>
-                            <h3 class="text-xl font-semibold dark:text-white">Monthly Income</h3>
-                        </div>
-                        <p class="text-3xl font-bold text-green-600">$0.00</p>
-                    </div>
-                    <div class="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
-                        <div class="flex items-center mb-4">
-                            <i class="fas fa-arrow-down text-3xl text-red-600 mr-4"></i>
-                            <h3 class="text-xl font-semibold dark:text-white">Monthly Expenses</h3>
-                        </div>
-                        <p class="text-3xl font-bold text-red-600">$0.00</p>
-                    </div>
-                </div>
-                <!-- Bar Chart Placeholder -->
-                <div class="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg mb-12">
-                    <h3 class="text-2xl font-semibold mb-6 dark:text-white">Monthly Spending Overview</h3>
-                    <img src="https://via.placeholder.com/800x400/10b981/ffffff?text=Spending+Chart" alt="Monthly Spending Chart" class="w-full rounded-lg">
-                </div>
-                <!-- Quick Add Transaction -->
-                <div class="text-center">
-                    <button class="bg-emerald-600 text-white px-8 py-4 rounded-full font-semibold hover:bg-emerald-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1" onclick="openModal()">
-                        <i class="fas fa-plus mr-2"></i>Add Transaction
+        <!-- ── Main Content ── -->
+        <div class="flex-1 md:ml-64 overflow-y-auto">
+
+            <!-- Top Bar -->
+            <div class="sticky top-0 z-30 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-4">
+                    <button class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700" onclick="toggleSidebar()">
+                        <i class="fas fa-bars text-gray-600 dark:text-gray-300"></i>
                     </button>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800 dark:text-white" data-i18n="dashboard_title">Your Financial Dashboard</h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="dashboard_subtitle">Monitor your income, expenses, and savings at a glance.</p>
+                    </div>
                 </div>
+                <button onclick="openModal()"
+                    class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-semibold text-sm flex items-center gap-2 shadow-md hover:shadow-lg transition">
+                    <i class="fas fa-plus"></i>
+                    <span data-i18n="dashboard_add_transaction">Add Transaction</span>
+                </button>
             </div>
 
-            <!-- Analysis -->
-            <div id="analysis" class="section hidden">
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Financial Analysis</h2>
-                    <p class="text-lg text-gray-600">Dive deep into your spending patterns and financial trends.</p>
+            <div class="p-6 space-y-6">
+
+                <!-- ── Stat Cards ── -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Balance -->
+                    <div class="stat-card col-span-2 md:col-span-2 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-2xl p-6 text-white shadow-lg">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-wallet text-lg"></i>
+                            </div>
+                            <p class="text-sm font-medium opacity-90" data-i18n="dashboard_total_balance">Total Balance</p>
+                        </div>
+                        <p id="dash-balance" class="text-3xl font-bold">{{ global_data.total_balance | fmt_rupiah }}</p>
+                        <p class="text-xs opacity-75 mt-1" data-i18n="after_expenses_desc">Remaining after expenses</p>
+                    </div>
+                    <!-- Monthly Income -->
+                    <div class="stat-card bg-white dark:bg-slate-800 rounded-2xl p-5 shadow border border-gray-100 dark:border-slate-700">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="w-8 h-8 bg-green-100 dark:bg-green-900/40 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-arrow-down text-green-600 text-sm"></i>
+                            </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400" data-i18n="dashboard_monthly_income">Monthly Income</p>
+                        </div>
+                        <p id="dash-income" class="text-xl font-bold text-green-600">{{ global_data.monthly_income | fmt_rupiah }}</p>
+                    </div>
+                    <!-- Monthly Expenses -->
+                    <div class="stat-card bg-white dark:bg-slate-800 rounded-2xl p-5 shadow border border-gray-100 dark:border-slate-700">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="w-8 h-8 bg-red-100 dark:bg-red-900/40 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-arrow-up text-red-500 text-sm"></i>
+                            </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400" data-i18n="dashboard_monthly_expenses">Monthly Expenses</p>
+                        </div>
+                        <p id="dash-expense" class="text-xl font-bold text-red-500">{{ global_data.monthly_expense | fmt_rupiah }}</p>
+                    </div>
                 </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="bg-white p-8 rounded-xl shadow-lg">
-                        <h3 class="text-2xl font-semibold mb-6">Spending Breakdown</h3>
-                        <img src="https://via.placeholder.com/500x300/10b981/ffffff?text=Spending+Breakdown" alt="Spending Breakdown" class="w-full rounded-lg mb-6">
-                        <p class="text-gray-600">Visualize where your money goes with detailed category breakdowns.</p>
-                    </div>
-                    <div class="bg-white p-8 rounded-xl shadow-lg">
-                        <h3 class="text-2xl font-semibold mb-6">Income vs Expenses</h3>
-                        <img src="https://via.placeholder.com/500x300/10b981/ffffff?text=Income+vs+Expenses" alt="Income vs Expenses" class="w-full rounded-lg mb-6">
-                        <p class="text-gray-600">Track your financial balance over time with interactive charts.</p>
-                    </div>
-                    <div class="bg-white p-8 rounded-xl shadow-lg">
-                        <h3 class="text-2xl font-semibold mb-6">Savings Goals</h3>
-                        <img src="https://via.placeholder.com/500x300/10b981/ffffff?text=Savings+Goals" alt="Savings Goals" class="w-full rounded-lg mb-6">
-                        <p class="text-gray-600">Monitor progress towards your savings objectives.</p>
-                    </div>
-                    <div class="bg-white p-8 rounded-xl shadow-lg">
-                        <h3 class="text-2xl font-semibold mb-6">Financial Insights</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center p-4 bg-emerald-50 rounded-lg">
-                                <i class="fas fa-lightbulb text-2xl text-emerald-600 mr-4"></i>
-                                <p class="text-gray-700">You're spending 15% more on dining out this month.</p>
+
+                <!-- ── Savings Rate Row ── -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow border border-gray-100 dark:border-slate-700">
+                        <div class="flex justify-between items-center mb-3">
+                            <div>
+                                <p class="text-sm font-semibold text-gray-700 dark:text-gray-300" data-i18n="stat_total_saving">Monthly Net Savings</p>
+                                <p id="dash-savings" class="text-2xl font-bold text-emerald-600 mt-1">{{ global_data.monthly_savings | fmt_rupiah }}</p>
                             </div>
-                            <div class="flex items-center p-4 bg-blue-50 rounded-lg">
-                                <i class="fas fa-chart-line text-2xl text-blue-600 mr-4"></i>
-                                <p class="text-gray-700">Your savings rate has increased by 5% this quarter.</p>
+                            <div class="text-right">
+                                <p class="text-xs text-gray-400" data-i18n="stat_saving_rate">Saving Rate</p>
+                                {% set sr = 0 %}
+                                {% if global_data.monthly_income > 0 %}
+                                    {% set sr = ((global_data.monthly_savings / global_data.monthly_income) * 100)|round(1) %}
+                                {% endif %}
+                                <p id="dash-save-rate" class="text-lg font-bold text-blue-600">{{ sr }}%</p>
+                                <p class="text-xs text-gray-400" data-i18n="saving_rate_target">Target: 20%+</p>
                             </div>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2">
+                            <div id="dash-rate-bar" class="h-2 rounded-full {% if sr >= 20 %}bg-emerald-500{% elif sr >= 10 %}bg-amber-400{% else %}bg-red-400{% endif %} transition-all duration-700" style="width:{{ sr if sr < 100 else 100 }}%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow border border-gray-100 dark:border-slate-700">
+                        <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">🚀 Quick Access</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <a href="incomeTracking.html" class="flex items-center gap-2 p-2 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition text-sm text-emerald-700 dark:text-emerald-300 font-medium">
+                                <i class="fas fa-wallet"></i><span data-i18n="sidebar_income_tracking">Tracking</span>
+                            </a>
+                            <a href="budgetplaning.html" class="flex items-center gap-2 p-2 rounded-xl bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition text-sm text-blue-700 dark:text-blue-300 font-medium">
+                                <i class="fas fa-chart-pie"></i><span data-i18n="sidebar_budget_planning">Budget</span>
+                            </a>
+                            <a href="smart_saving.html" class="flex items-center gap-2 p-2 rounded-xl bg-amber-50 dark:bg-amber-900/30 hover:bg-amber-100 dark:hover:bg-amber-900/50 transition text-sm text-amber-700 dark:text-amber-300 font-medium">
+                                <i class="fas fa-piggy-bank"></i><span data-i18n="sidebar_smart_saving">Saving</span>
+                            </a>
+                            <a href="analysis.html" class="flex items-center gap-2 p-2 rounded-xl bg-purple-50 dark:bg-purple-900/30 hover:bg-purple-100 dark:hover:bg-purple-900/50 transition text-sm text-purple-700 dark:text-purple-300 font-medium">
+                                <i class="fas fa-chart-line"></i><span data-i18n="sidebar_analysis">Analysis</span>
+                            </a>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Profile -->
-            <div id="profile" class="section hidden">
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Your Profile</h2>
-                    <p class="text-lg text-gray-600">Manage your account settings and preferences.</p>
-                </div>
-                <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg">
-                    <div class="text-center mb-8">
-                        <img src="https://via.placeholder.com/150x150/10b981/ffffff?text=Profile+Photo" alt="Profile Photo" class="w-32 h-32 rounded-full mx-auto mb-4">
-                        <h3 class="text-2xl font-semibold">John Doe</h3>
-                        <p class="text-gray-600">johndoe@example.com</p>
-                    </div>
-                    <div class="space-y-4">
-                        <button class="w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700 transition duration-300">Edit Profile</button>
-                        <button class="w-full bg-gray-200 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-300 transition duration-300">Settings</button>
-                        <button class="w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 transition duration-300">Logout</button>
+                <!-- ── Spending Chart ── -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow border border-gray-100 dark:border-slate-700">
+                    <h3 class="text-base font-semibold text-gray-700 dark:text-gray-300 mb-4 flex items-center gap-2">
+                        <i class="fas fa-chart-bar text-emerald-500"></i>
+                        <span data-i18n="dashboard_spending_overview">Monthly Spending Overview</span>
+                    </h3>
+                    <div class="h-56">
+                        <canvas id="spending-chart"></canvas>
                     </div>
                 </div>
+
+                <!-- ── Recent Transactions ── -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow border border-gray-100 dark:border-slate-700">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                            <i class="fas fa-history text-emerald-500"></i>
+                            <span data-i18n="recent_transactions">Recent Transactions</span>
+                        </h3>
+                        <a href="incomeTracking.html" class="text-sm text-emerald-600 hover:text-emerald-700 font-medium transition">View all →</a>
+                    </div>
+                    <div id="recent-txn-list">
+                        <p class="text-center text-gray-400 py-4">Loading...</p>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Quick Add Transaction Modal -->
-    <div id="transaction-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-96">
-            <h3 class="text-xl font-semibold mb-4">Add Transaction</h3>
-            <form id="transaction-form">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Type</label>
-                    <select name="type" class="w-full p-2 border rounded" required>
-                        <option value="income">Income</option>
-                        <option value="expense">Expense</option>
+    <!-- ── Add Transaction Modal ── -->
+    <div id="transaction-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md p-7">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white" data-i18n="income_add_transaction">Add Transaction</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl leading-none">&times;</button>
+            </div>
+            <form id="transaction-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" data-i18n="analysis_type">Type</label>
+                    <select name="type" required class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm">
+                        <option value="income" data-i18n="income_income">Income</option>
+                        <option value="expense" data-i18n="income_expense">Expense</option>
                     </select>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Amount</label>
-                    <input type="number" name="amount" step="0.01" class="w-full p-2 border rounded" required>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" data-i18n="income_amount">Amount (Rp)</label>
+                        <input type="number" name="amount" min="1" required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" data-i18n="analysis_date">Date</label>
+                        <input type="date" name="date" required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm">
+                    </div>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Category</label>
-                    <select name="category" class="w-full p-2 border rounded" required>
-                        <option value="Food">Food</option>
-                        <option value="Transport">Transport</option>
-                        <option value="Entertainment">Entertainment</option>
-                        <option value="Utilities">Utilities</option>
-                        <option value="Other">Other</option>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" data-i18n="analysis_category">Category</label>
+                    <select name="category" required class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm">
+                        <optgroup label="Income">
+                            <option value="Salary" data-i18n="category_salary">Salary</option>
+                            <option value="Freelance" data-i18n="category_freelance">Freelance</option>
+                            <option value="Allowance" data-i18n="category_allowance">Allowance</option>
+                            <option value="Bonus" data-i18n="category_bonus">Bonus</option>
+                        </optgroup>
+                        <optgroup label="Expense">
+                            <option value="Food/Dining" data-i18n="category_food">Food</option>
+                            <option value="Transportasi" data-i18n="category_transport">Transport</option>
+                            <option value="Shopping & Hiburan" data-i18n="category_entertainment">Entertainment</option>
+                            <option value="Paket Kuota" data-i18n="category_bills">Bills</option>
+                            <option value="Tabungan" data-i18n="category_other_expense">Other</option>
+                        </optgroup>
                     </select>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Date</label>
-                    <input type="date" name="date" class="w-full p-2 border rounded" required>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" data-i18n="income_description">Description</label>
+                    <input type="text" name="description"
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm">
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Description</label>
-                    <input type="text" name="description" class="w-full p-2 border rounded">
-                </div>
-                <div class="flex justify-end">
-                    <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700">Add</button>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="closeModal()"
+                        class="flex-1 py-3 rounded-xl border border-gray-300 dark:border-slate-600 text-gray-600 dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-slate-700 transition text-sm" data-i18n="cancel">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                        class="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition text-sm" data-i18n="income_save">
+                        Save
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Smart Nudge Alert -->
-    <div id="nudge-alert" class="fixed bottom-4 right-4 bg-yellow-500 text-white p-4 rounded-lg shadow-lg hidden">
-        <p id="nudge-message"></p>
-        <button class="mt-2 underline" onclick="closeNudge()">Dismiss</button>
+    <!-- Smart Nudge Toast -->
+    <div id="nudge-alert" class="fixed bottom-6 right-6 bg-amber-500 text-white p-4 rounded-xl shadow-lg hidden max-w-xs">
+        <p id="nudge-message" class="text-sm font-medium"></p>
+        <button class="mt-2 text-xs underline opacity-80" onclick="document.getElementById('nudge-alert').classList.add('hidden')">Dismiss</button>
     </div>
 
+    <!-- Danger Zone / Reset Data Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t dark:border-slate-700 mt-8">
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+                <h3 class="text-lg font-bold text-red-800 dark:text-red-400" data-i18n="reset_all_data">Reset All Data</h3>
+                <p class="text-sm text-red-600 dark:text-red-500/80">Clear all transactions and reset budgets for a fresh demo.</p>
+            </div>
+            <button onclick="resetAllData()" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg transition-all transform hover:scale-105 active:scale-95">
+                <i class="fas fa-undo mr-2"></i>Reset All Data
+            </button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='notifications.js') }}"></script>
+    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
     <script>
+        async function resetAllData() {
+            if (confirm("Are you sure you want to reset all data for the demo?")) {
+                try {
+                    const response = await fetch('/reset_data', { method: 'POST' });
+                    const result = await response.json();
+                    if (result.success) {
+                        alert("All data has been reset successfully!");
+                        window.location.reload();
+                    } else {
+                        alert("Error: " + result.error);
+                    }
+                } catch (error) {
+                    console.error('Error resetting data:', error);
+                    alert("Failed to reset data.");
+                }
+            }
+        }
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebar-overlay');
-            if (sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
-            } else {
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
-            }
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
         }
-    </script>
-    <script src="static/notifications.js"></script>
+        function handleLogout() {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = '/logout';
+        }
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
-    <script src="{{ url_for('static', filename='theme.js') }}"></script>
-    <script src="static/i18n.js"></script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('isLoggedIn') !== 'true') {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
 </body>
 </html>
