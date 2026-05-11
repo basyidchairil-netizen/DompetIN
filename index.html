@@ -1,18 +1,819 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dompetin - Budget Tracker for Students</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ===== RESET & BASE ===== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --color-bg: #f8f7f3;
+            --color-surface: #ffffff;
+            --color-primary: #2d6a4f;
+            --color-primary-dark: #1b4332;
+            --color-accent: #52b788;
+            --color-accent-light: #d8f3dc;
+            --color-text: #1a1a1a;
+            --color-text-muted: #555;
+            --color-border: #e0e0d8;
+            --color-card: #ffffff;
+            --color-hero-bg: #eaf4ee;
+            --color-nav-bg: rgba(248, 247, 243, 0.95);
+            --color-footer-bg: #1b4332;
+            --color-footer-text: #d8f3dc;
+            --radius: 14px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 24px rgba(45, 106, 79, 0.10);
+            --shadow-card: 0 2px 16px rgba(45, 106, 79, 0.08);
+            --font-display: 'Georgia', 'Times New Roman', serif;
+            --font-body: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --color-bg: #0f1f18;
+            --color-surface: #182d22;
+            --color-primary: #52b788;
+            --color-primary-dark: #2d6a4f;
+            --color-accent: #74c69d;
+            --color-accent-light: #1b4332;
+            --color-text: #e8f5e9;
+            --color-text-muted: #a5c8b0;
+            --color-border: #2d4a38;
+            --color-card: #182d22;
+            --color-hero-bg: #0f1f18;
+            --color-nav-bg: rgba(15, 31, 24, 0.97);
+            --color-footer-bg: #0a150f;
+            --color-footer-text: #74c69d;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.7;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== NAV ===== */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--color-nav-bg);
+            border-bottom: 1px solid var(--color-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: background var(--transition);
+        }
+
+        .nav-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--color-primary);
+            letter-spacing: -0.5px;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--color-text-muted);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            transition: color var(--transition), background var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--color-primary);
+            background: var(--color-accent-light);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .btn-login {
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 50px;
+            background: var(--color-primary);
+            color: #fff;
+            transition: background var(--transition), transform var(--transition);
+        }
+
+        .btn-login:hover {
+            background: var(--color-primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: var(--color-accent-light);
+            border: 1px solid var(--color-border);
+            border-radius: 50px;
+            cursor: pointer;
+            padding: 6px 10px;
+            display: flex;
+            align-items: center;
+            transition: background var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: var(--color-accent-light);
+            filter: brightness(0.93);
+        }
+
+        .theme-icon {
+            color: var(--color-primary);
+            font-size: 1rem;
+        }
+
+        .theme-icon-dark,
+        .theme-icon-auto {
+            display: none;
+        }
+
+        /* Language Toggle */
+        .language-toggle {
+            background: var(--color-accent-light);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            padding: 6px 10px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            transition: background var(--transition);
+        }
+
+        .language-toggle:hover {
+            filter: brightness(0.93);
+        }
+
+        /* Hamburger */
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.4rem;
+            color: var(--color-primary);
+            margin-left: 8px;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn-primary {
+            display: inline-block;
+            padding: 12px 28px;
+            background: var(--color-primary);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+            text-align: center;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(45, 106, 79, 0.22);
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            padding: 12px 28px;
+            background: transparent;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background var(--transition), color var(--transition), transform var(--transition);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-primary);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: var(--color-hero-bg);
+            padding: 80px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 60px;
+            min-height: 88vh;
+            transition: background var(--transition);
+        }
+
+        .hero-content {
+            max-width: 540px;
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--color-primary-dark);
+            margin-bottom: 20px;
+        }
+
+        [data-theme="dark"] .hero-content h1 {
+            color: var(--color-accent);
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            color: var(--color-text-muted);
+            margin-bottom: 36px;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .hero-image {
+            flex-shrink: 0;
+            width: 260px;
+            height: 260px;
+            background: var(--color-accent-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .hero-image img {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+        }
+
+        /* ===== SECTIONS SHARED ===== */
+        section {
+            padding: 80px 0;
+        }
+
+        section h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 700;
+            color: var(--color-primary-dark);
+            text-align: center;
+            margin-bottom: 48px;
+            position: relative;
+        }
+
+        [data-theme="dark"] section h2 {
+            color: var(--color-accent);
+        }
+
+        section h2::after {
+            content: '';
+            display: block;
+            width: 48px;
+            height: 4px;
+            background: var(--color-accent);
+            border-radius: 2px;
+            margin: 12px auto 0;
+        }
+
+        /* ===== FEATURES ===== */
+        .features {
+            background: var(--color-surface);
+            transition: background var(--transition);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 28px;
+        }
+
+        .feature-card {
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            padding: 36px 28px;
+            text-align: center;
+            transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow);
+        }
+
+        .feature-card .icon {
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 18px;
+            background: var(--color-accent-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-primary);
+        }
+
+        .feature-card .icon svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--color-primary-dark);
+            margin-bottom: 10px;
+        }
+
+        [data-theme="dark"] .feature-card h3 {
+            color: var(--color-accent);
+        }
+
+        .feature-card p {
+            font-size: 0.92rem;
+            color: var(--color-text-muted);
+        }
+
+        /* ===== PRICING ===== */
+        .pricing {
+            background: var(--color-bg);
+            transition: background var(--transition);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 28px;
+            align-items: start;
+        }
+
+        .pricing-card {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            padding: 36px 28px;
+            text-align: center;
+            transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px var(--color-accent-light), var(--shadow);
+            transform: scale(1.03);
+        }
+
+        .pricing-card:hover:not(.featured) {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+        }
+
+        .pricing-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .price {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: 24px;
+        }
+
+        .price span {
+            font-size: 0.95rem;
+            font-weight: 400;
+            color: var(--color-text-muted);
+        }
+
+        .pricing-card ul {
+            margin-bottom: 28px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .pricing-card li {
+            font-size: 0.92rem;
+            color: var(--color-text-muted);
+            padding-left: 22px;
+            position: relative;
+        }
+
+        .pricing-card li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .how-it-works {
+            background: var(--color-surface);
+            transition: background var(--transition);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 36px;
+        }
+
+        .step {
+            text-align: center;
+            padding: 28px 20px;
+            position: relative;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--color-primary);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 16px rgba(45, 106, 79, 0.25);
+        }
+
+        .step h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--color-primary-dark);
+            margin-bottom: 10px;
+        }
+
+        [data-theme="dark"] .step h3 {
+            color: var(--color-accent);
+        }
+
+        .step p {
+            font-size: 0.92rem;
+            color: var(--color-text-muted);
+        }
+
+        /* ===== ABOUT ===== */
+        .about {
+            background: var(--color-bg);
+            transition: background var(--transition);
+        }
+
+        .about p {
+            max-width: 680px;
+            margin: 0 auto 48px;
+            text-align: center;
+            font-size: 1.05rem;
+            color: var(--color-text-muted);
+            line-height: 1.9;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 0.88rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== CONTACT ===== */
+        .contact {
+            background: var(--color-surface);
+            transition: background var(--transition);
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--color-text-muted);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            color: var(--color-text);
+            font-family: var(--font-body);
+            transition: border-color var(--transition), background var(--transition);
+            outline: none;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(82, 183, 136, 0.15);
+        }
+
+        .form-group textarea {
+            min-height: 110px;
+        }
+
+        .contact-info {
+            padding-top: 8px;
+        }
+
+        .contact-info h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-primary-dark);
+            margin-bottom: 20px;
+        }
+
+        [data-theme="dark"] .contact-info h3 {
+            color: var(--color-accent);
+        }
+
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            font-size: 0.95rem;
+            color: var(--color-text-muted);
+        }
+
+        .contact-info .ci-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--color-primary);
+            flex-shrink: 0;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--color-footer-bg);
+            color: var(--color-footer-text);
+            padding: 28px 24px;
+            transition: background var(--transition);
+        }
+
+        footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            opacity: 0.85;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 14px;
+        }
+
+        .social-links a {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--transition), transform var(--transition);
+            color: var(--color-footer-text);
+        }
+
+        .social-links a:hover {
+            background: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .social-links svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 820px) {
+            .nav-links {
+                display: none;
+            }
+
+            .nav-links.open {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: var(--color-nav-bg);
+                border-bottom: 1px solid var(--color-border);
+                padding: 16px 24px;
+                gap: 4px;
+                z-index: 99;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .hero {
+                flex-direction: column-reverse;
+                text-align: center;
+                padding: 60px 24px;
+                min-height: auto;
+                gap: 40px;
+            }
+
+            .cta-buttons {
+                justify-content: center;
+            }
+
+            .hero-image {
+                width: 180px;
+                height: 180px;
+            }
+
+            .hero-image img {
+                width: 130px;
+                height: 130px;
+            }
+
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .stats {
+                gap: 32px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-right .btn-login {
+                display: none;
+            }
+
+            .hero-content h1 {
+                font-size: 1.8rem;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                padding: 10px 20px;
+                font-size: 0.93rem;
+            }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content h1 {
+            animation: fadeUp 0.6s ease both;
+        }
+
+        .hero-content p {
+            animation: fadeUp 0.6s 0.12s ease both;
+        }
+
+        .cta-buttons {
+            animation: fadeUp 0.6s 0.24s ease both;
+        }
+
+        .hero-image {
+            animation: fadeUp 0.6s 0.08s ease both;
+        }
+    </style>
 </head>
+
 <body>
     <header>
-<nav>
+        <nav>
             <div class="nav-container">
                 <div class="logo">Dompetin</div>
-                <ul class="nav-links">
+                <ul class="nav-links" id="navLinks">
                     <li><a href="#home" data-i18n="nav_home">Home</a></li>
                     <li><a href="#features" data-i18n="nav_features">Features</a></li>
                     <li><a href="#pricing" data-i18n="nav_pricing">Pricing</a></li>
@@ -21,71 +822,128 @@
                     <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
                 </ul>
                 <div class="nav-right">
-                    <!-- Theme Toggle Button -->
-                    <button class="theme-toggle" onclick="window.themeManager.cycleTheme()" aria-label="Toggle theme">
-                        <span class="theme-icon theme-icon-light"><i class="fas fa-sun"></i></span>
-                        <span class="theme-icon theme-icon-dark"><i class="fas fa-moon"></i></span>
-                        <span class="theme-icon theme-icon-auto"><i class="fas fa-circle-half-stroke"></i></span>
+                    <!-- Theme Toggle -->
+                    <button class="theme-toggle" onclick="cycleTheme()" aria-label="Toggle theme" title="Toggle theme">
+                        <span id="themeIcon">
+                            <!-- Sun SVG -->
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                style="width:18px;height:18px;color:var(--color-primary)">
+                                <circle cx="12" cy="12" r="5" />
+                                <line x1="12" y1="1" x2="12" y2="3" />
+                                <line x1="12" y1="21" x2="12" y2="23" />
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                                <line x1="1" y1="12" x2="3" y2="12" />
+                                <line x1="21" y1="12" x2="23" y2="12" />
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                            </svg>
+                        </span>
                     </button>
-                    <!-- Language Toggle Button -->
-                    <button class="language-toggle ml-2 px-2 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition" onclick="window.i18nManager.toggleLanguage()" title="Toggle Language">
-                        <span class="lang-text font-medium text-sm">EN</span>
+                    <!-- Language Toggle -->
+                    <button class="language-toggle" onclick="toggleLanguage()" title="Toggle Language">
+                        <span id="langText">EN</span>
                     </button>
                     <a href="login.html" class="btn-login" data-i18n="nav_login">Login</a>
                 </div>
-                <div class="menu-toggle">
-                    <i class="fas fa-bars"></i>
+                <div class="menu-toggle" onclick="toggleMenu()">
+                    <!-- Hamburger SVG -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        style="width:24px;height:24px;color:var(--color-primary)">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
                 </div>
             </div>
         </nav>
     </header>
 
     <main>
-        <!-- Hero Section -->
+        <!-- Hero -->
         <section id="home" class="hero">
             <div class="hero-content">
                 <h1 data-i18n="hero_title">Manage Your Money, One Step at a Time</h1>
-                <p data-i18n="hero_subtitle">Dompetin is your friendly budget tracker designed for students and young adults. Take control of your finances with ease and build a brighter financial future.</p>
+                <p data-i18n="hero_subtitle">Dompetin is your friendly budget tracker designed for students and young
+                    adults. Take control of your finances with ease and build a brighter financial future.</p>
                 <div class="cta-buttons">
                     <a href="dashboard.html" class="btn-primary" data-i18n="hero_get_started">Get Started</a>
                     <button class="btn-secondary" data-i18n="hero_download_app">Download App</button>
                 </div>
             </div>
             <div class="hero-image">
-                <img src="{{ url_for('static', filename='LogoDompetin.png') }}" alt="Dompetin App Screenshot">
+                <img src="./static/LogoDompetin.png" alt="Dompetin Logo"
+                    onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\'font-family:Georgia,serif;font-size:2.4rem;font-weight:700;color:var(--color-primary)\'>💰</div>'">
             </div>
         </section>
 
-        <!-- Features Section -->
+        <!-- Features -->
         <section id="features" class="features">
             <div class="container">
                 <h2 data-i18n="features_title">Features</h2>
                 <div class="features-grid">
+
                     <div class="feature-card">
-                        <i class="fas fa-chart-line"></i>
-                        <h3 data-i18n="feature_income_expense_title">Income & Expense Tracking</h3>
-                        <p data-i18n="feature_income_expense_desc">Easily record and categorize your income and expenses to stay on top of your finances.</p>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                            </svg>
+                        </div>
+                        <h3 data-i18n="feature_income_expense_title">Income &amp; Expense Tracking</h3>
+                        <p data-i18n="feature_income_expense_desc">Easily record and categorize your income and expenses
+                            to stay on top of your finances.</p>
                     </div>
+
                     <div class="feature-card">
-                        <i class="fas fa-calendar-alt"></i>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg>
+                        </div>
                         <h3 data-i18n="feature_budget_title">Budget Planning per Category</h3>
-                        <p data-i18n="feature_budget_desc">Set monthly budgets for different categories and track your spending against them.</p>
+                        <p data-i18n="feature_budget_desc">Set monthly budgets for different categories and track your
+                            spending against them.</p>
                     </div>
+
                     <div class="feature-card">
-                        <i class="fas fa-lightbulb"></i>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                        </div>
                         <h3 data-i18n="feature_insights_title">Smart Spending Insights</h3>
-                        <p data-i18n="feature_insights_desc">Get personalized insights and recommendations to optimize your spending habits.</p>
+                        <p data-i18n="feature_insights_desc">Get personalized insights and recommendations to optimize
+                            your spending habits.</p>
                     </div>
+
                     <div class="feature-card">
-                        <i class="fas fa-bullseye"></i>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                        </div>
                         <h3 data-i18n="feature_goals_title">Financial Goals Tracking</h3>
-                        <p data-i18n="feature_goals_desc">Set and track progress towards your savings goals and financial milestones.</p>
+                        <p data-i18n="feature_goals_desc">Set and track progress towards your savings goals and
+                            financial milestones.</p>
                     </div>
+
                 </div>
             </div>
         </section>
 
-        <!-- Pricing Section -->
+        <!-- Pricing -->
         <section id="pricing" class="pricing">
             <div class="container">
                 <h2 data-i18n="pricing_title">Pricing</h2>
@@ -129,7 +987,7 @@
             </div>
         </section>
 
-        <!-- How It Works Section -->
+        <!-- How It Works -->
         <section id="how-it-works" class="how-it-works">
             <div class="container">
                 <h2 data-i18n="how_it_works_title">How It Works</h2>
@@ -137,27 +995,32 @@
                     <div class="step">
                         <div class="step-number">1</div>
                         <h3 data-i18n="step1_title">Record Income and Expenses</h3>
-                        <p data-i18n="step1_desc">Log your daily transactions quickly and categorize them for better organization.</p>
+                        <p data-i18n="step1_desc">Log your daily transactions quickly and categorize them for better
+                            organization.</p>
                     </div>
                     <div class="step">
                         <div class="step-number">2</div>
                         <h3 data-i18n="step2_title">Set Monthly Budgets</h3>
-                        <p data-i18n="step2_desc">Create budgets for different spending categories to stay within your limits.</p>
+                        <p data-i18n="step2_desc">Create budgets for different spending categories to stay within your
+                            limits.</p>
                     </div>
                     <div class="step">
                         <div class="step-number">3</div>
                         <h3 data-i18n="step3_title">Get Insights and Recommendations</h3>
-                        <p data-i18n="step3_desc">Receive personalized tips and insights to improve your financial habits.</p>
+                        <p data-i18n="step3_desc">Receive personalized tips and insights to improve your financial
+                            habits.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- About Section -->
+        <!-- About -->
         <section id="about" class="about">
             <div class="container">
                 <h2 data-i18n="about_title">About Dompetin</h2>
-                <p data-i18n="about_desc">Our mission is to help students become more financially aware and disciplined. We believe that everyone deserves a chance to build a secure financial future, starting with simple tools that make money management easy and fun.</p>
+                <p data-i18n="about_desc">Our mission is to help students become more financially aware and disciplined.
+                    We believe that everyone deserves a chance to build a secure financial future, starting with simple
+                    tools that make money management easy and fun.</p>
                 <div class="stats">
                     <div class="stat">
                         <div class="stat-number">10,000+</div>
@@ -175,7 +1038,7 @@
             </div>
         </section>
 
-        <!-- Contact Section -->
+        <!-- Contact -->
         <section id="contact" class="contact">
             <div class="container">
                 <h2 data-i18n="contact_title">Contact Us</h2>
@@ -184,24 +1047,46 @@
                         <form id="contactForm">
                             <div class="form-group">
                                 <label for="name" data-i18n="contact_name">Name</label>
-                                <input type="text" id="name" name="name" required>
+                                <input type="text" id="name" name="name" required placeholder="Your name">
                             </div>
                             <div class="form-group">
                                 <label for="email" data-i18n="contact_email">Email</label>
-                                <input type="email" id="email" name="email" required>
+                                <input type="email" id="email" name="email" required placeholder="your@email.com">
                             </div>
                             <div class="form-group">
                                 <label for="message" data-i18n="contact_message">Message</label>
-                                <textarea id="message" name="message" required></textarea>
+                                <textarea id="message" name="message" required
+                                    placeholder="How can we help?"></textarea>
                             </div>
                             <button type="submit" class="btn-primary" data-i18n="contact_send">Send Message</button>
                         </form>
                     </div>
                     <div class="contact-info">
                         <h3 data-i18n="contact_get_in_touch">Get in Touch</h3>
-                        <p><i class="fas fa-envelope"></i> <span data-i18n="contact_support">support@dompetin.com</span></p>
-                        <p><i class="fas fa-phone"></i> <span data-i18n="contact_phone">1-800-DOMPETIN</span></p>
-                        <p><i class="fas fa-clock"></i> <span data-i18n="contact_hours">Mon-Fri 9AM-6PM EST</span></p>
+                        <p>
+                            <svg class="ci-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <polyline points="22,6 12,13 2,6" />
+                            </svg>
+                            <span data-i18n="contact_support">support@dompetin.com</span>
+                        </p>
+                        <p>
+                            <svg class="ci-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.36 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.27 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.08 6.08l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                            </svg>
+                            <span data-i18n="contact_phone">1-800-DOMPETIN</span>
+                        </p>
+                        <p>
+                            <svg class="ci-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            <span data-i18n="contact_hours">Mon–Fri 9AM–6PM WIB</span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -210,17 +1095,149 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2023 Dompetin. <span data-i18n="footer_copyright">All rights reserved.</span></p>
+            <p>&copy; 2024 Dompetin. <span data-i18n="footer_copyright">All rights reserved.</span></p>
             <div class="social-links">
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
+                <!-- Facebook -->
+                <a href="#" aria-label="Facebook">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                    </svg>
+                </a>
+                <!-- Twitter/X -->
+                <a href="#" aria-label="Twitter">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" />
+                    </svg>
+                </a>
+                <!-- Instagram -->
+                <a href="#" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                    </svg>
+                </a>
             </div>
         </div>
     </footer>
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
-    <script src="{{ url_for('static', filename='theme.js') }}"></script>
-    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
+    <script>
+        // ===== THEME =====
+        (function () {
+            const root = document.documentElement;
+            const saved = localStorage.getItem('dompetin-theme') || 'light';
+            applyTheme(saved);
+            function applyTheme(t) {
+                root.setAttribute('data-theme', t === 'dark' ? 'dark' : '');
+                localStorage.setItem('dompetin-theme', t);
+            }
+            window.cycleTheme = function () {
+                const cur = localStorage.getItem('dompetin-theme') || 'light';
+                applyTheme(cur === 'light' ? 'dark' : 'light');
+            };
+        })();
+
+        // ===== LANGUAGE (i18n stub - matches original data-i18n hooks) =====
+        const translations = {
+            en: {
+                nav_home: 'Home', nav_features: 'Features', nav_pricing: 'Pricing',
+                nav_how_it_works: 'How It Works', nav_about: 'About', nav_contact: 'Contact',
+                nav_login: 'Login',
+                hero_title: 'Manage Your Money, One Step at a Time',
+                hero_subtitle: 'Dompetin is your friendly budget tracker designed for students and young adults. Take control of your finances with ease and build a brighter financial future.',
+                hero_get_started: 'Get Started', hero_download_app: 'Download App',
+                features_title: 'Features',
+                feature_income_expense_title: 'Income & Expense Tracking',
+                feature_income_expense_desc: 'Easily record and categorize your income and expenses to stay on top of your finances.',
+                feature_budget_title: 'Budget Planning per Category',
+                feature_budget_desc: 'Set monthly budgets for different categories and track your spending against them.',
+                feature_insights_title: 'Smart Spending Insights',
+                feature_insights_desc: 'Get personalized insights and recommendations to optimize your spending habits.',
+                feature_goals_title: 'Financial Goals Tracking',
+                feature_goals_desc: 'Set and track progress towards your savings goals and financial milestones.',
+                pricing_title: 'Pricing', pricing_free: 'Free', pricing_standard: 'Standard',
+                pricing_premium: 'Premium', per_month: '/month',
+                pricing_get_started: 'Get Started', pricing_choose_standard: 'Choose Standard', pricing_choose_premium: 'Choose Premium',
+                how_it_works_title: 'How It Works',
+                step1_title: 'Record Income and Expenses', step1_desc: 'Log your daily transactions quickly and categorize them for better organization.',
+                step2_title: 'Set Monthly Budgets', step2_desc: 'Create budgets for different spending categories to stay within your limits.',
+                step3_title: 'Get Insights and Recommendations', step3_desc: 'Receive personalized tips and insights to improve your financial habits.',
+                about_title: 'About Dompetin',
+                about_desc: 'Our mission is to help students become more financially aware and disciplined. We believe that everyone deserves a chance to build a secure financial future, starting with simple tools that make money management easy and fun.',
+                about_students_helped: 'Students Helped', about_money_saved: 'Money Saved', about_user_rating: 'User Rating',
+                contact_title: 'Contact Us', contact_name: 'Name', contact_email: 'Email',
+                contact_message: 'Message', contact_send: 'Send Message',
+                contact_get_in_touch: 'Get in Touch', contact_support: 'support@dompetin.com',
+                contact_phone: '1-800-DOMPETIN', contact_hours: 'Mon–Fri 9AM–6PM WIB',
+                footer_copyright: 'All rights reserved.'
+            },
+            id: {
+                nav_home: 'Beranda', nav_features: 'Fitur', nav_pricing: 'Harga',
+                nav_how_it_works: 'Cara Kerja', nav_about: 'Tentang', nav_contact: 'Kontak',
+                nav_login: 'Masuk',
+                hero_title: 'Kelola Uangmu, Satu Langkah Setiap Saat',
+                hero_subtitle: 'Dompetin adalah pelacak anggaran yang ramah untuk pelajar dan anak muda. Kendalikan keuanganmu dengan mudah dan bangun masa depan finansial yang lebih cerah.',
+                hero_get_started: 'Mulai Sekarang', hero_download_app: 'Unduh Aplikasi',
+                features_title: 'Fitur',
+                feature_income_expense_title: 'Lacak Pemasukan & Pengeluaran',
+                feature_income_expense_desc: 'Catat dan kategorikan pemasukan serta pengeluaranmu dengan mudah.',
+                feature_budget_title: 'Perencanaan Anggaran per Kategori',
+                feature_budget_desc: 'Tetapkan anggaran bulanan untuk berbagai kategori dan pantau pengeluaranmu.',
+                feature_insights_title: 'Wawasan Pengeluaran Cerdas',
+                feature_insights_desc: 'Dapatkan wawasan dan rekomendasi personal untuk mengoptimalkan kebiasaan belanjamu.',
+                feature_goals_title: 'Pelacakan Tujuan Keuangan',
+                feature_goals_desc: 'Tetapkan dan lacak kemajuan menuju tujuan tabungan dan target keuanganmu.',
+                pricing_title: 'Harga', pricing_free: 'Gratis', pricing_standard: 'Standar',
+                pricing_premium: 'Premium', per_month: '/bulan',
+                pricing_get_started: 'Mulai', pricing_choose_standard: 'Pilih Standar', pricing_choose_premium: 'Pilih Premium',
+                how_it_works_title: 'Cara Kerja',
+                step1_title: 'Catat Pemasukan dan Pengeluaran', step1_desc: 'Catat transaksi harianmu dengan cepat dan kategorikan untuk organisasi yang lebih baik.',
+                step2_title: 'Tetapkan Anggaran Bulanan', step2_desc: 'Buat anggaran untuk kategori pengeluaran agar tetap dalam batas.',
+                step3_title: 'Dapatkan Wawasan dan Rekomendasi', step3_desc: 'Terima tips dan wawasan personal untuk meningkatkan kebiasaan keuanganmu.',
+                about_title: 'Tentang Dompetin',
+                about_desc: 'Misi kami adalah membantu pelajar menjadi lebih sadar dan disiplin secara finansial. Kami percaya semua orang berhak membangun masa depan keuangan yang aman.',
+                about_students_helped: 'Pelajar Dibantu', about_money_saved: 'Uang Ditabung', about_user_rating: 'Rating Pengguna',
+                contact_title: 'Hubungi Kami', contact_name: 'Nama', contact_email: 'Email',
+                contact_message: 'Pesan', contact_send: 'Kirim Pesan',
+                contact_get_in_touch: 'Hubungi Kami', contact_support: 'support@dompetin.com',
+                contact_phone: '1-800-DOMPETIN', contact_hours: 'Sen–Jum 09.00–18.00 WIB',
+                footer_copyright: 'Hak cipta dilindungi.'
+            }
+        };
+
+        let currentLang = localStorage.getItem('dompetin-lang') || 'en';
+        function applyLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('dompetin-lang', lang);
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            document.getElementById('langText').textContent = lang.toUpperCase();
+        }
+        window.toggleLanguage = function () {
+            applyLang(currentLang === 'en' ? 'id' : 'en');
+        };
+        applyLang(currentLang);
+
+        // ===== MOBILE MENU =====
+        window.toggleMenu = function () {
+            document.getElementById('navLinks').classList.toggle('open');
+        };
+
+        // ===== CONTACT FORM =====
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            alert('Pesan terkirim! / Message sent!');
+            this.reset();
+        });
+    </script>
 </body>
+
 </html>

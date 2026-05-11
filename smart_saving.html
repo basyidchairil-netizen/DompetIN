@@ -37,8 +37,8 @@
         @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
         .at-risk-glow { box-shadow: 0 0 0 3px rgba(239,68,68,0.3), 0 4px 20px rgba(239,68,68,0.15); }
     </style>
-    <script src="{{ url_for('static', filename='theme.js') }}"></script>
-    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
+    <script src="./static/theme.js"></script>
+    <script src="./static/i18n.js"></script>
 </head>
 <body class="bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-white min-h-screen transition-colors duration-300">
 
@@ -269,7 +269,7 @@
             }
         });
     </script>
-    <script src="{{ url_for('static', filename='notifications.js') }}"></script>
-    <script src="{{ url_for('static', filename='smart_saving.js') }}"></script>
+    <script src="./static/notifications.js"></script>
+    <script src="./static/smart_saving.js"></script>
 </body>
 </html>

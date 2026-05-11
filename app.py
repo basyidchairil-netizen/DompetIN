@@ -45,7 +45,7 @@ def get_openai_client():
     return OpenAI(api_key=api_key)
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-DB_PATH = os.path.join(BASE_DIR, 'dompetin.db')
+DB_PATH = os.path.join(BASE_DIR, 'database.db')
 
 # Database setup
 def init_db():

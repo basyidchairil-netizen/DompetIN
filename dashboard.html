@@ -28,8 +28,8 @@
         .stat-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
     </style>
-    <script src="{{ url_for('static', filename='theme.js') }}"></script>
-    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
+    <script src="./static/theme.js"></script>
+    <script src="./static/i18n.js"></script>
 </head>
 <body class="bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-white min-h-screen transition-colors duration-300">
 
@@ -290,8 +290,8 @@
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='notifications.js') }}"></script>
-    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+    <script src="./static/notifications.js"></script>
+    <script src="./static/dashboard.js"></script>
     <script>
         async function resetAllData() {
             if (confirm("Are you sure you want to reset all data for the demo?")) {

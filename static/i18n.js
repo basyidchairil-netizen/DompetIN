@@ -27,7 +27,7 @@
      */
     async function loadTranslations() {
         try {
-            const response = await fetch('/static/translations.json');
+            const response = await fetch('./static/translations.json');
             translations = await response.json();
             return true;
         } catch (error) {

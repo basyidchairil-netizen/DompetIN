@@ -1,5 +1,6 @@
 # Database
 dompetin.db
+database.db
 
 # Python
 __pycache__/
@@ -17,3 +18,6 @@ env/
 # Check schema scripts
 check_schema.py
 check_indices.py
+
+# Scratch
+scratch/
