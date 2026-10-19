@@ -405,6 +405,5 @@ Class IS 2026 · Lecturer: Eka Parima Saragih, S.Kom., M.Kom.
 
 <br/>
 
-*Made with ❤️ and too much coffee ☕*
 
 </div>
