@@ -367,27 +367,27 @@ DompetIN/
 <tr>
 <td align="center" width="33%">
 
-**Member 1**
+**Chairil Basyid**
 <br/>
-Student ID: —
-<br/>
-<sub>Contribution: —</sub>
-
-</td>
-<td align="center" width="33%">
-
-**Member 2**
-<br/>
-Student ID: —
+Student ID: 012202500058
 <br/>
 <sub>Contribution: —</sub>
 
 </td>
 <td align="center" width="33%">
 
-**Member 3**
+**Syahrul Ramadhan**
 <br/>
-Student ID: —
+Student ID: 012202500096
+<br/>
+<sub>Contribution: —</sub>
+
+</td>
+<td align="center" width="33%">
+
+**Farel Agnansyah**
+<br/>
+Student ID: 012202500104
 <br/>
 <sub>Contribution: —</sub>
 
