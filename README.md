@@ -1,6 +1,6 @@
 <div align="center">
 
-# 💰 DompetIN
+# DompetIN
 ### Personal Finance Manager
 
 *"Move beyond 'it works on my laptop.' Make it reproducible for anyone."*
@@ -21,37 +21,37 @@
 
 <br/>
 
-[🚀 Quick Start](#-quick-start) · [🐳 Docker Guide](#-docker-setup) · [✅ Verify](#-verify-the-app-works) · [🔧 Troubleshoot](#-troubleshooting) · [👥 Team](#-team)
+[Quick Start](#-quick-start) · [Docker Guide](#-docker-setup) · [Verify](#-verify-the-app-works) · [🔧 Troubleshoot](#-troubleshooting) · [Team](#-team)
 
 ---
 
 </div>
 
-## ✨ Features
+## Features
 
 <table>
 <tr>
 <td width="50%">
 
-**📊 Dashboard Analytics**
+**Dashboard Analytics**
 Real-time overview of your financial health with income vs expense breakdown and monthly summaries.
 
-**💸 Income & Expense Tracking**
+**Income & Expense Tracking**
 Log transactions by category and date with notes and full history view.
 
-**📅 Budget Planning**
+**Budget Planning**
 Set monthly budgets per category with visual progress bars and overspend alerts.
 
 </td>
 <td width="50%">
 
-**🎯 Saving Goals**
+**Saving Goals**
 Create and track progress toward financial goals with deadline tracking.
 
-**🤖 AI Financial Advice**
+**AI Financial Advice**
 Chat with Google Gemini AI for personalized, context-aware money tips.
 
-**👤 User Profile**
+**User Profile**
 Personalize your account and manage settings.
 
 </td>
@@ -60,7 +60,7 @@ Personalize your account and manage settings.
 
 ---
 
-## 📋 Project Info
+## Project Info
 
 | Item | Detail |
 |---|---|
@@ -74,20 +74,20 @@ Personalize your account and manage settings.
 
 ---
 
-## ✅ Prerequisites
+## Prerequisites
 
 Make sure these are installed and running before you begin:
 
 | Tool | Minimum Version | Check |
 |---|---|---|
-| 🐳 Docker Desktop | 24.x | `docker version` |
-| 🔀 Git | Any | `git --version` |
+| Docker Desktop | 24.x | `docker version` |
+| Git | Any | `git --version` |
 
-> **Tested on:** Docker 27.x · Windows 11 · Ubuntu 22.04
+> **Tested on:** Docker 27.x · Windows 11 · MacOS
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # 1. Clone and enter the repo
@@ -97,29 +97,28 @@ git checkout chores/dockerize-project
 
 # 2. Set up environment variables
 cp .env.example .env
-#    → Open .env and paste your GEMINI_API_KEY
 
 # 3. Build the Docker image
 docker build -t dompetindevops/dompetin:week6 .
 
 # 4. Run the container
-docker run -d \
-  --name dompetin-app \
-  -p 5000:5000 \
-  --env-file .env \
-  -v dompetin-data:/app/data \
+docker run -d 
+  --name dompetin-app 
+  -p 5000:5000 
+  --env-file .env 
+  -v dompetin-data:/app/data =
   dompetindevops/dompetin:week6
 
-# 5. Open in your browser 🎉
-#    → http://localhost:5000
+# 5. Open in your browser
+    http://localhost:5000
 ```
 
 ---
 
-## 🐳 Docker Setup
+## Docker Setup
 
 <details>
-<summary><b>📦 Step 1 — Runtime Analysis</b></summary>
+<summary><b>Step 1 — Runtime Analysis</b></summary>
 
 <br/>
 
@@ -137,7 +136,7 @@ docker run -d \
 </details>
 
 <details>
-<summary><b>🔨 Step 2 — Build the Image</b></summary>
+<summary><b>Step 2 — Build the Image</b></summary>
 
 <br/>
 
@@ -160,7 +159,7 @@ dompetindevops/dompetin   week6     2b3cdf7a061d   X minutes ago   539MB
 </details>
 
 <details>
-<summary><b>▶️ Step 3 — Run the Container</b></summary>
+<summary><b>Step 3 — Run the Container</b></summary>
 
 <br/>
 
@@ -181,12 +180,12 @@ docker run -d \
 | `--env-file .env` | Inject API keys from your local `.env` file |
 | `-v dompetin-data:/app/data` | Persist SQLite database to a named volume |
 
-✅ App is live at **http://localhost:5000**
+App is live at **http://localhost:5000**
 
 </details>
 
 <details>
-<summary><b>🔐 Step 4 — Environment Variables</b></summary>
+<summary><b>Step 4 — Environment Variables</b></summary>
 
 <br/>
 
@@ -206,16 +205,16 @@ OPENAI_API_KEY=your_openai_api_key_here
 
 | Variable | Required | Purpose |
 |---|---|---|
-| `GEMINI_API_KEY` | ✅ Yes | Powers the AI financial advice chatbot |
-| `OPENAI_API_KEY` | ❌ Optional | Alternative AI provider (graceful fallback) |
+| `GEMINI_API_KEY` | Yes | Powers the AI financial advice chatbot |
+| `OPENAI_API_KEY` | Optional | Alternative AI provider (graceful fallback) |
 
-> ⚠️ **Never commit your `.env` file.** It is listed in `.gitignore` for your safety.
+> **Never commit your `.env` file.** It is listed in `.gitignore` for your safety.
 
 </details>
 
 ---
 
-## ✅ Verify the App Works
+## Verify the App Works
 
 Run these checks after starting the container:
 
@@ -225,7 +224,7 @@ Run these checks after starting the container:
 docker ps --filter "name=dompetin-app"
 ```
 
-✅ Expected: Status shows `Up ... (healthy)`
+Expected: Status shows `Up ... (healthy)`
 
 ### V-02 — App Responds
 
@@ -237,7 +236,7 @@ curl -o /dev/null -s -w "%{http_code}" http://localhost:5000/
 (Invoke-WebRequest -Uri http://localhost:5000/ -UseBasicParsing).StatusCode
 ```
 
-✅ Expected: `200`
+Expected: `200`
 
 ### V-03 — Core Feature Works
 
@@ -245,19 +244,19 @@ curl -o /dev/null -s -w "%{http_code}" http://localhost:5000/
 2. Log in (a default user is seeded automatically)
 3. Navigate to **Income Tracking**
 4. Add a new transaction (e.g., category: Food, amount: 50000)
-5. ✅ Expected: Transaction appears in the list and dashboard updates
+5. Expected: Transaction appears in the list and dashboard updates
 
 ### V-04 — Data Persists After Restart *(optional)*
 
 ```bash
 docker restart dompetin-app
 # Wait ~10 seconds, then reload http://localhost:5000
-# ✅ Your transactions should still be there
+# Your transactions should still be there
 ```
 
 ---
 
-## 📊 Logs & Status
+## Logs & Status
 
 ```bash
 # View recent logs
@@ -278,7 +277,7 @@ docker exec -it dompetin-app env | grep API_KEY
 
 ---
 
-## 🛑 Stop & Clean Up
+## Stop & Clean Up
 
 ```bash
 # Stop the container
@@ -290,13 +289,13 @@ docker rm dompetin-app
 # (Optional) Remove the image
 docker rmi dompetindevops/dompetin:week6
 
-# ⚠️ WARNING: This permanently deletes all saved data!
+# WARNING: This permanently deletes all saved data!
 docker volume rm dompetin-data
 ```
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 | Symptom | Likely Cause | Fix |
 |---|---|---|
@@ -334,34 +333,34 @@ docker history dompetindevops/dompetin:week6
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 DompetIN/
-├── 🐳 Dockerfile           ← Docker image definition
-├── 🙈 .dockerignore        ← Excludes secrets, cache, DBs from build
-├── 🔑 .env.example         ← Copy to .env and add your API keys
-├── 🔒 .gitignore           ← Excludes .env, __pycache__, DBs from git
+├── Dockerfile           ← Docker image definition
+├── .dockerignore        ← Excludes secrets, cache, DBs from build
+├── .env.example         ← Copy to .env and add your API keys
+├── .gitignore           ← Excludes .env, __pycache__, DBs from git
 │
-├── 🐍 app.py               ← Main Flask application (1039 lines)
-├── 🗄️  db.py                ← Database helper & schema init
-├── 📦 requirements.txt     ← Python dependencies
+├── app.py               ← Main Flask application (1039 lines)
+├── db.py                ← Database helper & schema init
+├── requirements.txt     ← Python dependencies
 │
-├── 🌐 index.html           ← Dashboard / home page
-├── 🔐 login.html           ← Authentication page
-├── 📊 analysis.html        ← Financial analysis view
-├── 💼 budgetplaning.html   ← Budget management
-├── 📈 incomeTracking.html  ← Transaction log
-├── 🎯 smart_saving.html    ← Saving goals
-├── 👤 profile.html         ← User profile
+├── index.html           ← Dashboard / home page
+├── login.html           ← Authentication page
+├── analysis.html        ← Financial analysis view
+├── budgetplaning.html   ← Budget management
+├── incomeTracking.html  ← Transaction log
+├── smart_saving.html    ← Saving goals
+├── profile.html         ← User profile
 │
-├── 🖼️  static/              ← CSS, JS, images
-└── 📖 README.md            ← You are here
+├──  static/              ← CSS, JS, images
+└──  README.md            ← You are here
 ```
 
 ---
 
-## 👥 Team
+## Team
 
 <table>
 <tr>
