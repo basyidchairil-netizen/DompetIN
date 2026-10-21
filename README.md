@@ -21,7 +21,7 @@
 
 <br/>
 
-[Quick Start](#-quick-start) · [Docker Guide](#-docker-setup) · [Verify](#-verify-the-app-works) · [🔧 Troubleshoot](#-troubleshooting) · [Team](#-team)
+[Quick Start](#-quick-start) · [Docker Guide](#-docker-setup) · [Verify](#-verify-the-app-works) · [Troubleshoot](#-troubleshooting) · [Team](#-team)
 
 ---
 
