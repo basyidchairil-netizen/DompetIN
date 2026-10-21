@@ -45,7 +45,8 @@ def get_openai_client():
     return OpenAI(api_key=api_key)
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-DB_PATH = os.path.join(BASE_DIR, 'database.db')
+# Allow DB path to be overridden via environment variable (used in Docker with volumes)
+DB_PATH = os.getenv('DB_PATH', os.path.join(BASE_DIR, 'database.db'))
 
 # Database setup
 def init_db():
@@ -153,6 +154,9 @@ def init_db():
     
     conn.commit()
     conn.close()
+
+# Ensure the DB directory exists (important when DB_PATH points to a Docker volume)
+os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 
 init_db()
 
