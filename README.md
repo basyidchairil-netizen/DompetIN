@@ -17,7 +17,7 @@
 <br/>
 
 > A web-based personal finance tracker with income/expense tracking, budget planning,
-> saving goals, and **AI-powered financial advice** via Google Gemini — now fully containerized with Docker.
+> saving goals, and **AI-powered financial advice** via Google Gemini is now fully containerized with Docker.
 
 <br/>
 
@@ -64,13 +64,13 @@ Personalize your account and manage settings.
 
 | Item | Detail |
 |---|---|
-| **Project Name** | DompetIN — Personal Finance Manager |
+| **Project Name** | DompetIN - Personal Finance Manager |
 | **Stack** | Python 3.11, Flask 3.0, SQLite, Gunicorn, Gemini AI |
 | **Branch** | `chores/dockerize-project` |
 | **Image Tag** | `dompetindevops/dompetin:week6` |
 | **App Port** | `5000` |
-| **Assignment** | Week 6 — IS Agile Project Management with DevOps |
-| **Class** | IS 2026 · Eka Parima Saragih, S.Kom., M.Kom. |
+| **Assignment** | Week 6 - IS Agile Project Management with DevOps |
+| **Class** | IS 1 2026 · Eka Parima Saragih, S.Kom., M.Kom. |
 
 ---
 
@@ -308,7 +308,7 @@ docker volume rm dompetin-data
 | Permission error on DB | Volume ownership issue | Run `docker exec dompetin-app chmod 777 /app/data` |
 
 <details>
-<summary><b>🩺 Full Diagnostic Cheatsheet</b></summary>
+<summary><b>Full Diagnostic Cheatsheet</b></summary>
 
 <br/>
 
@@ -370,7 +370,6 @@ DompetIN/
 <br/>
 Student ID: 012202500058
 <br/>
-<sub>Contribution: —</sub>
 
 </td>
 <td align="center" width="33%">
@@ -379,16 +378,14 @@ Student ID: 012202500058
 <br/>
 Student ID: 012202500096
 <br/>
-<sub>Contribution: —</sub>
 
 </td>
 <td align="center" width="33%">
 
-**Farel Agnansyah**
+**Farrell Agnansyah**
 <br/>
 Student ID: 012202500104
 <br/>
-<sub>Contribution: —</sub>
 
 </td>
 </tr>
@@ -400,7 +397,7 @@ Student ID: 012202500104
 
 **Week 6 Assignment — Information Systems Agile Project Management with DevOps**
 <br/>
-Class IS 2026 · Lecturer: Eka Parima Saragih, S.Kom., M.Kom.
+Class IS 1 2026 · Lecturer: Eka Parima Saragih, S.Kom., M.Kom.
 
 <br/>
 
